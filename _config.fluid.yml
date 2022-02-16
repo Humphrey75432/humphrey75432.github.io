@@ -626,11 +626,11 @@ post:
   math:
     # 开启后文章默认可用，自定义页面如需使用，需在 Front-matter 中指定 `math: true`
     # If you want to use math on the custom page, you need to set `math: true` in Front-matter
-    enable: false
+    enable: true
 
     # 开启后，只有在文章 Front-matter 里指定 `math: true` 才会在文章页启动公式转换，以便在页面不包含公式时提高加载速度
     # If true, only set `math: true` in Front-matter will enable math, to load faster when the page does not contain math
-    specific: false
+    specific: true
 
     # Options: mathjax | katex
     engine: mathjax
@@ -640,11 +640,11 @@ post:
   mermaid:
     # 开启后文章默认可用，自定义页面如需使用，需在 Front-matter 中指定 `mermaid: true`
     # If you want to use mermaid on the custom page, you need to set `mermaid: true` in Front-matter
-    enable: false
+    enable: true
 
     # 开启后，只有在文章 Front-matter 里指定 `mermaid: true` 才会在文章页启动公式转换，以便在页面不包含公式时提高加载速度
     # If true, only set `mermaid: true` in Front-matter will enable mermaid, to load faster when the page does not contain mermaid
-    specific: false
+    specific: true
 
     # See: http://mermaid-js.github.io/mermaid/
     options: { theme: 'default' }
@@ -818,7 +818,7 @@ category:
   banner_img: /img/my-little-pony.jpeg
   banner_img_height: 60
   banner_mask_alpha: 0.3
-  subtitle: '类别是博客知识的深度'
+  subtitle: '类别展示了自己涉猎的知识广度~'
 
   # 分类的排序字段，前面带减号是倒序，不带减号是正序
   # Sort field for categories, with a minus sign is reverse order
@@ -848,7 +848,7 @@ tag:
   banner_img: /img/sheep.jpg
   banner_img_height: 80
   banner_mask_alpha: 0.3
-  subtitle: '标签用来归类文章, 更方便哦~'
+  subtitle: '给文章加上合适的标签，让他们看起来容易被快速找到~'
   tagcloud:
     min_font: 15
     max_font: 30
