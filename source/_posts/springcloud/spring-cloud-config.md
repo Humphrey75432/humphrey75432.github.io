@@ -1,5 +1,5 @@
 ---
-title: spring-cloud-config
+title: Spring Cloud配置中心
 date: 2022-02-20 14:04:14
 updated: 2022-02-20 14:04:14
 tags: Spring Cloud
