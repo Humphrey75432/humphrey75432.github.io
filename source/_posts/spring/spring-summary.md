@@ -40,7 +40,7 @@ IoC是Spring的核心，对于Spring框架来说，由Spring来负责控制对�
 
 
 
-# Spring常见的注入方式
+# 5. Spring常见的注入方式
 
 + setter属性注入
 + 构造方法注入
@@ -48,7 +48,7 @@ IoC是Spring的核心，对于Spring框架来说，由Spring来负责控制对�
 
 
 
-# Spring的bean是线程安全的吗？
+# 6. Spring的bean是线程安全的吗？
 
 Spring的bean默认是单例模式，并且Spring框架没有对单例bean进行多线程的封装处理；但由于大部分时候spring bean是无状态的，因此某种程度上来说bean也是安全的，如果bean有状态的话，就需要开发者自己保证线程安全。
 
@@ -59,7 +59,7 @@ Spring的bean默认是单例模式，并且Spring框架没有对单例bean进行
 
 
 
-# Spring支持的Bean作用域
+# 7. Spring支持的Bean作用域
 
 + singleton：Spring IoC容器只存在一个bean实例，bean以单例模式存在，是系统默认
 + prototype：每次从容器调用bean都会创建一个新的实例；
@@ -72,7 +72,7 @@ Spring的bean默认是单例模式，并且Spring框架没有对单例bean进行
 
 
 
-# Spring自动装配Bean的方式
+# 8. Spring自动装配Bean的方式
 
 + no：默认值，没有自动装配，使用显式bean引用进行装配
 + byName：根据bean名称注入对象依赖项；
@@ -81,14 +81,14 @@ Spring的bean默认是单例模式，并且Spring框架没有对单例bean进行
 
 
 
-# Spring事务实现方式
+# 9. Spring事务实现方式
 
 + 声明式事务：基于XML配置文件和注解方式（在类上添加`@Transaction`注解）；
 + 编码方式：提供编码的形式管理和维护事务；
 
 
 
-# Spring事务的隔离
+# 10. Spring事务的隔离
 
 + ISOLATION_DEFAULT：使用底层数据库的隔离级别，数据库设置什么我就用什么；
 + ISOLATION_READ_UNCOMMITED：未提交读，最低隔离级别，事务未提交时，就可被其他事务读取（出现幻读、脏读、不可重复读）；
@@ -98,7 +98,7 @@ Spring的bean默认是单例模式，并且Spring框架没有对单例bean进行
 
 
 
-# Spring MVC的运行流程
+# 11. Spring MVC的运行流程
 
 + spring mvc 先将请求发送给 DispatcherServlet。
 + DispatcherServlet 查询一个或多个 HandlerMapping，找到处理请求的 Controller。
@@ -109,7 +109,7 @@ Spring的bean默认是单例模式，并且Spring框架没有对单例bean进行
 
 
 
-# Spring MVC的组件
+# 12. Spring MVC的组件
 
 + 前置控制器 DispatcherServlet。
 + 映射控制器 HandlerMapping。
@@ -119,7 +119,7 @@ Spring的bean默认是单例模式，并且Spring框架没有对单例bean进行
 
 
 
-# @Autowired和Resource的区别
+# 13. @Autowired和Resource的区别
 
 ## Autowired注解
 
@@ -138,7 +138,7 @@ Spring的bean默认是单例模式，并且Spring框架没有对单例bean进行
 
 
 
-# 什么是Spring Boot
+# 14. 什么是Spring Boot
 
 为Spring服务，用来简化Spring应用的初始化搭建以及开发过程；
 
@@ -154,7 +154,7 @@ Spring Boot有下列好处，这也是为什么现在流行广泛的原因；
 
 
 
-# Spring Boot的核心配置文件
+# 15. Spring Boot的核心配置文件
 
 Spring Boot核心的两个配置文件：
 
@@ -163,7 +163,7 @@ Spring Boot核心的两个配置文件：
 
 
 
-# Spring Boot实现热部署
+# 16. Spring Boot实现热部署
 
 + 使用Devtools启动热部署，添加devtools库，在配置文件中把spring.devtools.restart.enabled设置为true;
 + 使用IntelliJ IDEA编译器，勾上自动编译或手动编译；
