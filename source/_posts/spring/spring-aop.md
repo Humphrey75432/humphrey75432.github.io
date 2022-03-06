@@ -185,3 +185,120 @@ Testing
 
 
 # 透过底层代码看Spring AOP
+
+## 它是怎么工作的？
+
+我们透过源代码来看看在配置类上添加`@EnableAspectJAutoProxy`注解就可以实现AOP功能，Spring在背后帮我们做了什么工作。
+
+```java
+// Registers an AnnotationAwareAspectJAutoProxyCreator against the current BeanDefinitionRegistry as appropriate based on a given @EnableAspectJAutoProxy annotation.
+class AspectJAutoProxyRegister implements ImportBeanDefinitionRegistrar {
+    	@Override
+	public void registerBeanDefinitions(
+			AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+
+		AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry);
+
+		AnnotationAttributes enableAspectJAutoProxy =
+				AnnotationConfigUtils.attributesFor(importingClassMetadata, EnableAspectJAutoProxy.class);
+	}
+}
+```
+
+**英文注释的意思是：**通过指定注释`@EnableAspectJAutoProxy`并根据当前的`BeanDefinitionRegistry`来注册一个`AnnotationAwareAspectJAutoProxyCreator`；所以我们在加了注解后就可以启用ProxyCreator去为我们创建AOP代理对象；
+
+我们再去看`AnnotationAwareAspectJAutoProxyCreator`这个类它做了哪些工作：
+
+```java
+public class AnnotationAwareAspectJAutoProxyCreator extends AspectJAwareAdvisorAutoProxyCreator {
+    @Override
+    protected void initBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+        // 调用父类的方法初始化Bean工厂
+        super.initBeanFactory(beanFactory);
+    }
+}
+```
+
+追踪代码到`AbstractAutowireCapableBeanFactory`如下：
+
+```java
+public abstract class AbstractAutowireCapableBeanFactory {
+    
+    protected Object initializeBean(String beanName, Object bean, @Nullable RootBeanDefinition mbd) {
+        Object wrappedBean = bean;
+        if (mbd == null || !mbd.isSynthetic()) {
+            // 执行beanPostProcessorsBeforeInitialization
+            wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
+            try {
+                // 初始化Bean
+                invokeInitMethod(beanName, wrappedBean, mbd);
+            }
+            
+            if (mbd == null || !mbd.isSynthetic()) {
+                // 执行beanPostProcessorsAfterInitialization
+                wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
+            }
+            return wrappedBean;
+        }
+    }
+}
+```
+
+我们看下通知是如何创建的，继续追踪源代码
+
+```java
+public abstract class AbstractAutoProxyCreator {
+    protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+        // 省略其他不相关的代码...
+        // Create proxy if we have advice
+        Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
+        if (specificInterceptors != DO_NOT_PROXY) {
+            this.advisedBeans.put(cacheKey, Boolean.TRUE);
+            Object proxy = createProxy(
+					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
+			this.proxyTypes.put(cacheKey, proxy.getClass());
+			return proxy;
+        }
+        
+        this.advisedBeans.put(cackeKey, Boolean.FALSE);
+        return bean;
+    }
+}
+```
+
+创建代理的源码如下：
+
+```java
+public abstract class AbstractAdvisorAutoProxyCreator {
+    @Override
+	@Nullable
+	protected Object[] getAdvicesAndAdvisorsForBean(
+			Class<?> beanClass, String beanName, @Nullable TargetSource targetSource) {
+
+		List<Advisor> advisors = findEligibleAdvisors(beanClass, beanName);
+		if (advisors.isEmpty()) {
+			return DO_NOT_PROXY;
+		}
+		return advisors.toArray();
+	}
+}
+```
+
+# 总结
+
+我们用一张图再来回顾一下Bean的生命周期
+
+![image-20220306123615086](https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220306123615086.png)
+
+用自己的话概括一下就是：
+
+1. 生成并且注册BeanDefinition对象；
+2. 初始化IoC容器并且加载BeanDefinition对象；
+3. 寻找对应的BeanFactory去实例化Bean;（实例化阶段）
+   1. 使用简单工厂 + 反射去推断构造函数进行实例化
+4. 执行Bean的属性赋值动作
+   1. 调用XXXAware接口回调方法；
+   2. 调用初始化生命周期的三种回调方法；
+   3. 假如Bean实现了AOP，会去创建动态代理对象；
+5. 销毁Bean
+   1. 销毁Bean的对象实例，仅在Spring容器关闭的过程中执行销毁；
