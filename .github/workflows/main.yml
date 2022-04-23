@@ -41,7 +41,15 @@ jobs:
       run: | 
         git config --global user.name 'humphrey' 
         git config --global user.email 'humphrey_hu@163.com'
-    - name: Deploy Hexo 
+
+    - name: Deploy Hexo
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: public
+        BASE_BRANCH: master
+
       run: |
         hexo clean
         hexo generate 
