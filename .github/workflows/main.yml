@@ -1,6 +1,5 @@
-name: Hexo CI CD
+name: Build and Deploy Hexo
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
@@ -8,34 +7,29 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2 
-        with:
-          persist-credentials: false
-          submodules: recursive
-      - name: "Using Special Node Version"
-        uses: actions/setup-node@v2
-        with:
-          node-version: "16"
+    - name: Checkout 🛎️
+      uses: actions/checkout@master
+      
+    - name: Use Node.js 16
+      uses: actions/setup-node@v2-beta
+      with:
+        node-version: '16'
 
-      - name: Generate Hexo site ⚗️
-        run: |
-          echo "Github Action Env Checking..."
-          echo "Node Version: `node -v`"
-          # Install dependencies && update env
-          echo "Install npm dependencies"
-          npm i
-          echo "Load hexo binary..."
-          export PATH="$PATH:./node_modules/.bin"
-          echo "Hexo version: $(hexo -v)"
-          # Generate site && minify site files, such as: html, js, css
-          hexo generate && hexo deploy
+    - name: Install Pandoc
+      run: |
+        sudo apt-get install pandoc
+        
+    - name: Install and Build 🔧 
+      run: |
+        npm install -g hexo-cli
+        npm install
+        hexo clean
+        hexo generate
 
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@3.6.2
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: . # The folder the action should deploy.
-          CLEAN: true # Automatically remove deleted 
-          PRESERVE: true
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: .
+        BASE_BRANCH: master
