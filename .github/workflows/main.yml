@@ -48,9 +48,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         FOLDER: public
-        BASE_BRANCH: master
-
-      run: |
-        hexo clean
-        hexo generate 
-        hexo deploy    
+        BASE_BRANCH: master  
