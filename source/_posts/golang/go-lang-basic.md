@@ -1,9 +1,9 @@
 ---
-title: Golang基础（看着一篇就够）
+title: Golang基础教程
 date: 2022-03-23 22:29:25
 updated: 2022-03-23 22:29:25
-tags: Golang
-categories: 服务端开发
+tags: Go语言
+categories: 服务后端开发
 ---
 
 # 一、这篇文章的目的
