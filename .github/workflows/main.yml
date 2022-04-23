@@ -5,7 +5,7 @@ name: Hexo Blog CI
 on: 
   push:
     branches:
-      - gh_pages
+      - master
       
 jobs:
   build: 
@@ -30,7 +30,7 @@ jobs:
     
     - name: Setup Deploy Private Key
       env:
-        HEXO_DEPLOY_PRIVATE_KEY: ${{ secrets.HEXO_DEPLOY_PRIVATE_KEY }}
+        HEXO_DEPLOY_PRIVATE_KEY: ${{ secrets.HEXO_DEPLOY_PRI }}
       run: |
         mkdir -p ~/.ssh/
         echo "$HEXO_DEPLOY_PRIVATE_KEY" > ~/.ssh/id_rsa 

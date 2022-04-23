@@ -105,3 +105,6 @@ public
 
 # JetBrains directory
 .idea
+
+github-deploy-key
+github-deploy-key.pub
