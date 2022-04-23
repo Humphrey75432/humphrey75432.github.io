@@ -103,6 +103,4 @@ theme: fluid
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: git
-  repository: git@github.com:Humphrey75432/humphrey_hu.github.io.git
-  branch: master
+  type: ''

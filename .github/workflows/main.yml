@@ -25,7 +25,6 @@ jobs:
         npm install
         hexo clean
         hexo generate
-        hexo deploy
 
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@3.7.1
