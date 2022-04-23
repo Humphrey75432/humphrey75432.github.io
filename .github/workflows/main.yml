@@ -29,7 +29,7 @@ jobs:
           export PATH="$PATH:./node_modules/.bin"
           echo "Hexo version: $(hexo -v)"
           # Generate site && minify site files, such as: html, js, css
-          hexo g --debug
+          hexo generate && hexo deploy
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.6.2
