@@ -28,10 +28,8 @@ jobs:
           echo "Load hexo binary..."
           export PATH="$PATH:./node_modules/.bin"
           echo "Hexo version: $(hexo -v)"
-          echo "Gulp version: $(gulp -v)"
-          echo "Gulp Tasks" && gulp --tasks
           # Generate site && minify site files, such as: html, js, css
-          hexo g --debug && gulp
+          hexo g --debug
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.6.2
