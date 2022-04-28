@@ -1,5 +1,5 @@
 ---
-title: Java（JVM）知识汇总
+title: JVM知识汇总
 date: 2022-02-21 22:38:31
 updated: 2022-02-21 22:38:31
 tags: JVM
