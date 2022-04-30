@@ -30,6 +30,7 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+ - ".circleci/*"
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -92,6 +93,7 @@ pagination_dir: page
 # Include / Exclude file(s)
 ## include:/exclude: options only apply to the 'source/' folder
 include:
+ - ".circleci/config.yml"
 exclude:
 ignore:
 
@@ -99,7 +101,6 @@ ignore:
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 theme: hexo-theme-fluid
-remote_theme: https://github.com/fluid-dev/hexo-theme-fluid
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
@@ -107,3 +108,4 @@ deploy:
   type: git
   repository: git@github.com:Humphrey75432/humphrey75432.github.io.git
   branch: gh-pages
+  ignore_hidden: false
