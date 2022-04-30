@@ -108,3 +108,5 @@ public
 
 github-deploy-key
 github-deploy-key.pub
+circle-ci
+circle-ci.pub
