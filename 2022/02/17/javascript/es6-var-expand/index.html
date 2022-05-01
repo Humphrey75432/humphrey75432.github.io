@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="变量解构与赋值基本用法ES6允许按照一定的模式，从数组和对象中提取值，对变量进行赋值。写法如下： 123456789let [a, b, c] &#x3D; [1, 2, 3];a &#x2F;&#x2F; 1b &#x2F;&#x2F; 2c &#x2F;&#x2F; 3&#x2F;&#x2F; 与下列写法等价var a &#x3D; 1;var b &#x3D; 2;var c &#x3D; 3; 本质上只有等号两边的模式匹配的情况下，解构变量才会成功，如果解构不成功，那么值就等于undefined；但是即便两">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6 变量解构">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/17/javascript/es6-var-expand/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="变量解构与赋值基本用法ES6允许按照一定的模式，从数组和对象中提取值，对变量进行赋值。写法如下： 123456789let [a, b, c] &#x3D; [1, 2, 3];a &#x2F;&#x2F; 1b &#x2F;&#x2F; 2c &#x2F;&#x2F; 3&#x2F;&#x2F; 与下列写法等价var a &#x3D; 1;var b &#x3D; 2;var c &#x3D; 3; 本质上只有等号两边的模式匹配的情况下，解构变量才会成功，如果解构不成功，那么值就等于undefined；但是即便两">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-17T02:53:06.000Z">
+<meta property="article:modified_time" content="2022-02-17T02:53:06.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="ES6基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>ES6 变量解构 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6 变量解构">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-17 10:53" pubdate>
+        2022年2月17日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      36 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6 变量解构</h1>
+            
+            <div class="markdown-body">
+              <h1 id="变量解构与赋值"><a href="#变量解构与赋值" class="headerlink" title="变量解构与赋值"></a>变量解构与赋值</h1><h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>ES6允许按照一定的模式，从数组和对象中提取值，对变量进行赋值。写法如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> [a, b, c] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>a <span class="hljs-comment">// 1</span><br>b <span class="hljs-comment">// 2</span><br>c <span class="hljs-comment">// 3</span><br><br><span class="hljs-comment">// 与下列写法等价</span><br><span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span>;<br><span class="hljs-keyword">var</span> b = <span class="hljs-number">2</span>;<br><span class="hljs-keyword">var</span> c = <span class="hljs-number">3</span>;<br></code></pre></td></tr></table></figure>
+<p>本质上只有等号两边的模式匹配的情况下，解构变量才会成功，如果解构不成功，那么值就等于undefined；但是即便两边的模式不完全匹配也是可以解构成功的。即：等号右边的模式仅等于等号左边声明的一部分。例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> [x, y] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>x <span class="hljs-comment">// 1</span><br>y <span class="hljs-comment">// 2</span><br></code></pre></td></tr></table></figure>
+<h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><p>除了<code>var</code>变量可以解构赋值，还有<code>let</code>和<code>const</code>也可以解构，除此之外，一种数据结构只要其有Iterator接口都可以使用数组解构赋值。例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> [a, b, c] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>(&#123;<span class="hljs-string">&#x27;aa&#x27;</span>, <span class="hljs-string">&#x27;bb&#x27;</span>, <span class="hljs-string">&#x27;cc&#x27;</span>&#125;);<br>a <span class="hljs-comment">// aa</span><br>b <span class="hljs-comment">// bb</span><br>c <span class="hljs-comment">// cc</span><br><br><span class="hljs-keyword">const</span> [d, e, f] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>(&#123;<span class="hljs-string">&#x27;dd&#x27;</span>, <span class="hljs-string">&#x27;ee&#x27;</span>, <span class="hljs-string">&#x27;ff&#x27;</span>&#125;);<br>d <span class="hljs-comment">// dd</span><br>e <span class="hljs-comment">// ee</span><br>f <span class="hljs-comment">// ff</span><br></code></pre></td></tr></table></figure>
+<p>使用Generator函数解斐波那契数列，内部使用解构赋值，每次循环过程中变量<code>a</code>和<code>b</code>都会重新赋值；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span>* <span class="hljs-title function_">fibs</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">var</span> a = <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">var</span> b = <span class="hljs-number">1</span>;<br>  <span class="hljs-keyword">while</span>(<span class="hljs-literal">true</span>) &#123;<br>    <span class="hljs-keyword">yield</span> a;<br>    [a, b] = [b, a + b];<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">var</span> [first, second, third, fourth, fifth, sixth] = <span class="hljs-title function_">fibs</span>();<br>sixth <span class="hljs-comment">// 5</span><br></code></pre></td></tr></table></figure>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>变量解构可以在声明前初始化，注意：如果解构右侧值不等于<code>undefined</code>那么初始化的值就不会生效。例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> [x, y = <span class="hljs-string">&#x27;y&#x27;</span>] = [x, <span class="hljs-literal">undefined</span>];<br>y <span class="hljs-comment">// y - 解构初始化成功</span><br><br><span class="hljs-keyword">let</span> [x, y = <span class="hljs-string">&#x27;y&#x27;</span>] = [x, <span class="hljs-literal">null</span>];<br>y <span class="hljs-comment">// null - 解构初始化失败</span><br></code></pre></td></tr></table></figure>
+<p>如果解构默认值是一个表达式，那么只有在需要使用到表达式的时候才会赋值，否则默认值无效。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;aaa&#x27;</span>);<br>&#125;<br><br><span class="hljs-keyword">let</span> [x = <span class="hljs-title function_">f</span>()] = [<span class="hljs-number">1</span>];<br>x <span class="hljs-comment">// 1</span><br><span class="hljs-comment">// 由于x能在后面的数组中获取到数值1，因此默认值中的f()不生效；</span><br></code></pre></td></tr></table></figure>
+<h2 id="对象的解构"><a href="#对象的解构" class="headerlink" title="对象的解构"></a>对象的解构</h2><p>除了可以对数组做解构，对象同样可以做解构，但是与数组有区别的是：对象解构只有在对象属性名相同的情况下才能解构成功，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> &#123;foo, bar&#125; = &#123;<span class="hljs-attr">foo</span>: <span class="hljs-string">&#x27;aaa&#x27;</span>, <span class="hljs-attr">bar</span>: <span class="hljs-string">&#x27;bbb&#x27;</span>&#125;<br>foo <span class="hljs-comment">// aaa</span><br>bar <span class="hljs-comment">// bbb</span><br><br><span class="hljs-keyword">let</span> &#123;baz&#125; = &#123;<span class="hljs-attr">foo</span>: <span class="hljs-string">&#x27;aaa&#x27;</span>, <span class="hljs-attr">bar</span>: <span class="hljs-string">&#x27;bbb&#x27;</span>&#125;<br>baz <span class="hljs-comment">// undefined</span><br></code></pre></td></tr></table></figure>
+<p>如果变量名和属性名不一样必须写成下面这样才行；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> &#123;<span class="hljs-attr">foo</span>: baz&#125; = &#123;<span class="hljs-attr">foo</span>: <span class="hljs-string">&#x27;aaa&#x27;</span>, <span class="hljs-attr">bar</span>: <span class="hljs-string">&#x27;bbb&#x27;</span>&#125;<br>baz <span class="hljs-comment">// aaa</span><br><br><span class="hljs-keyword">let</span> object = &#123;<span class="hljs-attr">first</span>: <span class="hljs-string">&#x27;hello&#x27;</span>, <span class="hljs-attr">last</span>: <span class="hljs-string">&#x27;world&#x27;</span>&#125;;<br><span class="hljs-keyword">let</span> &#123;<span class="hljs-attr">first</span>: f, <span class="hljs-attr">last</span>: l&#125; = object;<br>f <span class="hljs-comment">// hello</span><br>l <span class="hljs-comment">// world</span><br></code></pre></td></tr></table></figure>
+<p>解构也可以用于嵌套结构的对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> obj = &#123;<br>  <span class="hljs-attr">p</span>: [<br>    <span class="hljs-string">&#x27;Hello&#x27;</span>,<br>    &#123;<span class="hljs-attr">y</span>: <span class="hljs-string">&#x27;world&#x27;</span>&#125;<br>  ]<br>&#125;;<br><br><span class="hljs-keyword">var</span> &#123;<span class="hljs-attr">p</span>: [x, &#123;y&#125;]&#125; = obj;<br>x <span class="hljs-comment">// hello</span><br>y <span class="hljs-comment">// world</span><br><span class="hljs-comment">// p 为模式而不是变量，因此也不会被赋值</span><br></code></pre></td></tr></table></figure>
+<h2 id="解构已声明的变量"><a href="#解构已声明的变量" class="headerlink" title="解构已声明的变量"></a>解构已声明的变量</h2><p>如果需要给已经声明的变量解构，一定要使用圆括号将其包裹起来，否则JavaScript引擎会将其解析为代码块。从而导致解构失败。ES6在解构变量时，除非会造成歧义必须使用圆括号围起来，否则不推荐使用圆括号；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// Wrong syntax</span><br><span class="hljs-keyword">var</span> x;<br>&#123;x&#125; = &#123;<span class="hljs-attr">x</span>: <span class="hljs-number">1</span>&#125;<br><br><span class="hljs-comment">// Correct syntax</span><br><span class="hljs-keyword">var</span> x;<br>(&#123;x&#125; = &#123;<span class="hljs-attr">x</span>: <span class="hljs-number">1</span>&#125;)<br><br><span class="hljs-comment">// 还可以很方便地将现有对象的方法赋值到某个变量</span><br><span class="hljs-keyword">let</span> &#123;log, sin, cos&#125; = <span class="hljs-title class_">Math</span>;<br></code></pre></td></tr></table></figure>
+<h2 id="字符串的解构"><a href="#字符串的解构" class="headerlink" title="字符串的解构"></a>字符串的解构</h2><p>字符串也可以解构，解构出来的结果是当作数组处理。程序代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> [a, b, c, d, e] = <span class="hljs-string">&#x27;hello&#x27;</span>;<br>a <span class="hljs-comment">// &#x27;h&#x27;</span><br>b <span class="hljs-comment">// &#x27;e&#x27;</span><br>c <span class="hljs-comment">// &#x27;l&#x27;</span><br>d <span class="hljs-comment">// &#x27;l&#x27;</span><br>e <span class="hljs-comment">// &#x27;o&#x27;</span><br><br><span class="hljs-comment">// 类似数组对象都存在一个length属性，也可以通过解构获得</span><br><span class="hljs-keyword">let</span> &#123;<span class="hljs-attr">length</span>: len&#125; = <span class="hljs-string">&#x27;hello&#x27;</span>;<br>len <span class="hljs-comment">// 5</span><br></code></pre></td></tr></table></figure>
+<h2 id="数值和布尔值的解构赋值"><a href="#数值和布尔值的解构赋值" class="headerlink" title="数值和布尔值的解构赋值"></a>数值和布尔值的解构赋值</h2><p>解构赋值时，如果等号右边是数值和布尔值，则会先转换为对象；但是<code>undefined</code>和<code>null</code>无法转为对象，因此会解构失败；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> &#123;<span class="hljs-attr">toString</span>: s&#125; = <span class="hljs-number">123</span>;<br>s === <span class="hljs-title class_">Number</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span> <span class="hljs-comment">// true</span><br><br><span class="hljs-keyword">let</span> &#123;<span class="hljs-attr">toString</span>: s&#125; = <span class="hljs-literal">true</span>;<br>s === <span class="hljs-title class_">Boolean</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span> <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+<h2 id="函数参数的解构赋值"><a href="#函数参数的解构赋值" class="headerlink" title="函数参数的解构赋值"></a>函数参数的解构赋值</h2><p>函数参数也可以解构赋值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">[x, y]</span>) &#123;<br>  <span class="hljs-keyword">return</span> x + y;<br>&#125;<br><br><span class="hljs-title function_">add</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]); <span class="hljs-comment">// 3</span><br><br>[[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>], [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>]].<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">[a, b]</span>) =&gt;</span> a + b);<br><span class="hljs-comment">// [3, 7]</span><br></code></pre></td></tr></table></figure>
+<p>函数参数的解构也可以使用默认值（这不是废话嘛）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">move</span>(<span class="hljs-params">&#123;x = <span class="hljs-number">0</span>, y = <span class="hljs-number">0</span>&#125; = &#123;&#125;</span>) &#123;<br>  <span class="hljs-keyword">return</span> [x, y];<br>&#125;<br><br><span class="hljs-title function_">move</span>(&#123;<span class="hljs-attr">x</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">8</span>&#125;); <span class="hljs-comment">// [3, 8]</span><br><span class="hljs-title function_">move</span>(&#123;<span class="hljs-attr">x</span>: <span class="hljs-number">3</span>&#125;); <span class="hljs-comment">// [3, 0]</span><br><span class="hljs-title function_">move</span>(&#123;&#125;); <span class="hljs-comment">// [0, 0]</span><br><span class="hljs-title function_">move</span>(); <span class="hljs-comment">// [0, 0]</span><br></code></pre></td></tr></table></figure>
+<p>下面这种写法不是解构，而是给函数参数设置默认值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">move</span>(<span class="hljs-params">&#123;x, y&#125; = &#123;x: <span class="hljs-number">0</span>, y: <span class="hljs-number">0</span>&#125;</span>) &#123;<br>  <span class="hljs-keyword">return</span> [x, y];<br>&#125;<br><br><span class="hljs-title function_">move</span>(&#123;<span class="hljs-attr">x</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">8</span>&#125;); <span class="hljs-comment">// [3, 8]</span><br><span class="hljs-title function_">move</span>(&#123;<span class="hljs-attr">x</span>: <span class="hljs-number">3</span>&#125;); <span class="hljs-comment">// [3, undefined]</span><br><span class="hljs-title function_">move</span>(&#123;&#125;); <span class="hljs-comment">// [undefined, undefined]</span><br><span class="hljs-title function_">move</span>(); <span class="hljs-comment">// [0, 0]</span><br></code></pre></td></tr></table></figure>
+<h2 id="说了那么多，解构有什么用呢？"><a href="#说了那么多，解构有什么用呢？" class="headerlink" title="说了那么多，解构有什么用呢？"></a>说了那么多，解构有什么用呢？</h2><h3 id="交换变量的值"><a href="#交换变量的值" class="headerlink" title="交换变量的值"></a>交换变量的值</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript">[x, y] = [y, x]<br></code></pre></td></tr></table></figure>
+<h3 id="从函数返回多个值"><a href="#从函数返回多个值" class="headerlink" title="从函数返回多个值"></a>从函数返回多个值</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">example</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>&#125;<br><br><span class="hljs-keyword">var</span> [a, b, c] = <span class="hljs-title function_">example</span>();<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">example</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-attr">foo</span>: <span class="hljs-number">1</span>,<br>    <span class="hljs-attr">bar</span>: <br>  &#125;;<br>&#125;<br>  <br><span class="hljs-keyword">var</span> &#123;foo, bar&#125; = <span class="hljs-title function_">example</span>();<br></code></pre></td></tr></table></figure>
+<h3 id="函数参数的定义"><a href="#函数参数的定义" class="headerlink" title="函数参数的定义"></a>函数参数的定义</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params">[x, y, z]</span>) &#123; ... &#125;<br><span class="hljs-title function_">f</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);<br></code></pre></td></tr></table></figure>
+<h3 id="提取JSON数据"><a href="#提取JSON数据" class="headerlink" title="提取JSON数据"></a>提取JSON数据</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> jsonData = &#123;<br>  <span class="hljs-attr">id</span>: <span class="hljs-number">42</span>,<br>  <span class="hljs-attr">status</span>: <span class="hljs-string">&quot;OK&quot;</span>,<br>  <span class="hljs-attr">data</span>: [<span class="hljs-number">867</span>, <span class="hljs-number">5309</span>]<br>&#125;;<br><br><span class="hljs-keyword">let</span> &#123;id, status, <span class="hljs-attr">data</span>: number&#125; = jsonData;<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(id, status, number);<br><span class="hljs-comment">// 42, &quot;OK&quot;, [867, 5309]</span><br></code></pre></td></tr></table></figure>
+<h3 id="函数参数的默认值"><a href="#函数参数的默认值" class="headerlink" title="函数参数的默认值"></a>函数参数的默认值</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript">jQuery.<span class="hljs-property">ajax</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">url, &#123;</span><br><span class="hljs-params">  <span class="hljs-keyword">async</span> = <span class="hljs-literal">true</span>,</span><br><span class="hljs-params">  beforeSend = <span class="hljs-keyword">function</span>() &#123;&#125;,</span><br><span class="hljs-params">  cache = <span class="hljs-literal">true</span>,</span><br><span class="hljs-params">  complete = <span class="hljs-keyword">function</span>() &#123;&#125;,</span><br><span class="hljs-params">  crossDomain = <span class="hljs-literal">false</span>,</span><br><span class="hljs-params">  <span class="hljs-variable language_">global</span> = <span class="hljs-literal">true</span>,</span><br><span class="hljs-params">  // ... more config params</span><br><span class="hljs-params">&#125;</span>) &#123;<br>  <span class="hljs-comment">// ... do stuff</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+<h3 id="遍历Map解构"><a href="#遍历Map解构" class="headerlink" title="遍历Map解构"></a>遍历Map解构</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>();<br>map.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;first&#x27;</span>, <span class="hljs-string">&#x27;hello&#x27;</span>);<br>map.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;last&#x27;</span>, <span class="hljs-string">&#x27;world&#x27;</span>);<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> map) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(key + <span class="hljs-string">&quot; is &quot;</span> + value);<br>&#125;<br><br><span class="hljs-comment">// first is hello</span><br><span class="hljs-comment">// last is world</span><br><br><span class="hljs-comment">// 如果只想获取键名称，可以这样</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key] <span class="hljs-keyword">of</span> map) &#123;<br>  <span class="hljs-comment">// ... do something</span><br>&#125;<br><br><span class="hljs-comment">// 只想获取键值</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [,value] <span class="hljs-keyword">of</span> map) &#123;<br>  <span class="hljs-comment">// ... do something</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="输入模块的指定方法"><a href="#输入模块的指定方法" class="headerlink" title="输入模块的指定方法"></a>输入模块的指定方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> &#123; <span class="hljs-title class_">SourceMapConsumer</span>, <span class="hljs-title class_">SourceNode</span> &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;source-map&quot;</span>);<br><br><span class="hljs-comment">// 除此之外使用import也可以使用解构倒入指定方法</span><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">SourceMapConsumer</span>, <span class="hljs-title class_">SourceNode</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;source-map&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6%E5%9F%BA%E7%A1%80/">ES6基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-string/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ES6 字符串</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-let-const/">
+                        <span class="hidden-mobile">ES6 let和const的区别</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

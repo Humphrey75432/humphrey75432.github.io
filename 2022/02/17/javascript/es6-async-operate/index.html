@@ -1,0 +1,502 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="异步操作和Async函数基本概念前面提到，JavaScript本身是不支持异步编程的，但是不支持异步处理，那么处理速度会特别慢。因此引入异步编程的特性便迫在眉睫。 按照前面章节提到的，JS在异步编程中实现的方式有下面几个：  回调函数 Promise Generator函数 + 协程  Thunk函数简单来说：所谓的“船名调用”实现：就是将参数方法放到一个临时函数中，再将这个临时函数传入函数体，这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6 异步操作">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/17/javascript/es6-async-operate/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="异步操作和Async函数基本概念前面提到，JavaScript本身是不支持异步编程的，但是不支持异步处理，那么处理速度会特别慢。因此引入异步编程的特性便迫在眉睫。 按照前面章节提到的，JS在异步编程中实现的方式有下面几个：  回调函数 Promise Generator函数 + 协程  Thunk函数简单来说：所谓的“船名调用”实现：就是将参数方法放到一个临时函数中，再将这个临时函数传入函数体，这">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-17T14:23:01.000Z">
+<meta property="article:modified_time" content="2022-02-17T14:23:01.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="ES6基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>ES6 异步操作 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6 异步操作">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-17 22:23" pubdate>
+        2022年2月17日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      38 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6 异步操作</h1>
+            
+            <div class="markdown-body">
+              <h1 id="异步操作和Async函数"><a href="#异步操作和Async函数" class="headerlink" title="异步操作和Async函数"></a>异步操作和Async函数</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>前面提到，JavaScript本身是不支持异步编程的，但是不支持异步处理，那么处理速度会特别慢。因此引入异步编程的特性便迫在眉睫。</p>
+<p>按照前面章节提到的，JS在异步编程中实现的方式有下面几个：</p>
+<ul>
+<li>回调函数</li>
+<li>Promise</li>
+<li>Generator函数 + 协程</li>
+</ul>
+<h2 id="Thunk函数"><a href="#Thunk函数" class="headerlink" title="Thunk函数"></a>Thunk函数</h2><p>简单来说：所谓的“船名调用”实现：就是将参数方法放到一个临时函数中，再将这个临时函数传入函数体，这个临时函数就称作“Thunk函数”：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> thunk = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> x + <span class="hljs-number">5</span>;<br>&#125;<br><br><span class="hljs-keyword">function</span> (<span class="hljs-params">thunk</span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-title function_">thunk</span>() * <span class="hljs-number">2</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在JavaScript中函数替换的不是表达式，而是多参数函数，将其替换程单参数的版本。且只接受回调函数作为参数。因此，任何函数只要有回调函数，就可以写成Thunk函数的形式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> thunk = <span class="hljs-keyword">function</span>(<span class="hljs-params">fn</span>) &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params">callback</span>) &#123;<br>      <span class="hljs-keyword">return</span> fn.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, ...args, callback);<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>举一个具体的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params">a, b</span>) &#123;<br>  <span class="hljs-title function_">cb</span>(a);<br>&#125;<br><span class="hljs-keyword">let</span> ft = <span class="hljs-title class_">Thunk</span>(f);<br><br><span class="hljs-keyword">let</span> log = <span class="hljs-variable language_">console</span>.<span class="hljs-property">log</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">console</span>);<br><span class="hljs-title function_">ft</span>(<span class="hljs-number">1</span>)(log) <span class="hljs-comment">// 1</span><br></code></pre></td></tr></table></figure>
+<h2 id="Thunkify模块"><a href="#Thunkify模块" class="headerlink" title="Thunkify模块"></a>Thunkify模块</h2><p>生产环境下转换器，可以使用Thunkify模块。使用<code>npm install thunkify</code>安装；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> thunkify = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;thunkify&#x27;</span>);<br><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;fs&#x27;</span>);<br><br><span class="hljs-keyword">var</span> read = <span class="hljs-title function_">thunkify</span>(rs.<span class="hljs-property">readFile</span>);<br><span class="hljs-title function_">read</span>(<span class="hljs-string">&#x27;package.json&#x27;</span>)(<span class="hljs-keyword">function</span>(<span class="hljs-params">err, str</span>)&#123;<br>  <span class="hljs-comment">// concrete code</span><br>&#125;);<br></code></pre></td></tr></table></figure>
+<h2 id="看到这你可能会问，这有什么用？"><a href="#看到这你可能会问，这有什么用？" class="headerlink" title="看到这你可能会问，这有什么用？"></a>看到这你可能会问，这有什么用？</h2><p>因为ES6现在新增了Generator函数，因此结合Thunk以后可以很好地管理Generartor流程。例子如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;fs&#x27;</span>);<br><span class="hljs-keyword">var</span> thunkify = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;thunkify&#x27;</span>);<br><span class="hljs-keyword">var</span> readFile = <span class="hljs-title function_">thunkify</span>(fs.<span class="hljs-property">readFile</span>);<br><br><span class="hljs-keyword">var</span> gen = <span class="hljs-keyword">function</span>* () &#123;<br>  <span class="hljs-keyword">var</span> r1 = <span class="hljs-keyword">yield</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;/etc/fstab&#x27;</span>);<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(r1.<span class="hljs-title function_">toString</span>());<br>  <span class="hljs-keyword">var</span> r2 = <span class="hljs-keyword">yield</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;/etc/shells&#x27;</span>);<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(r2.<span class="hljs-title function_">toString</span>());<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>上面的代码：yield命令用于将程序的执行权移出Generator函数。Thunk函数正好可以完成这个需求。</p>
+<h2 id="还没结束"><a href="#还没结束" class="headerlink" title="还没结束"></a>还没结束</h2><p>看完上面，你可能已经知道Thunk函数现在可以做到什么事情：没错，Thunk函数的真正威力是：可以自动执行Generator函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">fn</span>) &#123;<br>  <span class="hljs-keyword">var</span> gen = <span class="hljs-title function_">fn</span>();<br>  <br>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">next</span>(<span class="hljs-params">err, data</span>) &#123;<br>    <span class="hljs-keyword">var</span> result = gen.<span class="hljs-title function_">next</span>(data);<br>    <span class="hljs-keyword">if</span> (result.<span class="hljs-property">done</span>) <span class="hljs-keyword">return</span>;<br>    result.<span class="hljs-title function_">value</span>(next);<br>  &#125;<br>  <br>  <span class="hljs-title function_">next</span>();<br>&#125;<br><br><span class="hljs-keyword">function</span>* <span class="hljs-title function_">g</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br><br><span class="hljs-title function_">run</span>(g);<br></code></pre></td></tr></table></figure>
+<p>有了上面的执行器，那么下面执行Generator函数就简单了很多。不关内部有多少个异步操作，直接把Generator函数传入run函数即可。前提是每一个异步操作都必须是Thunk函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> g = <span class="hljs-keyword">function</span>* () &#123;<br>  <span class="hljs-keyword">var</span> f1 = <span class="hljs-keyword">yield</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;fileA&#x27;</span>);<br>  <span class="hljs-keyword">var</span> f2 = <span class="hljs-keyword">yield</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;fileB&#x27;</span>);<br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-keyword">var</span> fn = <span class="hljs-keyword">yield</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;fileN&#x27;</span>);<br>&#125;<br><br><span class="hljs-title function_">run</span>(g);<br></code></pre></td></tr></table></figure>
+<h2 id="CO模块"><a href="#CO模块" class="headerlink" title="CO模块"></a>CO模块</h2><p>co模块是著名程序员TJ Holowaychuk发布一个小工具，用于Generator函数的自动执行。有了co模块，你可以不必自己编写Generator函数的执行器。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> gen = <span class="hljs-keyword">function</span>* () &#123;<br>  <span class="hljs-keyword">var</span> f1 = <span class="hljs-keyword">yield</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;/etc/fstab&#x27;</span>);<br>  <span class="hljs-keyword">var</span> f2 = <span class="hljs-keyword">yield</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;/etc/shells&#x27;</span>);<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(f1.<span class="hljs-title function_">toString</span>());<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(f2.<span class="hljs-title function_">toString</span>());<br>&#125;;<br><br><span class="hljs-keyword">var</span> co = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;co&#x27;</span>);<br><span class="hljs-title function_">co</span>(gen).<span class="hljs-title function_">then</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Generator execute success.&#x27;</span>)<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>co支持并发的异步操作，即允许某些操作同时进行，等到它们全部完成，才进行下一步。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 数组写法</span><br><span class="hljs-title function_">co</span>(<span class="hljs-keyword">function</span>* ()&#123;<br>  <span class="hljs-keyword">var</span> res = <span class="hljs-keyword">yield</span> [<br>    <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-number">1</span>),<br>    <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-number">2</span>)<br>  ];<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);<br>&#125;).<span class="hljs-title function_">catch</span>(onerror);<br><br><span class="hljs-comment">// 对象写法</span><br><span class="hljs-title function_">co</span>(<span class="hljs-keyword">function</span>* ()&#123;<br>  <span class="hljs-keyword">var</span> res = <span class="hljs-keyword">yield</span> &#123;<br>    <span class="hljs-number">1</span>: <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-number">1</span>),<br>    <span class="hljs-number">2</span>: <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-number">2</span>)<br>  &#125;;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);<br>&#125;).<span class="hljs-title function_">catch</span>(onerror);<br></code></pre></td></tr></table></figure>
+<h2 id="async函数"><a href="#async函数" class="headerlink" title="async函数"></a>async函数</h2><p>ES7提供了async函数，使得异步操作变得更加方便。async函数是什么？一句话：async函数就是Generator函数的语法糖。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> asyncReadFile = <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">var</span> f1 = <span class="hljs-keyword">await</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;/etc/fstab&#x27;</span>);<br>  <span class="hljs-keyword">var</span> f2 = <span class="hljs-keyword">await</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;/etc/shells&#x27;</span>);<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(f1.<span class="hljs-title function_">toString</span>());<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(f2.<span class="hljs-title function_">toString</span>());<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>语法上来看，跟Generator函数的使用基本类似，但是在其基础上还是有一点改进：</p>
+<ul>
+<li>（1）内置执行器：因此async函数执行和普通函数一样，只需要一行即可；</li>
+<li>（2）更好的语义，这个一目了然；</li>
+<li>（3）更广的适用性：即可支持Promise，也可以支持普通对象；</li>
+<li>（4）返回值是Promise，因此可以使用then指定下一步操作；</li>
+</ul>
+<p>如果async函数内部抛出错误，会导致返回的Promise对象变为reject状态。抛出的对象会被catch方法回调接收到。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;Wrong&#x27;</span>);<br>&#125;<br><br><span class="hljs-title function_">f</span>().<span class="hljs-title function_">then</span>(<br>	<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(v),<br>  <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e)<br>)<br></code></pre></td></tr></table></figure>
+<p>其次：async函数返回的Promise对象，必须等到所有的await命令的Promise对象执行完，才发发生改变。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">getTitle</span>(<span class="hljs-params">url</span>) &#123;<br>	<span class="hljs-keyword">let</span> response = <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(url);<br>  <span class="hljs-keyword">let</span> html = <span class="hljs-keyword">await</span> response.<span class="hljs-title function_">text</span>();<br>  <span class="hljs-keyword">return</span> html.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/&lt;title&gt;([\s\S]+)&lt;\/title&gt;/i</span>)[<span class="hljs-number">1</span>];<br>&#125;<br><br><span class="hljs-title function_">getTitle</span>(<span class="hljs-string">&#x27;https://github.com/Humphrey75432&#x27;</span>).<span class="hljs-title function_">then</span>(<span class="hljs-variable language_">console</span>.<span class="hljs-property">log</span>);<br></code></pre></td></tr></table></figure>
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><p>（1）<code>await</code>命令后面的<code>Promise</code>对象，运行结果可能是<code>reject</code>，所以最好把<code>await</code>命令放入<code>try...catch</code>块中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">myFunction</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">await</span> <span class="hljs-title function_">somethingThatReturnsAPromise</span>();<br>    &#125; <span class="hljs-keyword">catch</span> (err) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err);<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// Another grammar</span><br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">myFunction</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">await</span> <span class="hljs-title function_">somethingThatReturnsAPromise</span>()<br>    	.<span class="hljs-title function_">catch</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err);<br>    &#125;);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>（2）多个await命令后面的异步操作，如果不存在继发关系，最好让它们同时触发。这样会提升执行效率</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> [foo, bar] = <span class="hljs-keyword">await</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">all</span>([<span class="hljs-title function_">getFoo</span>(), <span class="hljs-title function_">getBar</span>()]);<br><br><span class="hljs-comment">// second grammar</span><br><span class="hljs-keyword">let</span> fooPromise = <span class="hljs-title function_">getFoo</span>();<br><span class="hljs-keyword">let</span> barPromise = <span class="hljs-title function_">getBar</span>();<br><span class="hljs-keyword">let</span> foo = <span class="hljs-keyword">await</span> fooPromise;<br><span class="hljs-keyword">let</span> bar = <span class="hljs-keyword">await</span> barPromise;<br></code></pre></td></tr></table></figure>
+<p>（3）如果确实希望多个请求并发执行，可以使用<code>Promise.all</code>方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">dbFuc</span>(<span class="hljs-params">db</span>) &#123;<br>  <span class="hljs-keyword">let</span> docs = [&#123;&#125;, &#123;&#125;, &#123;&#125;];<br>  <span class="hljs-keyword">let</span> promises = docs.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">doc</span>) =&gt;</span> db.<span class="hljs-title function_">post</span>(doc));<br><br>  <span class="hljs-keyword">let</span> results = <span class="hljs-keyword">await</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">all</span>(promises);<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(results);<br>&#125;<br><br><span class="hljs-comment">// 或者使用下面的写法</span><br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">dbFuc</span>(<span class="hljs-params">db</span>) &#123;<br>  <span class="hljs-keyword">let</span> docs = [&#123;&#125;, &#123;&#125;, &#123;&#125;];<br>  <span class="hljs-keyword">let</span> promises = docs.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">doc</span>) =&gt;</span> db.<span class="hljs-title function_">post</span>(doc));<br><br>  <span class="hljs-keyword">let</span> results = [];<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> promise <span class="hljs-keyword">of</span> promises) &#123;<br>    results.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">await</span> promise);<br>  &#125;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(results);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6%E5%9F%BA%E7%A1%80/">ES6基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/18/frontend/canvas/canvas-getting-started/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Canvas基础入门</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-program-style/">
+                        <span class="hidden-mobile">ES6 编码风格</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

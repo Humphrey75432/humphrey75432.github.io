@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. Java基本数据类型1.1 整数类型：包括byte, short, int和long；分别占用1, 2, 4和8个字节。取值范围如下：    类型名 取值范围     byte -2^7 ~ 2^(7-1)   short -2^15 ~ 2^(15-1)   int -2^31 ~ 2^(31-1)   long -2^63 ~ 2^(63-1)     1.2 小数类型：有float和d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java编程原理——编程基础">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/13/java-core/ch01/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="1. Java基本数据类型1.1 整数类型：包括byte, short, int和long；分别占用1, 2, 4和8个字节。取值范围如下：    类型名 取值范围     byte -2^7 ~ 2^(7-1)   short -2^15 ~ 2^(15-1)   int -2^31 ~ 2^(31-1)   long -2^63 ~ 2^(63-1)     1.2 小数类型：有float和d">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-13T05:58:16.000Z">
+<meta property="article:modified_time" content="2022-02-16T11:42:59.647Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="Java基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Java编程原理——编程基础 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Java编程原理——编程基础">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-13 13:58" pubdate>
+        2022年2月13日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Java编程原理——编程基础</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-Java基本数据类型"><a href="#1-Java基本数据类型" class="headerlink" title="1. Java基本数据类型"></a>1. Java基本数据类型</h1><h5 id="1-1-整数类型：包括byte-short-int和long；分别占用1-2-4和8个字节。取值范围如下："><a href="#1-1-整数类型：包括byte-short-int和long；分别占用1-2-4和8个字节。取值范围如下：" class="headerlink" title="1.1 整数类型：包括byte, short, int和long；分别占用1, 2, 4和8个字节。取值范围如下："></a>1.1 整数类型：包括byte, short, int和long；分别占用1, 2, 4和8个字节。取值范围如下：</h5><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型名</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>byte</td>
+<td>-2^7 ~ 2^(7-1)</td>
+</tr>
+<tr>
+<td>short</td>
+<td>-2^15 ~ 2^(15-1)</td>
+</tr>
+<tr>
+<td>int</td>
+<td>-2^31 ~ 2^(31-1)</td>
+</tr>
+<tr>
+<td>long</td>
+<td>-2^63 ~ 2^(63-1)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h5 id="1-2-小数类型：有float和double，分别占用4和8个字节"><a href="#1-2-小数类型：有float和double，分别占用4和8个字节" class="headerlink" title="1.2 小数类型：有float和double，分别占用4和8个字节"></a>1.2 小数类型：有float和double，分别占用4和8个字节</h5><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型名</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>float</td>
+<td>1.4E-45 ~ 3.4E+38<br>-3.4E+38~-1.4E-45</td>
+</tr>
+<tr>
+<td>double</td>
+<td>4.9E-324 ~ 1.7E+308<br>-1.7E+308~-4.9E-324</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="2-Java特殊数据类型"><a href="#2-Java特殊数据类型" class="headerlink" title="2. Java特殊数据类型"></a>2. Java特殊数据类型</h1><h5 id="2-1-数组类型"><a href="#2-1-数组类型" class="headerlink" title="2.1 数组类型"></a>2.1 数组类型</h5><p>数组类型在内存中有两块：一块是用于<strong>存储数组本身</strong>，另一块是用于<strong>存储数组内容的位置。</strong> 因此给数组变量赋值和给数组中的元素赋值是完全不同的两个概念。</p>
+<h1 id="3-Java运算符"><a href="#3-Java运算符" class="headerlink" title="3. Java运算符"></a>3. Java运算符</h1><h5 id="3-1-“-”-“-“-“-”-“-“-“-”"><a href="#3-1-“-”-“-“-“-”-“-“-“-”" class="headerlink" title="3.1 “+”, “-“, “*”, “/“, “%”"></a>3.1 “+”, “-“, “*”, “/“, “%”</h5><p>运算符的使用需要注意：</p>
+<ol>
+<li>整数相除不是四舍五入，而是直接舍去小数位；</li>
+<li>a++表示先使用原值a后再进行自增；a—同理；</li>
+<li>++a表示先对原始值a进行自增再进行使用；—a同理；</li>
+<li>a += b相当于 a = a + b; a -= b同理，同样对乘除取模运算一样；</li>
+</ol>
+<h1 id="4-Java逻辑运算"><a href="#4-Java逻辑运算" class="headerlink" title="4. Java逻辑运算"></a>4. Java逻辑运算</h1><ol>
+<li>与运算符(&amp;)：两个都为true才是true，有一个为false就是false;</li>
+<li>或运算符(|)：只要有一个为true就是true，只有都为false才是false;</li>
+<li>非运算符(!)：true的非运算就是false，反之同理;</li>
+<li>异或运算符(^)：相同为false，不相同就是true;</li>
+<li>短路与(&amp;&amp;)：作用跟&amp;类似，boolean flag = a || b++ &gt; 0, 当a为true忽略后面的运算；</li>
+<li>短路或(||)：作用于|类似，boolean flag = a &amp;&amp; b++ &gt; 0，当a为true时，忽略后面的运算；</li>
+</ol>
+<h1 id="5-Java条件语法"><a href="#5-Java条件语法" class="headerlink" title="5. Java条件语法"></a>5. Java条件语法</h1><ul>
+<li>选择结构：if/else相当于三元运算符—&gt; operator ? a : b;</li>
+<li>多重if/else if/else if/else相当于switch—&gt; switch-case语法：<figure class="highlight awk"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><pre><code class="hljs awk"><span class="hljs-keyword">if</span> (cond1) &#123;<br>    <span class="hljs-regexp">//</span> op1<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cond2) &#123;<br>    <span class="hljs-regexp">//</span> op2<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cond3) &#123;<br>    <span class="hljs-regexp">//</span> op3<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-regexp">//</span> op4<br>&#125;<br><br>switch(cond) &#123;<br>    case cond1:<br>        <span class="hljs-regexp">//</span> op1<br>        <span class="hljs-keyword">break</span>;<br>    case cond2:<br>        <span class="hljs-regexp">//</span> op2<br>        <span class="hljs-keyword">break</span>;<br>    case cond3:<br>        <span class="hljs-regexp">//</span> op3<br>        <span class="hljs-keyword">break</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>系统层面下：if/eise使用的操作系统中的<strong>跳转指令</strong>实现的，而switch使用的是<strong>跳转表（跳转表使用二分查找实现，效率较高）</strong> 实现的。在switch分支少的情况下会使用跳转指令实现。</p>
+<h1 id="6-Java循环语法"><a href="#6-Java循环语法" class="headerlink" title="6. Java循环语法"></a>6. Java循环语法</h1><h5 id="1-while循环"><a href="#1-while循环" class="headerlink" title="1. while循环"></a>1. while循环</h5><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">while</span> (cond) &#123;<br>    <span class="hljs-keyword">loop</span> <span class="hljs-keyword">body</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>只要循环条件为true，就一直执行循环体内，否则就中止执行；</p>
+<h5 id="2-do-while循环"><a href="#2-do-while循环" class="headerlink" title="2. do-while循环"></a>2. do-while循环</h5><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">do</span> &#123;<br>    <span class="hljs-keyword">loop</span> <span class="hljs-keyword">body</span><br>&#125; <span class="hljs-keyword">while</span> (cond)<br></code></pre></td></tr></table></figure>
+<p>不管循环条件是什么，循环体至少会执行一次；</p>
+<h5 id="3-for循环"><a href="#3-for循环" class="headerlink" title="3. for循环"></a>3. for循环</h5><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">for</span> (init; cond; step) &#123;<br>    <span class="hljs-keyword">loop</span> <span class="hljs-keyword">body</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>1.执行初始化命令；</li>
+<li>2.检查循环条件是否为true，如果为false执行步骤6</li>
+<li>3.循环条件为true，执行循环体；</li>
+<li>4.执行步进操作；</li>
+<li>5.步进操作执行结束后，跳转至步骤2</li>
+<li>6.for循环后续的语句；</li>
+</ul>
+<h5 id="4-foreach语法"><a href="#4-foreach语法" class="headerlink" title="4. foreach语法"></a>4. foreach语法</h5><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">for</span> (DataType element : <span class="hljs-type">DataTypeArr</span>) &#123;<br>    <span class="hljs-keyword">loop</span> <span class="hljs-keyword">body</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>每次迭代循环element时，指针会自动更新；</p>
+<h5 id="5-循环控制"><a href="#5-循环控制" class="headerlink" title="5. 循环控制"></a>5. 循环控制</h5><ul>
+<li>break：提前结束循环，不再执行循环体内的剩余代码；</li>
+<li>continue:跳过循环体内剩余的代码，然后执行步进操作；</li>
+</ul>
+<h1 id="7-Java函数"><a href="#7-Java函数" class="headerlink" title="7. Java函数"></a>7. Java函数</h1><p>函数是一种操作，一种处理模块，也是用来减少重复代码和分解复杂操作的重要手段。</p>
+<ol>
+<li>函数参数支持可变长度参数，语法为在数据类型的后面加上(…)，在函数内可变长度参数可以看做是数组。<strong>可变长度参数必须是参数列表中的最后一个，一个函数也只能有一个可变长度参数</strong>。</li>
+<li>return用于显示执行函数返回，即便函数返回值是void也可以使用return关键字。</li>
+<li>返回值可以是数组或者是对象，根据具体需求来选择；</li>
+<li>函数重名但是参数列表不同的现象称之为函数的重载；</li>
+<li>函数自己调用自己的行为称之为函数的递归；递归函数实现简单，但是十分占用资源开销比较大，并且不易调试；</li>
+<li>函数中的参数以及函数中定义的变量都是在栈中分配内存，当栈的内存不够使用后就会出现StackOverflowError错误。</li>
+<li>函数中使用到的数组，数组的地址是在栈中分配内存，数组中的元素是在堆中分配内存。当栈中数组元素没有指向堆中的内存，JVM将会收回分配在堆中的内存。</li>
+<li>总结：函数主要是通过内存中的栈来进行内存分配的，系统就函数调用者和函数如何使用栈做了约定，返回值可以简单地认为是通过一个专门的返回值存储器存储的。</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Java/">Java</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/16/hello-world/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

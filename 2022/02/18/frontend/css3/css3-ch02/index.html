@@ -1,0 +1,611 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="CSS3 进阶操作CSS3 边框在CSS3中你可以创建圆角边框、阴影边框。属性如下：  border-radius：边框圆角 box-shadow：盒子阴影 border-image：边框图片  CSS3 圆角举个例子： 123456789101112131415#cornenr1 &amp;#123;  border-radius: 25px;  background: #a8bcf4;  paddin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS3进阶操作">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/18/frontend/css3/css3-ch02/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="CSS3 进阶操作CSS3 边框在CSS3中你可以创建圆角边框、阴影边框。属性如下：  border-radius：边框圆角 box-shadow：盒子阴影 border-image：边框图片  CSS3 圆角举个例子： 123456789101112131415#cornenr1 &amp;#123;  border-radius: 25px;  background: #a8bcf4;  paddin">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-18T12:50:27.000Z">
+<meta property="article:modified_time" content="2022-02-18T12:50:27.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="CSS3">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>CSS3进阶操作 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="CSS3进阶操作">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-18 20:50" pubdate>
+        2022年2月18日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      63 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">CSS3进阶操作</h1>
+            
+            <div class="markdown-body">
+              <h1 id="CSS3-进阶操作"><a href="#CSS3-进阶操作" class="headerlink" title="CSS3 进阶操作"></a>CSS3 进阶操作</h1><h2 id="CSS3-边框"><a href="#CSS3-边框" class="headerlink" title="CSS3 边框"></a>CSS3 边框</h2><p>在CSS3中你可以创建圆角边框、阴影边框。属性如下：</p>
+<ul>
+<li>border-radius：边框圆角</li>
+<li>box-shadow：盒子阴影</li>
+<li>border-image：边框图片</li>
+</ul>
+<h2 id="CSS3-圆角"><a href="#CSS3-圆角" class="headerlink" title="CSS3 圆角"></a>CSS3 圆角</h2><p>举个例子：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-id">#cornenr1</span> &#123;<br>  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">25px</span>;<br>  <span class="hljs-attribute">background</span>: <span class="hljs-number">#a8bcf4</span>;<br>  <span class="hljs-attribute">padding</span>: <span class="hljs-number">20px</span>;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">150px</span>;<br>&#125;<br><br><span class="hljs-selector-id">#corner2</span> &#123;<br>  <span class="hljs-attribute">border-radius</span>:<span class="hljs-number">15px</span> <span class="hljs-number">50px</span> <span class="hljs-number">30px</span> <span class="hljs-number">5px</span>;<br>  <span class="hljs-attribute">background</span>: <span class="hljs-number">#fe5cb9</span>;<br>  <span class="hljs-attribute">padding</span>: <span class="hljs-number">10px</span>;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">150px</span>;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可以发现第二个例子有四个值：顺序为：左上、右上、右下和左下；</p>
+<p>一个值就是默认四个角都是一样的，没什么毛病。</p>
+<p>初次之外还有其他属性，可以自己熟悉一下：</p>
+<ul>
+<li>border-top-left-radius</li>
+<li>border-top-right-radius</li>
+<li>border-bottom-left-radius</li>
+<li>border-bottom-right-radis</li>
+</ul>
+<h2 id="CSS3-背景"><a href="#CSS3-背景" class="headerlink" title="CSS3 背景"></a>CSS3 背景</h2><p>CSS3中新增几个背景属性，提供了更大背景元素控制；</p>
+<ul>
+<li>background-image：添加背景图片，不同背景用逗号分隔开；</li>
+<li>background-size：指定背景图像的大小；</li>
+<li>background-origin：指定背景图像的位置区域，有：border-box, padding-box和content-box;</li>
+<li>background-clip：从指定位置开始绘制背景图形；</li>
+</ul>
+<h2 id="CSS3-渐变"><a href="#CSS3-渐变" class="headerlink" title="CSS3 渐变"></a>CSS3 渐变</h2><p>可以在两个或者多个指定的颜色之间显示平稳的过渡，CSS3中定义了两种类型的渐变（gradients）：</p>
+<ul>
+<li>线性渐变：向上下左右对角方向</li>
+<li>径向渐变：由中心定义</li>
+</ul>
+<p>语法如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">linear-gradient</span>(direction, color-stop1, color-stop2, ...)<br><br><span class="hljs-comment">/* </span><br><span class="hljs-comment">  direction: 默认上下，左右为to right</span><br><span class="hljs-comment">  对角渐变：to bottom right</span><br><span class="hljs-comment">  还可以使用角度：angle (这里指的是弧度)</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+<p>重复的线性渐变</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">repeating-linear-gradient</span>(red, yellow <span class="hljs-number">10%</span>, green <span class="hljs-number">20%</span>);<br></code></pre></td></tr></table></figure>
+<p>径向渐变</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">radial-gradient</span>(shape size at position, start-color, ... ,last-color);<br></code></pre></td></tr></table></figure>
+<p>shape参数定义了形状。可以是circle和ellipse，圆形和椭圆形；</p>
+<p>和重复地线性渐变一样，径向渐变也有重复地属性，这里就不再演示了。</p>
+<h2 id="CSS3-文本效果-amp-字体"><a href="#CSS3-文本效果-amp-字体" class="headerlink" title="CSS3 文本效果 &amp; 字体"></a>CSS3 文本效果 &amp; 字体</h2><p>文本效果包括下面的这几个：</p>
+<ul>
+<li>text-shadow：文本阴影，可以定义多个，可以做字体发光效果</li>
+<li>box-shadow：盒子阴影，可以定义多个，做成发光盒子</li>
+<li>text-overflow：指定用户如何显示溢出内容；</li>
+<li>word-wrap：自动换行属性允许强制文本换行，这意味着分裂它中间的一个字；</li>
+<li>word-break：单词拆分换行属性指定换行规则；</li>
+</ul>
+<p>需要使用自定义字体可以使用<code>@font-face</code>属性。例子如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-keyword">@font-face</span> &#123;<br>  <span class="hljs-attribute">font-family</span>: myFirstFont;<br>  <span class="hljs-attribute">src</span> url(<span class="hljs-attribute">font</span><span class="hljs-selector-class">.ttf</span>);<br>&#125;<br><br><span class="hljs-selector-tag">div</span> &#123;<br>  <span class="hljs-attribute">font-family</span>: myFirstFont;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="CSS3-2D-amp-3D转换"><a href="#CSS3-2D-amp-3D转换" class="headerlink" title="CSS3 2D &amp; 3D转换"></a>CSS3 2D &amp; 3D转换</h2><h3 id="2D转换"><a href="#2D转换" class="headerlink" title="2D转换"></a>2D转换</h3><p>2D变换方法有下面5种：</p>
+<ul>
+<li>translate：根据x轴和y轴位置给定的参数，从当前元素位置移动；</li>
+<li>rotate：在一个给定读书顺时针旋转元素，负值代表逆时针旋转；</li>
+<li>scale：该元素增加或者减少大小，取决于宽度（x轴）和高度（y轴）的参数；</li>
+<li>skew：表示x轴和y轴倾斜的角度，如果第二个参数为空，则默认为0，参数为负数表示像反方向倾斜；</li>
+<li>matrix：和2D变换方法合并成一个，一共有六个参数，包括：旋转、缩放、移动和倾斜的功能；</li>
+</ul>
+<p>具体语法可以再查阅</p>
+<h3 id="3D转换"><a href="#3D转换" class="headerlink" title="3D转换"></a>3D转换</h3><p>3D转换会使用到两个方法：</p>
+<ul>
+<li>rotateX：围绕其在一个给定度数X轴旋转的元素；</li>
+<li>rotateY：围绕其在一个给定读书Y轴旋转的元素；</li>
+</ul>
+<p>你也可以使用transform属性做2D和3D变换，一般来说建议使用transform属性，特别是在使用一些库来实现高级动画效果的时候；</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">div</span> &#123;<br>    <span class="hljs-attribute">transform</span>: none | transform-functions;<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">transform-functions包括：</span><br><span class="hljs-comment">matrix, matrix3d;</span><br><span class="hljs-comment">translate, translate3d, translateX, translateY, translateZ;</span><br><span class="hljs-comment">scale, scale3d, scaleX, scaleY, scaleZ;</span><br><span class="hljs-comment">rotate, rotate3d, rotateX, rotateY, rotateX;</span><br><span class="hljs-comment">skew, skewX, skewY;</span><br><span class="hljs-comment">perspective：为3D转换元素定义透视视图；</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+<h2 id="CSS3-过渡"><a href="#CSS3-过渡" class="headerlink" title="CSS3 过渡"></a>CSS3 过渡</h2><p>CSS3过渡是元素从一种样式逐渐改变为另一种效果，要实现这一点，必须规定两项内容；</p>
+<ul>
+<li>指定要添加效果的CSS属性；</li>
+<li>指定效果的持续时间；</li>
+</ul>
+<p>例子如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">div</span> &#123;<br>    <span class="hljs-attribute">transition</span>: width <span class="hljs-number">2s</span>;<br>    -webkit-<span class="hljs-attribute">transition</span>: width <span class="hljs-number">2s</span>; <span class="hljs-comment">/* Safari or Chrome */</span><br>&#125;<br><br><span class="hljs-comment">/* 要添加多个样式的变换效果，可以使用逗号分隔属性 */</span><br><span class="hljs-selector-tag">div</span> &#123;<br>    <span class="hljs-attribute">transition</span>: width <span class="hljs-number">2s</span>, height <span class="hljs-number">2s</span>, transform <span class="hljs-number">2s</span>;<br>    -webkit-<span class="hljs-attribute">transform</span>: width <span class="hljs-number">2s</span>, height <span class="hljs-number">2s</span>, transform <span class="hljs-number">2s</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="CSS3-动画"><a href="#CSS3-动画" class="headerlink" title="CSS3 动画"></a>CSS3 动画</h2><p>CSS3可以创建动画，可以取代一些JavaScript实现的动画效果；</p>
+<p>CSS3使用<code>@keyframes</code>创建动画，语法如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-keyword">@keyframes</span> myfirst &#123;<br>    <span class="hljs-selector-tag">from</span> &#123; <span class="hljs-attribute">background</span>: red; &#125;<br>    <span class="hljs-selector-tag">to</span> &#123; <span class="hljs-attribute">background</span>: yellow; &#125;<br>&#125;<br><br><span class="hljs-keyword">@-webkit-keyframes</span> myfirst &#123;<br>    <span class="hljs-selector-tag">from</span> &#123; <span class="hljs-attribute">background</span>: red; &#125;<br>    <span class="hljs-selector-tag">to</span> &#123; <span class="hljs-attribute">background</span>: yellow; &#125;<br>&#125;<br><br><span class="hljs-selector-tag">div</span> &#123;<br>    <span class="hljs-attribute">animation</span>: myfirst <span class="hljs-number">5s</span>;<br>&#125;<br><br><span class="hljs-comment">/* 除此之外还可以这样定义 */</span><br><span class="hljs-keyword">@keyframes</span> myfirst &#123;<br>    <span class="hljs-number">0%</span> &#123; <span class="hljs-attribute">background</span>: red; &#125;<br>    <span class="hljs-number">25%</span> &#123; <span class="hljs-attribute">background</span>: yellow; &#125;<br>    <span class="hljs-number">50%</span> &#123; <span class="hljs-attribute">background</span>: blue; &#125;<br>    <span class="hljs-number">100%</span> &#123; <span class="hljs-attribute">background</span>: green; &#125;<br>&#125;<br><br><span class="hljs-keyword">@-webkit-keyframes</span> myfirst &#123;<br>    <span class="hljs-number">0%</span> &#123; <span class="hljs-attribute">background</span>: red; &#125;<br>    <span class="hljs-number">25%</span> &#123; <span class="hljs-attribute">background</span>: yellow; &#125;<br>    <span class="hljs-number">50%</span> &#123; <span class="hljs-attribute">background</span>: blue; &#125;<br>    <span class="hljs-number">100%</span> &#123; <span class="hljs-attribute">background</span>: green; &#125;<br>&#125;<br><br><span class="hljs-selector-tag">div</span> &#123;<br>    <span class="hljs-attribute">animation</span>: myfirst <span class="hljs-number">5s</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="CSS3媒体查询"><a href="#CSS3媒体查询" class="headerlink" title="CSS3媒体查询"></a>CSS3媒体查询</h2><p>顾名思义，针对不同媒体类型的设备定制不同的样式规则，例如：手机、电视、平板、电脑以及阅读器设置不同的样式规则；语法如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-keyword">@media</span> <span class="hljs-keyword">not</span> | <span class="hljs-keyword">only</span> mediatype <span class="hljs-keyword">and</span> (expression) &#123;<br>    <span class="hljs-comment">/* Write CSS Code here... */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>解释一下参数的含义：</p>
+<ul>
+<li>not：用于排除某些特定设备的；</li>
+<li>only：用来指定某种特别的媒体设备；</li>
+<li>all：适用于所有媒体设备，这个最常见；</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">min-width</span>: <span class="hljs-number">480px</span>) &#123;<br>    <span class="hljs-selector-id">#leftsidebar</span> &#123; <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>; <span class="hljs-attribute">float</span>: left; &#125;<br>    <span class="hljs-selector-id">#main</span> &#123; <span class="hljs-attribute">margin-left</span>: <span class="hljs-number">216px</span>; &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>以上实例在屏幕可视窗口尺寸大于480px像素时将菜单浮动到页面左侧；</p>
+<h2 id="CSS3-Flex布局"><a href="#CSS3-Flex布局" class="headerlink" title="CSS3 Flex布局"></a>CSS3 Flex布局</h2><p>弹性布局是CSS3的一种新布局模式，当页面需要适应不同的屏幕大小以及设备类型时确保元素拥有恰当的行为布局方式，引入弹性布局模型的目的是提供一种更加有效地方式来对一个容器中的元素进行排列、对齐和分配空白空间；</p>
+<p>下面以例子来说明：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/css&quot;</span>&gt;</span><span class="language-css"></span><br><span class="language-css">            <span class="hljs-selector-class">.flex-container</span> &#123;</span><br><span class="language-css">                <span class="hljs-attribute">display</span>: flex;</span><br><span class="language-css">                <span class="hljs-attribute">width</span>: <span class="hljs-number">400px</span>;</span><br><span class="language-css">                <span class="hljs-attribute">height</span>: <span class="hljs-number">250px</span>;</span><br><span class="language-css">                <span class="hljs-attribute">background</span>: lightgray;</span><br><span class="language-css">            &#125;</span><br><span class="language-css">            </span><br><span class="language-css">            <span class="hljs-selector-class">.flex-item</span> &#123;</span><br><span class="language-css">                <span class="hljs-attribute">background-color</span>: cornflowerblue;</span><br><span class="language-css">                <span class="hljs-attribute">width</span>: <span class="hljs-number">100px</span>;</span><br><span class="language-css">                <span class="hljs-attribute">height</span>: <span class="hljs-number">100px</span>;</span><br><span class="language-css">                <span class="hljs-attribute">margin</span>: <span class="hljs-number">10px</span>;</span><br><span class="language-css">            &#125;</span><br><span class="language-css">        </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;flex-container&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;flex-item&quot;</span>&gt;</span>flex item 1<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;flex-item&quot;</span>&gt;</span>flex item 2<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;flex-item&quot;</span>&gt;</span>flex item 3<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h3 id="弹性容器布局属性"><a href="#弹性容器布局属性" class="headerlink" title="弹性容器布局属性"></a>弹性容器布局属性</h3><h4 id="flex-direction"><a href="#flex-direction" class="headerlink" title="flex-direction"></a>flex-direction</h4><p>指定了弹性子元素在父容器中的位置，值有：</p>
+<ul>
+<li>row：默认值，从左到右排列；</li>
+<li>row-reverse：反转横向排列，从右到左排列；</li>
+<li>column：纵向排列；</li>
+<li>column-reverse：反转纵向排列，从后往前排；</li>
+</ul>
+<h4 id="justify-content"><a href="#justify-content" class="headerlink" title="justify-content"></a>justify-content</h4><p>内容对齐属性应用在弹性容器上，把弹性项沿着弹性容器的主轴线对齐，值有：</p>
+<ul>
+<li>flex-start：弹性项目向行头紧挨着填充。这个是默认值。第一个弹性项的main-start外边距边线被放置在该行的main-start边线，而后续弹性项依次平齐摆放。</li>
+<li>flex-end：弹性项目向行尾紧挨着填充。第一个弹性项的main-end外边距边线被放置在该行的main-end边线，而后续弹性项依次平齐摆放。</li>
+<li>center：弹性项目居中紧挨着填充。（如果剩余的自由空间是负的，则弹性项目将在两个方向上同时溢出）。</li>
+<li>space-between：弹性项目平均分布在该行上。如果剩余空间为负或者只有一个弹性项，则该值等同于flex-start。否则，第1个弹性项的外边距和行的main-start边线对齐，而最后1个弹性项的外边距和行的main-end边线对齐，然后剩余的弹性项分布在该行上，相邻项目的间隔相等。</li>
+<li>space-around：弹性项目平均分布在该行上，两边留有一半的间隔空间。如果剩余空间为负或者只有一个弹性项，则该值等同于center。否则，弹性项目沿该行分布，且彼此间隔相等（比如是20px），同时首尾两边和弹性容器之间留有一半的间隔（1/2*20px=10px）。</li>
+</ul>
+<h4 id="align-items"><a href="#align-items" class="headerlink" title="align-items"></a>align-items</h4><p>设置或检索弹性盒子元素在侧轴（纵轴）方向上的对齐方式；值有：</p>
+<ul>
+<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
+<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
+<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
+<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
+<li>strench：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min/max-width/height’属性的限制。</li>
+</ul>
+<h4 id="flex-wrap"><a href="#flex-wrap" class="headerlink" title="flex-wrap"></a>flex-wrap</h4><p>指定弹性盒子的子元素换行方式，值有：</p>
+<ul>
+<li>nowrap：默认， 弹性容器为单行。该情况下弹性子项可能会溢出容器。</li>
+<li>wrap：弹性容器为多行。该情况下弹性子项溢出的部分会被放置到新行，子项内部会发生断行</li>
+<li>wrap-reverse：反转 wrap 排列。</li>
+</ul>
+<h4 id="align-content"><a href="#align-content" class="headerlink" title="align-content"></a>align-content</h4><p>用于修改flex-wrap属性的行为，类似align-items，但它不是设置弹性子元素的对齐，而是设置各个行的对齐，值有：</p>
+<ul>
+<li>strench：默认。各行将会伸展以占用剩余的空间。</li>
+<li>flex-start：各行向弹性盒容器的起始位置堆叠。</li>
+<li>flex-end：各行向弹性盒容器的结束位置堆叠。</li>
+<li>center：各行向弹性盒容器的中间位置堆叠。</li>
+<li>space-between：各行在弹性盒容器中平均分布。</li>
+<li>space-around：各行在弹性盒容器中平均分布，两端保留子元素与子元素之间间距大小的一半。</li>
+</ul>
+<h3 id="弹性元素布局属性"><a href="#弹性元素布局属性" class="headerlink" title="弹性元素布局属性"></a>弹性元素布局属性</h3><h4 id="排序order"><a href="#排序order" class="headerlink" title="排序order"></a>排序order</h4><p>用整数值来定义排列顺序，数值小的排在前面，可以为负值；例子如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.flex-item</span> &#123;<br>    <span class="hljs-attribute">background-color</span>: cornflowerblue;<br>    <span class="hljs-attribute">width</span>: <span class="hljs-number">100px</span>;<br>    <span class="hljs-attribute">height</span>: <span class="hljs-number">100px</span>;<br>    <span class="hljs-attribute">margin</span>: <span class="hljs-number">10px</span>;<br>&#125;<br><br><span class="hljs-selector-class">.flex-item</span><span class="hljs-selector-pseudo">:first</span>-child &#123;<br>    <span class="hljs-attribute">order</span>: -<span class="hljs-number">1</span>;<br>    -webkit-<span class="hljs-attribute">order</span>: -<span class="hljs-number">1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="对齐"><a href="#对齐" class="headerlink" title="对齐"></a>对齐</h4><p>设置margin值为auto，自动获取弹性容器中剩余空间，因此设置垂直方向margin值为’auto’</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.flex-item</span> &#123;<br>    <span class="hljs-attribute">background-color</span>: cornflowerblue;<br>    <span class="hljs-attribute">width</span>: <span class="hljs-number">75px</span>;<br>    <span class="hljs-attribute">height</span>: <span class="hljs-number">75px</span>;<br>    <span class="hljs-attribute">margin</span>: <span class="hljs-number">10px</span>;<br>&#125;<br><br><span class="hljs-selector-class">.flex-item</span><span class="hljs-selector-pseudo">:first</span>-child &#123;<br>    <span class="hljs-attribute">margin-right</span>: auto;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="完美居中"><a href="#完美居中" class="headerlink" title="完美居中"></a>完美居中</h4><p>可以看出，使用弹性盒子后，居中变得非常简单。下面演示一下完美居中的实现方法；</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.flex-item</span> &#123;<br>    <span class="hljs-attribute">background-color</span>: cornflowerblue;<br>    <span class="hljs-attribute">width</span>: <span class="hljs-number">75px</span>;<br>    <span class="hljs-attribute">height</span>: <span class="hljs-number">75px</span>;<br>    <span class="hljs-attribute">margin</span>: auto;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="align-self"><a href="#align-self" class="headerlink" title="align-self"></a>align-self</h4><p>用于设置弹性元素自身在纵轴方向上的对齐方式，值有：</p>
+<ul>
+<li>auto：如果’align-self’的值为’auto’，则其计算值为元素的父元素的’align-items’值，如果其没有父元素，则计算值为’stretch’。</li>
+<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
+<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
+<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
+<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
+<li>strench：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min/max-width/height’属性的限制。</li>
+</ul>
+<p>以下演示了不同值的效果，可以在<a target="_blank" rel="noopener" href="https://codepen.io">Code Pen</a>上直接试验：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.flex-item</span> &#123;<br>    <span class="hljs-attribute">background-color</span>: cornflowerblue;<br>    <span class="hljs-attribute">width</span>: <span class="hljs-number">60px</span>;<br>    <span class="hljs-attribute">min-height</span>: <span class="hljs-number">100px</span>;<br>    <span class="hljs-attribute">margin</span>: <span class="hljs-number">10px</span>;<br>&#125;<br><br><span class="hljs-selector-class">.item1</span> &#123;<br>    <span class="hljs-attribute">align-self</span>: flex-start;<br>    -webkit-<span class="hljs-attribute">align-self</span>: flex-start;<br>&#125;<br><br><span class="hljs-selector-class">.item2</span> &#123;<br>    <span class="hljs-attribute">align-self</span>: flex-end;<br>    -webkit-<span class="hljs-attribute">align-self</span>: flex-end;<br>&#125;<br><br><span class="hljs-selector-class">.item3</span> &#123;<br>    <span class="hljs-attribute">align-self</span>: center;<br>    -webkit-<span class="hljs-attribute">align-self</span>: center;<br>&#125;<br><br><span class="hljs-selector-class">.item4</span> &#123;<br>    <span class="hljs-attribute">align-self</span>: baseline;<br>    -webkit-<span class="hljs-attribute">align-self</span>: baseline;<br>&#125;<br><br><span class="hljs-selector-class">.item5</span> &#123;<br>    <span class="hljs-attribute">align-self</span>: strench;<br>    -webkit-<span class="hljs-attribute">align-self</span>: strench;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="flex"><a href="#flex" class="headerlink" title="flex"></a>flex</h4><p>用于指定弹性子元素如何分配空间，值有：</p>
+<ul>
+<li>auto：计算值为1 1 auto</li>
+<li>initial：计算值为0 1 auto</li>
+<li>none：计算值为0 0 auto</li>
+<li>inherit：从父元素继承</li>
+<li>flex-grow：定义弹性盒子元素的扩展比率</li>
+<li>flex-shrink：定义弹性盒子元素的搜索比率</li>
+<li>flex-basis：定义弹性盒子元素的默认基准值</li>
+</ul>
+<p>例子：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.flex-item</span> &#123;<br>    <span class="hljs-attribute">background-color</span>: cornflowerblue;<br>    <span class="hljs-attribute">margin</span>: <span class="hljs-number">10px</span>;<br>&#125;<br><br><span class="hljs-selector-class">.item1</span> &#123;<br>    -webkit-<span class="hljs-attribute">flex</span>: <span class="hljs-number">2</span>;<br>    <span class="hljs-attribute">flex</span>: <span class="hljs-number">2</span>;<br>&#125;<br><br><span class="hljs-selector-class">.item2</span> &#123;<br>    -webkit-<span class="hljs-attribute">flex</span>: <span class="hljs-number">1</span>;<br>    <span class="hljs-attribute">flex</span>: <span class="hljs-number">1</span>;<br>&#125;<br><br><span class="hljs-selector-class">.item3</span> &#123;<br>    -webkit-<span class="hljs-attribute">flex</span>: <span class="hljs-number">1</span>;<br>    <span class="hljs-attribute">flex</span>: <span class="hljs-number">1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/CSS3/">CSS3</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/18/frontend/css3/css3-ch03/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CSS3之Sass学习</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/18/frontend/css3/css3-ch01/">
+                        <span class="hidden-mobile">CSS3基础回顾</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

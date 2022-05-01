@@ -1,0 +1,680 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 类的定义与理解1.1 容器的视角 函数是代码的容器，而类是函数的容器； 既然类是函数的容器，应当既可以对外暴露相应的行为和操作，也可以屏蔽相应的动作和行为防止误用； 通过private关键字封装和隐藏函数的内部细节，避免被误操作，是计算机程序中的基本思维方式；  1.2 数据类型的视角 类也可以看作为自定义数据类型，一个数据类型包含其基本定义以及操作； 一个表示数据类型的类可以由以下4部分构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java编程原理——面向对象基础">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/16/java-core/ch03/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="1. 类的定义与理解1.1 容器的视角 函数是代码的容器，而类是函数的容器； 既然类是函数的容器，应当既可以对外暴露相应的行为和操作，也可以屏蔽相应的动作和行为防止误用； 通过private关键字封装和隐藏函数的内部细节，避免被误操作，是计算机程序中的基本思维方式；  1.2 数据类型的视角 类也可以看作为自定义数据类型，一个数据类型包含其基本定义以及操作； 一个表示数据类型的类可以由以下4部分构">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-16T07:17:46.000Z">
+<meta property="article:modified_time" content="2022-02-16T07:17:46.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="Java基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Java编程原理——面向对象基础 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Java编程原理——面向对象基础">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-16 15:17" pubdate>
+        2022年2月16日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.7k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      65 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Java编程原理——面向对象基础</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-类的定义与理解"><a href="#1-类的定义与理解" class="headerlink" title="1. 类的定义与理解"></a>1. 类的定义与理解</h1><h2 id="1-1-容器的视角"><a href="#1-1-容器的视角" class="headerlink" title="1.1 容器的视角"></a>1.1 容器的视角</h2><ol>
+<li>函数是代码的容器，而类是函数的容器；</li>
+<li>既然类是函数的容器，应当既可以对外暴露相应的行为和操作，也可以屏蔽相应的动作和行为防止误用；</li>
+<li>通过private关键字封装和隐藏函数的内部细节，避免被误操作，是计算机程序中的基本思维方式；</li>
+</ol>
+<h2 id="1-2-数据类型的视角"><a href="#1-2-数据类型的视角" class="headerlink" title="1.2 数据类型的视角"></a>1.2 数据类型的视角</h2><ol>
+<li>类也可以看作为自定义数据类型，一个数据类型包含其基本定义以及操作；</li>
+<li>一个表示数据类型的类可以由以下4部分构成</li>
+</ol>
+<ul>
+<li>以<strong>类变量</strong>体现出的类型本身具有的属性；</li>
+<li>以<strong>类方法</strong>体现出的类型本身具有的操作；</li>
+<li>以<strong>实例变量</strong>体现出的类型实例具有的属性；</li>
+<li>以<strong>实例方法</strong>体现出的类型实例具有的操作；</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Point</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> x; <span class="hljs-comment">// 实例变量</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> y; <span class="hljs-comment">// 实例变量</span><br>    <span class="hljs-comment">/* 实例方法 */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">distance</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-keyword">return</span> Math.sqrt(x * x + y * y);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol>
+<li>通过对象来访问和操作函数内部的数据是一种基本的面向对象思维；</li>
+<li>一般而言，不应该将实例变量声明为public，而只应该通过对象的方法对实例变量进行操作；</li>
+<li>静态初始化代码块在类加载的时候执行，该步骤实在任何对象创建之前，且只执行一次；</li>
+<li>构造函数与类名相同，并且不带有返回值，构造函数隐式返回的就是实例本身；</li>
+<li>一旦自定义构造函数，编译器将不再生成默认构造函数；</li>
+</ol>
+<h2 id="1-3-私有构造函数"><a href="#1-3-私有构造函数" class="headerlink" title="1.3 私有构造函数"></a>1.3 私有构造函数</h2><p>使用私有构造函数存在于以下几个场景：</p>
+<ol>
+<li>不能创建类的实例，类只能被静态访问；</li>
+<li>能创建类的实例，但是只能够通过类的静态方法调用（也是单例模式常用的情景）；</li>
+<li>只是用来被其他多个构造方法调用，用于减少重复代码；</li>
+</ol>
+<h2 id="1-4-总结"><a href="#1-4-总结" class="headerlink" title="1.4 总结"></a>1.4 总结</h2><p>通过<strong>类实现自定义数据类型</strong>，封装该类型的数据所具有的属性和操作，<strong>隐藏实现细节</strong>，从而在更高层次（<strong>类和对象层次</strong>，而非基本数据类型和函数层次）上<strong>考虑和操作数据</strong>，是计算机程序解决复杂问题的一种重要的思维方式。</p>
+<h2 id="1-5-将现实问题转化为面向对象的层次"><a href="#1-5-将现实问题转化为面向对象的层次" class="headerlink" title="1.5 将现实问题转化为面向对象的层次"></a>1.5 将现实问题转化为面向对象的层次</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;设想现实问题的概念以及其所包含的属性、行为，再理清概念之间的关系，然后再定义类、属性、方法以及类与类之间的关系。概念属性和行为可能非常多，但是定义的类只需要包括与现实生活相关的问题即可。<br/><br>&nbsp;&nbsp;&nbsp;&nbsp;分解现实问题中涉及的概念以及概念之间的关系，将概念表示为多个类，通过类之间的组合表达更为复杂的概念以及概念之间的关系，是计算机程序的一种基本思维方式。</p>
+<h1 id="2-类的继承"><a href="#2-类的继承" class="headerlink" title="2. 类的继承"></a>2. 类的继承</h1><h2 id="2-1-基本概念"><a href="#2-1-基本概念" class="headerlink" title="2.1 基本概念"></a>2.1 基本概念</h2><ol>
+<li>使用继承可以复用代码，公共属性和行为可以放至父类中，而子类只需要关注自身特有的行为即可；</li>
+<li>不同子类的对象注重于实现自己的行为。</li>
+</ol>
+<h2 id="2-2-有关继承的更多的细节"><a href="#2-2-有关继承的更多的细节" class="headerlink" title="2.2 有关继承的更多的细节"></a>2.2 有关继承的更多的细节</h2><ol>
+<li>构造函数：由于子类继承父类需要重写父类的构造函数，如果父类构造函数调用可被子类重写的方法，则可能导致混淆，应当只调用private方法；</li>
+<li>静态绑定是在程序编译期间决定的，而动态绑定需要等到程序运行时才决定</li>
+<li>实例变量、静态变量、静态方法和private方法都是静态绑定的。</li>
+<li>重载是指方法名称相同但是参数签名不同，重写是指子类重写父类相同参数签名的方法；函数的重写是动态绑定的；</li>
+</ol>
+<h2 id="2-3-类型转换与protected关键字"><a href="#2-3-类型转换与protected关键字" class="headerlink" title="2.3 类型转换与protected关键字"></a>2.3 类型转换与protected关键字</h2><ol>
+<li>向上转型：子类型的对象赋值给父类型的引用变量；</li>
+<li>向下转型：父类型的对象赋值给子类型的引用变量；</li>
+<li>protected关键字广泛用于模板方法模式中；</li>
+<li>可见性重写：子类重写父类方法时不降低父类方法的可见性，这样的规定是由于子类和父类属于“is-a”关系，子类必须支持父类所有对外的行为，降低可见性将导致子类对外的行为减少；</li>
+<li>继承所带来负面影响就在于有时候我们不希望子类去复写父类的一些方法，因此可以通过final关键字实现；</li>
+</ol>
+<h1 id="3-类加载的过程"><a href="#3-类加载的过程" class="headerlink" title="3. 类加载的过程"></a>3. 类加载的过程</h1><h2 id="3-1-总览"><a href="#3-1-总览" class="headerlink" title="3.1 总览"></a>3.1 总览</h2><p>(1) 一个Java类所包含下列信息：</p>
+<ul>
+<li>静态变量</li>
+<li>类初始化代码</li>
+<li>静态方法</li>
+<li>实例变量</li>
+<li>实例初始化代码</li>
+<li>父类信息引用</li>
+</ul>
+<p>(2)类初始化代码包括</p>
+<ul>
+<li>定义静态变量时的赋值语句</li>
+<li>实例初始化代码块</li>
+<li>构造函数</li>
+</ul>
+<p>(3)类加载的过程</p>
+<ul>
+<li>分配内存以及保存类的信息</li>
+<li>给类变量赋默认值</li>
+<li>加载父类</li>
+<li>设置父子关系</li>
+<li>执行类初始化代码（先执行父类，再执行子类）</li>
+</ul>
+<h2 id="3-2-对象创建的过程"><a href="#3-2-对象创建的过程" class="headerlink" title="3.2 对象创建的过程"></a>3.2 对象创建的过程</h2><ol>
+<li>每个对象除了保存着类的实例变量外，还保存着实际类信息的引用；</li>
+<li>寻找要执行的实例方法时，是从对象的实际类型信息开始找，找不到再去父类信息中寻找；</li>
+<li>动态绑定实际就是根据对象的实际类型查找要执行的方法，子类型中找不到的时候再查找父类；</li>
+</ol>
+<h2 id="3-3-继承的破坏性——破坏封装"><a href="#3-3-继承的破坏性——破坏封装" class="headerlink" title="3.3 继承的破坏性——破坏封装"></a>3.3 继承的破坏性——破坏封装</h2><ol>
+<li>继承使用不当会造成破坏。首先，当父类和子类存在实现细节上的依赖则可能出现破坏封装的行为，如果子类不知道基类实现方法的实现细节，则子类无法正确地进行扩展。</li>
+<li>父类不能随意增加公开方法，因为给父类增加方法就是给子类增加方法，而子类可能必须要重写该方法才能确保方法的正确性；</li>
+<li>对于子类而言，通过继承实现是没有安全保障的，因为父类修改内部实现细节，它的功能就可能会被破坏，而对于基类而言，让子类继承和重写方法，就可能丧失随意修改内部实现的自由。</li>
+</ol>
+<h2 id="3-4-继承的破坏性——没有反映”is-a”关系"><a href="#3-4-继承的破坏性——没有反映”is-a”关系" class="headerlink" title="3.4 继承的破坏性——没有反映”is-a”关系"></a>3.4 继承的破坏性——没有反映”is-a”关系</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;按照继承的语义来说，父类拥有的行为，子类也应该有。然而在生活中的例子总有特殊。例如鸟都是会飞的，但是企鹅也属于鸟，但是不会飞。因此父类约束子类的行为在日常中并不能完全保证。</p>
+<h2 id="3-5-最佳实践"><a href="#3-5-最佳实践" class="headerlink" title="3.5 最佳实践"></a>3.5 最佳实践</h2><ol>
+<li>避免使用继承——使用final关键字关闭继承；</li>
+</ol>
+<ul>
+<li>给父类方法加上final关键字，父类就保留了随意修改这个方法内部实现的自由；</li>
+</ul>
+<ol>
+<li>优先使用组合模式代替继承；</li>
+</ol>
+<ul>
+<li>组合替代继承，使得父类的行为不在对外暴露，子类也可以实现自己的逻辑，互不影响；</li>
+</ul>
+<ol>
+<li>使用接口；</li>
+</ol>
+<h1 id="4-接口"><a href="#4-接口" class="headerlink" title="4. 接口"></a>4. 接口</h1><h2 id="4-1-本质"><a href="#4-1-本质" class="headerlink" title="4.1 本质"></a>4.1 本质</h2><ol>
+<li>接口是声明能力的一种方式，其只是一个对对象而言需要遵守的规定。从而衍生出一种新的计算机思维：面向接口编程；</li>
+<li>接口更重要的意义在于降低了代码间的耦合，挺高了代码的灵活性；</li>
+<li>接口可以多继承，也可以继承是实现并行，但是关键字==extends==要放在==implements==前面；</li>
+</ol>
+<h2 id="4-2-Java-8和Java-9新增的接口函数："><a href="#4-2-Java-8和Java-9新增的接口函数：" class="headerlink" title="4.2 Java 8和Java 9新增的接口函数："></a>4.2 Java 8和Java 9新增的接口函数：</h2><ol>
+<li>新增静态方法，便于直接将函数定义在接口中；</li>
+<li>默认方法，使用<strong>default</strong>关键字表示，有具体实现，引入默认方法主要是<strong>函数式的数据处理请求</strong>，为了给接口增加新功能；</li>
+</ol>
+<h2 id="4-3-总结"><a href="#4-3-总结" class="headerlink" title="4.3 总结"></a>4.3 总结</h2><p>针对接口编程是一种重要的程序思维方式，这种方式不仅可以复用代码，还可以降低耦合，提高灵活性，是分解复杂问题的一种重要工具。</p>
+<h1 id="5-抽象类"><a href="#5-抽象类" class="headerlink" title="5. 抽象类"></a>5. 抽象类</h1><ol>
+<li>相对于具体类而言，抽象类具有抽象的方法，可以用于表达抽象的概念。</li>
+<li>抽象类和接口是配合而非替代关系，两者经常一起使用。接口声明能力，抽象类提供默认实现，实现全部或者部分方法，一个接口经常有一个对应的抽象类。（参见Collection接口对应的AbstractCollection)</li>
+</ol>
+<h1 id="6-内部类"><a href="#6-内部类" class="headerlink" title="6. 内部类"></a>6. 内部类</h1><h2 id="6-1-定义"><a href="#6-1-定义" class="headerlink" title="6.1 定义"></a>6.1 定义</h2><p>顾名思义为定义外部类内部的类称之为内部类，通过内部类可以实现对外部的完全隐藏，可以得到更好的封装性。代码实现上也会更加简洁。内部类也可以很方便地访问外部类的私有变量，可以声明为private从而实现对外完全隐藏。相关代码写在一起，写法也会更加简洁。</p>
+<h2 id="6-2-内部类分类"><a href="#6-2-内部类分类" class="headerlink" title="6.2 内部类分类"></a>6.2 内部类分类</h2><ul>
+<li>静态内部类：带有static关键字的内部类，如果静态内部类与外部类关系密切，且不依赖于外部实例，则可以考虑定义静态内部类；</li>
+</ul>
+<ol>
+<li>Java API中Integer类内部的IntegerCache类，用于支持整数的自动装箱；</li>
+<li>LinkedList类内部有一个私有静态内部类Node，用于表示链中的每个节点；</li>
+<li>Character类内部有public的UnicodeBlock，用于表示一个UnicodeBlock；</li>
+</ol>
+<ul>
+<li>成员内部类：无任何修饰符的内部类，成员内部类对象总是与一个外部对象相连；如果内部类和外部类关系密切，需要访问外部类的实例变量和方法，则可以考虑定义成员内部类。外部类的一些方法的返回值可能是某个接口，为了返回该接口，外部类方法可能使用内部类实现该接口。这个内部类就可以设置为private，对外完全隐藏；</li>
+</ul>
+<ol>
+<li>Java API中的LinkedList类中，listIterator和descendingIterator的返回值都是接口Iterator，调用者可以通过Iterator接口对链表进行遍历，listIterator和descendingIterator内部分别使用成员内部类ListItr和DescendingIterator。</li>
+</ol>
+<ul>
+<li>方法内部类：定义在方法体中的类，方法内部类可以直接访问外部类的变量以及方法（取决于是静态的还是实例的）。实际上方法内部类操作的并不是外部的变量，而是它自己的实例变量。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Outer</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">final</span> String[] str = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[]&#123;<span class="hljs-string">&quot;hello&quot;</span>&#125;;<br>        <span class="hljs-comment">/* 方法内部类实例 */</span><br>        <span class="hljs-keyword">class</span> <span class="hljs-title class_">Inner</span> &#123;<br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">innerMethod</span><span class="hljs-params">()</span> &#123;<br>                str[<span class="hljs-number">0</span>] = <span class="hljs-string">&quot;hello world&quot;</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-type">Inner</span> <span class="hljs-variable">inner</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Inner</span>();<br>        inner.innerMethod();<br>        System.out.println(str[<span class="hljs-number">0</span>]);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>匿名内部类：没有具体类名关联，使用new关键字临时创建的类成为匿名内部类；匿名内部类只能被使用一次，用来创建一个对象，没有构造函数，但是可以根据参数列表调用对应父类构造方法，也可以定义实例变量和方法，可以初始化代码块。匿名内部类能做的，方法内部类都可以实现，只不过是用匿名内部类在实现上显得更加简洁一些。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Outer</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">(<span class="hljs-keyword">final</span> <span class="hljs-type">int</span> x, <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> y)</span> &#123;<br>        <span class="hljs-comment">/* 匿名内部类示例 */</span><br>        <span class="hljs-type">Point</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Point</span>(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>) &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">distance</span><span class="hljs-params">()</span> &#123;<br>                <span class="hljs-keyword">return</span> distance(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Point</span>(x, y));<br>            &#125;<br>        &#125;;<br>        System.out.println(p.distance());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>Java API使用中参见Arrays.sort函数。</p>
+<h2 id="6-3-总结"><a href="#6-3-总结" class="headerlink" title="6.3 总结"></a>6.3 总结</h2><p>将程序分为保持不变的主体框架，和针对具体情况的可变逻辑，通过回调的方式进行写作，是计算机程序中的一种常见实践。匿名内部类是实现回调接口的一种简便方式。</p>
+<h1 id="7-枚举"><a href="#7-枚举" class="headerlink" title="7. 枚举"></a>7. 枚举</h1><h2 id="7-1-使用枚举的好处"><a href="#7-1-使用枚举的好处" class="headerlink" title="7.1 使用枚举的好处"></a>7.1 使用枚举的好处</h2><ol>
+<li>枚举使得语法更简洁；</li>
+<li>枚举更安全，一个枚举类型的变量，值要么为null，要么为具体枚举值；</li>
+<li>枚举自带便利方法（例如values以及valueOf和toString方法），易于使用；</li>
+</ol>
+<h1 id="8-异常"><a href="#8-异常" class="headerlink" title="8. 异常"></a>8. 异常</h1><h2 id="8-1-基本概念"><a href="#8-1-基本概念" class="headerlink" title="8.1 基本概念"></a>8.1 基本概念</h2><ol>
+<li>throw关键字表示异常退出，因此出现异常的地方，后续代码都不会执行；</li>
+<li>异常处理机制会从当前函数开始查找谁能“捕获”该异常，当前函数无法捕获则查看上一层，直至主函数。如果主函数也没有则启用默认机制。即输出至控制台。</li>
+<li>try-with-resource语法：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">useResource</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>    <span class="hljs-keyword">try</span>(<span class="hljs-type">AutoClosable</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileInputStream</span>(<span class="hljs-string">&quot;hello&quot;</span>)) &#123; <span class="hljs-comment">// 创建资源</span><br>        <span class="hljs-comment">// 使用资源</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol>
+<li>未受检异常表示编程的逻辑错误，编程过程中应当检查以避免这种错误。无论是受检异常还是未受检异常，无论是出现在throws关键字声明中，都应该在合适的地方以适当的方式进行处理。</li>
+</ol>
+<h2 id="8-2-异常的使用"><a href="#8-2-异常的使用" class="headerlink" title="8.2 异常的使用"></a>8.2 异常的使用</h2><ol>
+<li>真正出现异常的时候，应当抛出异常，而不是返回一个特殊值；</li>
+<li>异常处理分报告恢复，报告时需说明异常出现的原因以及正确输入的范例或者格式；</li>
+</ol>
+<h2 id="8-3-异常的处理逻辑"><a href="#8-3-异常的处理逻辑" class="headerlink" title="8.3 异常的处理逻辑"></a>8.3 异常的处理逻辑</h2><ol>
+<li>自己能处理的异常由自己处理，如果可通过程序自动解决的就不需要向上报告了，直接自动解决；</li>
+<li>自己不能完全解决的，就向上报告，如果自己有额外的信息提供，有助于分析和解决问题，就应该提供，可以以原异常为cause重新抛出一个异常；</li>
+<li>总有一层代码需要为异常负责，可能是知道处理异常的代码，也可能是面向用户的代码，也可能是主程序。如果异常不能自动解决，对于用户而言需要提供对用户有用以及有帮助的信息；对于运维人员应该输出详细的异常链和异常栈日志；</li>
+</ol>
+<h2 id="8-4-总结"><a href="#8-4-总结" class="headerlink" title="8.4 总结"></a>8.4 总结</h2><p>通过异常机制可以将程序正常逻辑和异常逻辑进行分离，异常情况可以集中处理，也可以自动传递。不需要每层方法都进行处理，异常也不能被自动忽略。从而处理异常的代码可以大大减少，代码的可读性、可靠性以及可维护性也会增加。</p>
+<h1 id="9-基本类型的包装类以及String类型"><a href="#9-基本类型的包装类以及String类型" class="headerlink" title="9. 基本类型的包装类以及String类型"></a>9. 基本类型的包装类以及String类型</h1><h2 id="9-1-共性"><a href="#9-1-共性" class="headerlink" title="9.1 共性"></a>9.1 共性</h2><ol>
+<li>均重写了Object类中的(equals，hashCode以及toString)方法；</li>
+</ol>
+<ul>
+<li>equals：表示两个数值在逻辑上的相等，而非地址上的相等，因此需要重写；</li>
+<li>hashCode：返回对象的哈希值，hashCode反映的是其在内存中的地址相同，一般equals和hashCode都需要一起重写；</li>
+</ul>
+<ol>
+<li>Comparable接口，用于比较大小，在小于、等于和大于的时分别返回-1，0和1；</li>
+<li>包装类和String</li>
+<li>常用常量：包装类中包含一些常用的常量，例如布尔的<strong>TRUE/FALSE</strong>，整形中的<strong>MIN_VALUE</strong>和<strong>MAX_VALUE</strong>以及浮点中的<strong>POSITIVE_INFINITY（正无穷）</strong> 以及 <strong>NEGATIVE_INFINITY（负无穷）</strong>；</li>
+<li>包装类中带有一个Number类型，可以返回任意基本数据类型；</li>
+<li>不可变性：包装类和String声明都是final的，无法被继承；并且内部基本类型都是私有final的，并且无setter方法；<br>使用Immutable是因为可以使得程序更为简单和安全，在<strong>多线程环境下不用担心数据会被篡改</strong>；</li>
+<li>包装类中存在一个Cache的静态内部类，用于缓存共享常量以节约内存空间，借用了享元模式；</li>
+</ol>
+<h1 id="10-单说String"><a href="#10-单说String" class="headerlink" title="10. 单说String"></a>10. 单说String</h1><h2 id="10-1-String类的一些特性"><a href="#10-1-String类的一些特性" class="headerlink" title="10.1 String类的一些特性"></a>10.1 String类的一些特性</h2><ol>
+<li>String内部使用的是UTF-16BE模式编码；</li>
+<li>同其他包装类一样，String类使用的也是不可变对象，对象一旦创建将不可再更改；定义不可变类，程序更加简洁，安全以及容易理解。但如果频繁更改字符串则会导致性能底下。</li>
+</ol>
+<h2 id="10-2-字符串常量"><a href="#10-2-字符串常量" class="headerlink" title="10.2 字符串常量"></a>10.2 字符串常量</h2><ol>
+<li>如果通过字符串常量赋值，则两个String对象的内存地址都是指向同一块的；</li>
+<li>如果是通过new的方式创建出来的字符串对象在内存中实际上两个不同的对象，因此所在的内存地址是不相同的；</li>
+</ol>
+<h2 id="10-3-StringBuilder与StringBuffer"><a href="#10-3-StringBuilder与StringBuffer" class="headerlink" title="10.3 StringBuilder与StringBuffer"></a>10.3 StringBuilder与StringBuffer</h2><ol>
+<li>StringBuffer类是线程安全的，而StringBuilder是线程不安全的；</li>
+<li>append方法使用了一种类似于指数分配长度的策略。在不知道最终需要多长的情况下，指数扩展是一种常见的策略，广泛应用于各种内存分配相关的计算机程序中。</li>
+<li>String支持+，+=运算。由Java编译器提供支持，其会将该运算符转换成append操作；</li>
+</ol>
+<h1 id="11-Arrays类"><a href="#11-Arrays类" class="headerlink" title="11 Arrays类"></a>11 Arrays类</h1><h2 id="11-1-基本"><a href="#11-1-基本" class="headerlink" title="11.1 基本"></a>11.1 基本</h2><ol>
+<li>sort排序：可以使用sort排序，默认返回从小到大排序，基本类型可以直接使用，对象类型需要实现Comparator接口，可以使用Java8的lambda表达式简化语法；</li>
+<li>Comparator接口可以接收Collections接口中的reverse或者reverseOrder方法；</li>
+<li>总结：传递比较器Comparator给sort方法，体现了程序设计中的一种重要方式。将不变以及变化进行分离，排序的基本步骤和算法是保持不变的。将不变的算法作为主体，而将变化的部分设计成参数，允许调用者动态绑定。也是一种常见的设计模式。</li>
+</ol>
+<h2 id="11-2-查找"><a href="#11-2-查找" class="headerlink" title="11.2 查找"></a>11.2 查找</h2><ol>
+<li>Arrays方法支持很多种查找方法，包括二分查找，使用方法如下：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 针对基本类型</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">binarySearch</span><span class="hljs-params">(<span class="hljs-type">int</span>[] a, <span class="hljs-type">int</span> key)</span>;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">binarySearch</span><span class="hljs-params">(<span class="hljs-type">int</span>[] a, <span class="hljs-type">int</span> fromIndex, <span class="hljs-type">int</span> toIndex, <span class="hljs-type">int</span> key)</span>;<br><br><span class="hljs-comment">// 针对对象数组</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">binarySearch</span><span class="hljs-params">(Object[] a, Object key)</span>;<br><br><span class="hljs-comment">// 自定义比较器</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-type">int</span> <span class="hljs-title function_">binarySearch</span><span class="hljs-params">(T[] a, T key, Comparator&lt;? <span class="hljs-built_in">super</span> T&gt; c)</span>;<br></code></pre></td></tr></table></figure></li>
+<li><p>需要说明的是二分查找若能找到相应的数值，返回的是其所在的索引，数值为正数；否则返回插入点的数值+1并且为负数；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 索引列表为数组下标：0, 1, 2, 3, 4</span><br><span class="hljs-comment">// 插入点列表为：0, 1, 2, 3, 4</span><br><span class="hljs-type">int</span>[] arr = &#123;<span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">13</span>, <span class="hljs-number">21</span>&#125;;<br>System.out.println(Arrays.binarySearch(arr, <span class="hljs-number">3</span>); <span class="hljs-comment">// 0</span><br>System.out.println(Arrays.binarySearch(arr, <span class="hljs-number">5</span>); <span class="hljs-comment">// 1</span><br>System.out.println(Arrays.binarySearch(arr, <span class="hljs-number">7</span>); <span class="hljs-comment">// 2</span><br>System.out.println(Arrays.binarySearch(arr, <span class="hljs-number">13</span>); <span class="hljs-comment">// 3</span><br>System.out.println(Arrays.binarySearch(arr, <span class="hljs-number">21</span>); <span class="hljs-comment">// 4</span><br>System.out.println(Arrays.binarySearch(arr, <span class="hljs-number">22</span>); <span class="hljs-comment">// -6 (由21的插入点为5加1得到，再取负数)</span><br>System.out.println(Arrays.binarySearch(arr, <span class="hljs-number">2</span>); <span class="hljs-comment">// -1 (插在3的前面数插入点为0，再加1取负数得到)</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>理解多维数组：多维数组本质上还是一个一维数组，只是每个数组元素都可以再放一个数组，这样就构成了所谓的“多维数组”；其中对于多维数组会包括一个deepXXX的方法；</p>
+</li>
+<li><p>排序算法：对于基本数据类型，Java采用的是“双枢轴快速排序”算法；而对于对象类型，使用的是TimSort（Java 7引进），而TimSort实际上是对归并排序做了一系列优化。</p>
+</li>
+</ol>
+<h1 id="12-时间处理"><a href="#12-时间处理" class="headerlink" title="12 时间处理"></a>12 时间处理</h1><h2 id="12-1-基本概念："><a href="#12-1-基本概念：" class="headerlink" title="12.1 基本概念："></a>12.1 基本概念：</h2><ul>
+<li>时区：GMT为格林尼治标准时间，全球共分为24时区，中国在东八区，因此也成为GMT+8;</li>
+<li>时刻和纪元时：按照计算机规定：1970年1月1日的0时0分0秒称之为纪元时；</li>
+<li>年历：例如中国的公历和年历、日本的农历等等；</li>
+</ul>
+<h2 id="12-2-Java8之前的API支持"><a href="#12-2-Java8之前的API支持" class="headerlink" title="12.2 Java8之前的API支持"></a>12.2 Java8之前的API支持</h2><ul>
+<li>Date：时刻，绝对时间，与年月日无关；</li>
+<li>Calenda：年历，为抽象类；表示公历的子类为Gregorian-Calendar；</li>
+<li>TimeZone：表示时区</li>
+<li>Locale：表示国家（或者地区）和语言；</li>
+</ul>
+<h2 id="12-3-Java8之前的API局限性"><a href="#12-3-Java8之前的API局限性" class="headerlink" title="12.3 Java8之前的API局限性"></a>12.3 Java8之前的API局限性</h2><ul>
+<li>Date中的过时方法有悖常识，因此容易被误用；</li>
+<li>Calendar类操作繁琐，设计臃肿；</li>
+<li>DateFormat不是线程安全的，在多线程环境中会存在问题；</li>
+</ul>
+<h1 id="13-随机"><a href="#13-随机" class="headerlink" title="13 随机"></a>13 随机</h1><ol>
+<li>种子决定了随机序列的产生，种子相同，产生的随机数序列就是相同的；</li>
+<li>指定种子是为了实现可重复的随机；</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Java/">Java</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/16/java-core/ch04/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java编程原理——泛型和容器</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/16/java-core/ch02/">
+                        <span class="hidden-mobile">Java编程原理——计算机执行的二进制逻辑</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

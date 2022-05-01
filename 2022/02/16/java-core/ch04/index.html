@@ -1,0 +1,648 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 泛型1.1 基本概念 泛型实际上就是将类型参数化，处理的数据类型不是固定的，而是可以作为参数传入； Java的泛型实际上通过Java编译器对泛型字符做类型擦除实现的； 泛型可以指定上限为某个具体类，例如：  12345public class NumberPair&lt;U extends Number, V extends Number&gt; extends Pair&lt;U, V&amp;gt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java编程原理——泛型和容器">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/16/java-core/ch04/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="1 泛型1.1 基本概念 泛型实际上就是将类型参数化，处理的数据类型不是固定的，而是可以作为参数传入； Java的泛型实际上通过Java编译器对泛型字符做类型擦除实现的； 泛型可以指定上限为某个具体类，例如：  12345public class NumberPair&lt;U extends Number, V extends Number&gt; extends Pair&lt;U, V&amp;gt">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-16T11:52:26.000Z">
+<meta property="article:modified_time" content="2022-02-16T11:52:26.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="Java基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Java编程原理——泛型和容器 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Java编程原理——泛型和容器">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-16 19:52" pubdate>
+        2022年2月16日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      66 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Java编程原理——泛型和容器</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-泛型"><a href="#1-泛型" class="headerlink" title="1 泛型"></a>1 泛型</h1><h2 id="1-1-基本概念"><a href="#1-1-基本概念" class="headerlink" title="1.1 基本概念"></a>1.1 基本概念</h2><ol>
+<li>泛型实际上就是将类型参数化，处理的数据类型不是固定的，而是可以作为参数传入；</li>
+<li>Java的泛型实际上通过Java编译器对泛型字符做类型擦除实现的；</li>
+<li>泛型可以指定上限为某个具体类，例如：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">NumberPair</span>&lt;U <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Number</span>, V <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Number</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Pair</span>&lt;U, V&gt;&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">NumberPair</span><span class="hljs-params">(U first, V second)</span> &#123;<br>        <span class="hljs-built_in">super</span>(first, second);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol>
+<li>除此之外，也可以指定上界为某个接口，例如Java中的max方法需要实现Comparable接口；</li>
+<li>总结：泛型是计算机中一种非常重要的思维方式，它将数据结构和算法与数据类型进行分离，使得同一套数据结构和算法能够应用于各种数据类型，而且可以保证类型安全，提高可读性。</li>
+</ol>
+<h2 id="1-2-通配符解析"><a href="#1-2-通配符解析" class="headerlink" title="1.2 通配符解析"></a>1.2 通配符解析</h2><ol>
+<li>参数类型限定通配符写法。例如：public void addAll(DynamicArray&lt;? extends E&gt; c), <strong>&lt;? exntends E&gt;也称为有限定通配符</strong>；</li>
+<li>与之相对应的就为无限定通配符，具体为：Dynamic&lt;?&gt;，更简洁的写法就为<T></li>
+<li>但是通配符存在一个重要限制：只能读，不能写，由于类型安全无知，因此Java编译器一般是不允许写入，所以干脆禁止；</li>
+<li>通配符的形式都可以使用类型参数的形式来替代，通配符能做的，用类型参数都可以做；</li>
+<li>通配符的形式可以减少类型参数，形式上往往更为简单，可读性也更好；因此能使用通配符就使用通配符；</li>
+<li>如果类型参数之间有依赖关系，或者返回依赖类型参数，或者需要写操作，则只能使用类型参数；</li>
+<li>通配符形式和类型参数往往配合使用；</li>
+</ol>
+<h2 id="1-3-超类型通配符"><a href="#1-3-超类型通配符" class="headerlink" title="1.3 超类型通配符"></a>1.3 超类型通配符</h2><ol>
+<li>形式：&lt;? super E&gt;，用于表示E的某个父类类型；</li>
+<li>使用场景：对于有限通配符形式&lt;? extends E&gt;在无法满足工作需要时，可以使用&lt;? super E&gt;代替；</li>
+<li>&lt;? super E&gt;用于灵活写入或比较，&lt;?&gt;或&lt;? exntends E&gt;用于灵活读取；</li>
+</ol>
+<h2 id="1-4-局限性"><a href="#1-4-局限性" class="headerlink" title="1.4 局限性"></a>1.4 局限性</h2><ol>
+<li>基本类型不能用于实例化类型参数；</li>
+<li>运行时类型信息不适用泛型；</li>
+<li>类型擦除可能引起一些冲突，因此泛型中不能使用基本类型，要使用基本类型对应的包装类型；</li>
+<li>不能通过类型参数创建对象；</li>
+<li>泛型类类型参数不能用于创建静态变量和方法；</li>
+<li>不能创建泛型数组，因为一旦创建泛型数组既不会产生编译错误，也不会产生运行异常，但确是非常危险的；</li>
+<li>如果要存放泛型对象，可以使用原始类型的数组，或者是用泛型容器；</li>
+<li>泛型容器内部使用Object数组，如果要转换泛型容器为对应类型的数组，需要使用反射；</li>
+</ol>
+<h1 id="2-列表和队列"><a href="#2-列表和队列" class="headerlink" title="2 列表和队列"></a>2 列表和队列</h1><h2 id="2-1-ArrayList"><a href="#2-1-ArrayList" class="headerlink" title="2.1 ArrayList"></a>2.1 ArrayList</h2><ol>
+<li>ArrayList为动态数组，其内部使用了一个Object类型的数组，默认容量为10，可以通过构造函数更改其初始容量；</li>
+<li>ArrayList实现了Iterable接口，Iterable表示可迭代，凡是实现了Iterable接口的容器类均可以使用foreach语法，Java编译器会将其转换成调用Iterable接口中的Iterator方法；</li>
+<li>迭代陷阱：由于迭代器内部会维护一些索引位置相关的数据，要求在迭代过程中，容器不能发生结构性变化。否则索引位置就失效了，因此会出现ConcurrentModificationException异常。如果需要删除容器中间的元素，需使用iterator的remove方法。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/* 错误写法 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">remove</span><span class="hljs-params">(ArrayList&lt;Integer&gt; list)</span> &#123;<br>    <span class="hljs-keyword">for</span> (Integer a : list) &#123;<br>        <span class="hljs-keyword">if</span> (a &lt; <span class="hljs-number">100</span>) &#123;<br>            list.remove(a); <span class="hljs-comment">// 恐抛出ConcurrentModificationException</span><br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/* 正确写法 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">remove</span><span class="hljs-params">(ArrayList&lt;Integer&gt; list)</span> &#123;<br>    Iterator&lt;Integer&gt; it = list.iterator();<br>    <span class="hljs-keyword">while</span>(it.hasNext()) &#123;<br>        <span class="hljs-keyword">if</span> (it.next() &lt; <span class="hljs-number">100</span>) &#123;<br>            it.remove();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol>
+<li>使用迭代器的好处：迭代器表示的是一种关注点分离的思想，将数据和实际组织方式与数据的迭代遍历相分离，是一种常见的设计模式。从封装思路上讲，迭代器封装了各种数据组织方式的迭代操作，提供了简单一致性的接口。</li>
+<li>ArrayList的特点</li>
+</ol>
+<ul>
+<li>随机访问：按照索引位置访问效率非常高，时间复杂度为O(1)；</li>
+<li>除非数组已排序，否则按照内容查找元素效率比较低，具体为O(N)，也就是说性能与长度成正比；</li>
+<li>添加数组元素的效率为O(N)；</li>
+<li>插入和删除的效率较低，如果是在数组首部插入或者删除元素，需要对整个数组中的元素进行移动，具体为O(N)；</li>
+<li>需要说明的是ArrayList不是线程安全的，在不需要线程安全的场景下推荐使用ArrayList；</li>
+</ul>
+<h2 id="2-2-LinkedList"><a href="#2-2-LinkedList" class="headerlink" title="2.2 LinkedList"></a>2.2 LinkedList</h2><ol>
+<li>LinkedList是使用数据结构中的单链表来实现的，因此插入和删除的性能很高，但是随机访问的效率就很低；</li>
+<li>LinkedList除了实现Collection接口，还实现了Queue接口，因此对于队列可以这样使用：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java">Queue&lt;String&gt; queue = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br>queue.offer(<span class="hljs-string">&quot;a&quot;</span>);<br>queue.offer(<span class="hljs-string">&quot;b&quot;</span>);<br>queue.offer(<span class="hljs-string">&quot;c&quot;</span>);<br><span class="hljs-keyword">while</span>(queue.peek() != <span class="hljs-literal">null</span>) &#123;<br>    System.out.println(queue.poll());<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol>
+<li>LinkedList也可以当作栈使用，示例如下：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java">Deque&lt;String&gt; stack = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br>stack.push(<span class="hljs-string">&quot;a&quot;</span>);<br>stack.push(<span class="hljs-string">&quot;b&quot;</span>);<br>stack.push(<span class="hljs-string">&quot;c&quot;</span>);<br><span class="hljs-keyword">while</span>(stack.peek() != <span class="hljs-literal">null</span>) &#123;<br>    System.out.println(stack.pop());<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol>
+<li>LinkedList的用法和ArrayList类似，与ArrayList不同的是，LinkedList既可以用作队列也可以用作栈；</li>
+<li>LinkedList的特点如下：</li>
+</ol>
+<ul>
+<li>按需分配空间，不需要预先分配很多空间；</li>
+<li>不可随机访问，按照索引位置访问效率较低；</li>
+<li>无论列表是否有序，按内容查找都需要逐个查找；</li>
+<li>在两端进行添加、删除操作效率很高；</li>
+</ul>
+<h2 id="2-3-ArrayDeque"><a href="#2-3-ArrayDeque" class="headerlink" title="2.3 ArrayDeque"></a>2.3 ArrayDeque</h2><ol>
+<li>ArrayDeque是基于数组实现的双端队列</li>
+<li>ArrayDeque内部使用了一种叫做“循环数组”的结构，通过head和tail指针实现数据的插入和删除。循环数组的长度是2的幂次方。以及使用高效的位运算实现高效。</li>
+<li>由于是双端队列因此具备下列特点：</li>
+</ol>
+<ul>
+<li>在两端添加和删除的效率很高；</li>
+<li>根据元素的内容查找和删除的效率很低；</li>
+<li>与ArrayList和LinkedList不同的是，没有索引位置的概念，不能根据索引位置进行操作。</li>
+</ul>
+<h1 id="3-Map和Set"><a href="#3-Map和Set" class="headerlink" title="3 Map和Set"></a>3 Map和Set</h1><h2 id="3-1-HashMap"><a href="#3-1-HashMap" class="headerlink" title="3.1 HashMap"></a>3.1 HashMap</h2><ol>
+<li>创建的HashMap默认容量为16，默认因子为0.75，因此阈值为16 * 0.75 = 12</li>
+<li>创建Map保存数据的几个步骤分别为：</li>
+</ol>
+<ul>
+<li>(1) 计算键的哈希值；</li>
+<li>(2) 根据哈希值得到保存位置（取模）；</li>
+<li>(3) 插到对应位置的链表表头或者更新已有值；</li>
+<li>(4) 根据扩展table大小，注意这里的table是Entry类型；</li>
+</ul>
+<ol>
+<li>总结HashMap的实现原理</li>
+</ol>
+<ul>
+<li>HashMap内部有一个哈希表，每个元素指向一个单链表；</li>
+<li>根据键值对操作实际上就是用键计算hash值，取模得到数组中的索引位置；然后操作哈希表中指向的单链表；</li>
+<li>存取时依据键的hash值，只在对应的链表中操作，不会访问其他链表。对应链表操作时也是先计算hash值，当哈希值相同时再使用equals方法比较</li>
+<li>HashMap是无顺序的，所有的键值对都是随机排列的，如果希望Map中的数据有序排列，可以使用LinkedHashMap；</li>
+<li>HashMap不是线程安全的，因此在不需要高并发的场景下推荐使用HashMap，如果是在高并发场景，可以使用Java8中新增的ConcurrentHashMap对象；</li>
+</ul>
+<h2 id="3-2-HashSet"><a href="#3-2-HashSet" class="headerlink" title="3.2 HashSet"></a>3.2 HashSet</h2><ol>
+<li>Set表示没有重复元素并且无序的容器接口，与数学中的集合概念吻合；</li>
+<li>HashSet有下列应用场景</li>
+</ol>
+<ul>
+<li>排重：如果对排重后的元素无顺序要求，可以使用HashSet进行排重；</li>
+<li>保存特殊值：例如维护IP地址的黑名单和白名单，可以使用HashSet；</li>
+<li>集合运算：方便进行数学中的交集以及并集的集合运算；</li>
+</ul>
+<ol>
+<li>HashSet内部使用的是HashMap实现，内部都包含一个HashMap的实例变量；</li>
+<li>总结HashSet的特点有如下几个：</li>
+</ol>
+<ul>
+<li>没有重复元素；</li>
+<li>可以高效的添加、删除元素、判断元素是否存在；</li>
+<li>没有顺序；</li>
+</ul>
+<h2 id="3-3-TreeMap或TreeSet"><a href="#3-3-TreeMap或TreeSet" class="headerlink" title="3.3 TreeMap或TreeSet"></a>3.3 TreeMap或TreeSet</h2><ol>
+<li>与HashMap无序相对比，TreeMap是有序的。</li>
+<li>TreeMap内部使用的是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/红黑树/2413209?fr=aladdin">红黑树</a>实现的；</li>
+<li>TreeMap的特点如下</li>
+</ol>
+<ul>
+<li>按键有序：可以很方便地根据键的顺序进行查找</li>
+<li>为了使得按键有序，TreeMap要求键实现Comparable接口或者通过构造方法提供一个Comparator对象；</li>
+<li>根据键值保存、查找、删除的效率比较高；</li>
+</ul>
+<ol>
+<li>总结TreeSet的特点有如下几个：</li>
+</ol>
+<ul>
+<li>没有重复元素；</li>
+<li>可以高效地添加、删除元素、判断元素是否存在；</li>
+<li>有顺序，可以根据自己实现Comparator方法达到正序或者逆序排列；</li>
+</ul>
+<h2 id="3-4-LinkedHashMap"><a href="#3-4-LinkedHashMap" class="headerlink" title="3.4 LinkedHashMap"></a>3.4 LinkedHashMap</h2><ol>
+<li>LinkedHashMap存在两种顺序，一种是插入顺序（先插入的元素在前面），一种是访问顺序（最近访问的元素会移动到末尾，最开始的是没被访问的）；</li>
+<li>LinkedHashMap是有序的，例子如下(插入顺序)：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java">Map&lt;String, Integer&gt; seqMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashMap</span>&lt;&gt;();<br>seqMap.put(<span class="hljs-string">&quot;c&quot;</span>, <span class="hljs-number">100</span>);<br>seqMap.put(<span class="hljs-string">&quot;d&quot;</span>, <span class="hljs-number">200</span>);<br>seqMap.put(<span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-number">500</span>);<br>seqMap.put(<span class="hljs-string">&quot;d&quot;</span>, <span class="hljs-number">300</span>);<br><span class="hljs-keyword">for</span> (Entry&lt;String, Integer&gt; entry : seqMap.entrySet()) &#123;<br>    System.out.println(entry.getKey() + <span class="hljs-string">&quot; &quot;</span> + entry.getValue());<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">Result is :</span><br><span class="hljs-comment">c 100</span><br><span class="hljs-comment">d 300</span><br><span class="hljs-comment">a 500</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>LinkedHashMap的访问顺序：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java">Map&lt;String, Integer&gt; accessMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashMap</span>&lt;&gt;(<span class="hljs-number">16</span>, <span class="hljs-number">0.75</span>, <span class="hljs-literal">true</span>);<br>accessMap.put(<span class="hljs-string">&quot;c&quot;</span>, <span class="hljs-number">100</span>);<br>accessMap.put(<span class="hljs-string">&quot;d&quot;</span>, <span class="hljs-number">200</span>);<br>accessMap.put(<span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-number">500</span>);<br>accessMap.get(<span class="hljs-string">&quot;c&quot;</span>);<br>accessMap.put(<span class="hljs-string">&quot;d&quot;</span>, <span class="hljs-number">300</span>);<br><span class="hljs-keyword">for</span> (Entry&lt;String, Integer&gt; entry : accessMap.getEntrySet())&#123;<br>    System.out.println(entry.getKey() + <span class="hljs-string">&quot; &quot;</span> + entry.getValue());<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">Result is : </span><br><span class="hljs-comment">a 500</span><br><span class="hljs-comment">c 100</span><br><span class="hljs-comment">d 300</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>LinkedHashMap可以应用于缓存，例如LRU缓存，下面贴出一个LRU缓存的简单实现：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 实现代码</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LRUCache</span>&lt;K, V&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">LinkedHashMap</span>&lt;K, V&gt; &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> maxEntries;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">LRUCache</span><span class="hljs-params">(<span class="hljs-type">int</span> maxEntries)</span> &#123;<br>        <span class="hljs-built_in">super</span>(<span class="hljs-number">16</span>, <span class="hljs-number">0.75f</span>, <span class="hljs-literal">true</span>);<br>        <span class="hljs-built_in">this</span>.maxEntries = maxEntries;<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">removeEldestEntry</span><span class="hljs-params">(Entry&lt;K, V&gt; eldest)</span> &#123;<br>        <span class="hljs-keyword">return</span> size() &gt; maxEntries;<br>    &#125;<br>&#125;<br><span class="hljs-comment">// 使用示例</span><br>LRUCache&lt;String, Object&gt; cache = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LRUCache</span>&lt;&gt;(<span class="hljs-number">3</span>);<br>cache.put(<span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-string">&quot;abstract&quot;</span>);<br>cache.put(<span class="hljs-string">&quot;b&quot;</span>, <span class="hljs-string">&quot;basic&quot;</span>);<br>cache.put(<span class="hljs-string">&quot;c&quot;</span>, <span class="hljs-string">&quot;call&quot;</span>);<br>cache.get(<span class="hljs-string">&quot;a&quot;</span>);<br>cache.put(<span class="hljs-string">&quot;d&quot;</span>, <span class="hljs-string">&quot;call&quot;</span>);<br>System.out.println(cache);<br><br><span class="hljs-comment">// 输出结果</span><br>&#123;c=call, a=<span class="hljs-keyword">abstract</span>, d=call&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="3-5-EnumMap"><a href="#3-5-EnumMap" class="headerlink" title="3.5 EnumMap"></a>3.5 EnumMap</h2><ol>
+<li>键类型为枚举类型，除了可以使用基本的HashMap，也可以使用EnumMap；</li>
+<li>EnumMap的好处在于，Map的所有键都是预先定义的，其次是枚举能保证一定的顺序性。示例如下：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">Size</span> &#123;<br>    SMALL, MEDIUM, LARGE<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Clothes</span> &#123;<br>    String id;<br>    Size size;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Map&lt;Size, Integer&gt; <span class="hljs-title function_">countBySize</span><span class="hljs-params">(List&lt;Clothes&gt; clothes)</span> &#123;<br>    Map&lt;Size, Integer&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">EnumMap</span>&lt;&gt;(Size.class);<br>    <span class="hljs-keyword">for</span> (Clothes c : clothes) &#123;<br>        <span class="hljs-type">Size</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> c.getSize();<br>        <span class="hljs-type">Integer</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> map.get(size);<br>        <span class="hljs-keyword">if</span> (count != <span class="hljs-literal">null</span>) &#123;<br>            map.put(size, count + <span class="hljs-number">1</span>);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            map.put(size, <span class="hljs-number">1</span>);<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> map;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol>
+<li>EnumSet使用了极为精简和高效的位向量实现，位向量是计算机程序中解决问题的一种方式。</li>
+<li>EnumSet不能通过new的方式创建，如果需要创建EnumSet对象，需要调用其内部的静态工厂方法；</li>
+<li>位向量是用一个位表示一个元素的状态，用一组位表示一个集合的状态，每个位对应一个元素，而状态只可能有两种。</li>
+<li>对于只有两种状态，且需要进行集合运算的数据、使用位向量进行表示、位运算进行处理。是计算机程序中常用的思维方式。</li>
+</ol>
+<h1 id="4-堆与优先级队列"><a href="#4-堆与优先级队列" class="headerlink" title="4 堆与优先级队列"></a>4 堆与优先级队列</h1><h2 id="4-1-完全二叉树"><a href="#4-1-完全二叉树" class="headerlink" title="4.1 完全二叉树"></a>4.1 完全二叉树</h2><ol>
+<li>完全二叉树的特点：给定任意一个节点，可以根据其编号直接快速计算出其<strong>父节点</strong>和<strong>孩子节点</strong>的编号。<strong>例如：如果节点编号为i，则父亲节点编号为i / 2，左孩子的节点编号为2 * i，右孩子节点编号为2 * i + 1;</strong></li>
+<li>基于上述特点，完全二叉树可以很方便的存储到一个连续数组中；</li>
+</ol>
+<h2 id="4-2-PriorityQueue"><a href="#4-2-PriorityQueue" class="headerlink" title="4.2 PriorityQueue"></a>4.2 PriorityQueue</h2><ol>
+<li>PriorityQueue内部使用堆实现，可以实现很高的存取效率，逐个出队列可以得到有序，但内部不一定是有序的。基本例子如下，模拟一个任务队列，代码如下：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Task</span> &#123;<br>    <span class="hljs-type">int</span> priority; <span class="hljs-comment">// 数值越大，优先级越高</span><br>    String name; <span class="hljs-comment">// 表示任务的名称</span><br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Comparator&lt;Task&gt; taskComparator = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Comparator</span>() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">compare</span><span class="hljs-params">(Task o1, Task o2)</span> &#123;<br>            <span class="hljs-keyword">if</span> (o1.getPriority() &gt; o2.getPriority()) &#123;<br>                <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (o1.getPriority() &lt; o2.getPriority())&#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>            &#125;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br>    &#125;<br>&#125;<br><br>Queue&lt;Task&gt; tasks = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Priority</span>&lt;&gt;(<span class="hljs-number">11</span>, taskComparator);<br>tasks.offer(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Task</span>(<span class="hljs-number">20</span>, <span class="hljs-string">&quot;写日记&quot;</span>));<br>tasks.offer(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Task</span>(<span class="hljs-number">10</span>, <span class="hljs-string">&quot;看电视&quot;</span>));<br>tasks.offer(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Task</span>(<span class="hljs-number">100</span>, <span class="hljs-string">&quot;写代码&quot;</span>));<br><span class="hljs-type">Task</span> <span class="hljs-variable">task</span> <span class="hljs-operator">=</span> tasks.poll();<br><span class="hljs-keyword">while</span> (task != <span class="hljs-literal">null</span>) &#123;<br>    System.out.print(<span class="hljs-string">&quot;处理任务：&quot;</span> + task.getName() + <span class="hljs-string">&quot;, 优先级：&quot;</span> + task.getPriority());<br>    task = tasks.poll();<br>&#125;<br><span class="hljs-comment">// 结果如下：</span><br>处理任务：写代码，优先级：<span class="hljs-number">100</span><br>处理任务：写日记，优先级：<span class="hljs-number">20</span><br>处理任务：看电视，优先级：<span class="hljs-number">10</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>PriorityQueue有如下特点：</li>
+</ol>
+<ul>
+<li>实现了优先级队列，最先出队的总是优先级最高的；</li>
+<li>优先级相同时，内部元素不完全有序；</li>
+<li>查询头部元素效率很高，入队、出队效率很高；</li>
+<li>根据值查找和删除元素效率很低</li>
+<li>具体两个应用场景：求前K个最大的元素，且数据源源不断进来或者是求数据的中间值，且数据源源不断来；</li>
+</ul>
+<h1 id="5-通用容器类"><a href="#5-通用容器类" class="headerlink" title="5 通用容器类"></a>5 通用容器类</h1><ol>
+<li>Collections提供了很多针对容器接口的通用算法和功能；</li>
+<li>容器接口有如下六种，分别是：Collection、List、Set、Queue、Deque和Map；</li>
+<li>容器类中运用了大量的适配器模式</li>
+</ol>
+<ul>
+<li>空容器方法：类似于将null或者“空”转换成一个标准的容器接口对象；例如：emptyMap, emptyList或者是emptySet;（不可变对象）</li>
+<li>单一对象方法：讲一个单独的对象转换为一个标准的容器接口对象；例如：singletonList, singletonMap或者singletonSet;（不可变对象）</li>
+<li>其他适配方法，例如将Map转换为Set等。</li>
+</ul>
+<ol>
+<li>基本容器类都是线程不安全的，因此在不需要并发的场景下可以放心使用；</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Java/">Java</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/16/java-core/ch05/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java编程原理——并发</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/16/java-core/ch03/">
+                        <span class="hidden-mobile">Java编程原理——面向对象基础</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,554 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="对象扩展属性的简洁表示法ES6允许直接写入变量和函数，作为对象的属性和方法。这样书写更加简洁。 123456var foo &#x3D; &amp;#x27;bar&amp;#x27;;var baz &#x3D; &amp;#123;foo&amp;#125;;baz &#x2F;&#x2F; &amp;#123;foo: &quot;bar&quot;&amp;#125;&#x2F;&#x2F; 等同于var baz &#x3D; &amp;#123;foo: foo&amp;#125;; 除了属性可以简写，方法也可以简写">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6 对象扩展">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/17/javascript/es6-object-expand/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="对象扩展属性的简洁表示法ES6允许直接写入变量和函数，作为对象的属性和方法。这样书写更加简洁。 123456var foo &#x3D; &amp;#x27;bar&amp;#x27;;var baz &#x3D; &amp;#123;foo&amp;#125;;baz &#x2F;&#x2F; &amp;#123;foo: &quot;bar&quot;&amp;#125;&#x2F;&#x2F; 等同于var baz &#x3D; &amp;#123;foo: foo&amp;#125;; 除了属性可以简写，方法也可以简写">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-17T07:08:22.000Z">
+<meta property="article:modified_time" content="2022-02-17T07:08:22.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="ES6基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>ES6 对象扩展 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6 对象扩展">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-17 15:08" pubdate>
+        2022年2月17日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      9.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      80 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6 对象扩展</h1>
+            
+            <div class="markdown-body">
+              <h1 id="对象扩展"><a href="#对象扩展" class="headerlink" title="对象扩展"></a>对象扩展</h1><h2 id="属性的简洁表示法"><a href="#属性的简洁表示法" class="headerlink" title="属性的简洁表示法"></a>属性的简洁表示法</h2><p>ES6允许直接写入变量和函数，作为对象的属性和方法。这样书写更加简洁。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> foo = <span class="hljs-string">&#x27;bar&#x27;</span>;<br><span class="hljs-keyword">var</span> baz = &#123;foo&#125;;<br>baz <span class="hljs-comment">// &#123;foo: &quot;bar&quot;&#125;</span><br><br><span class="hljs-comment">// 等同于</span><br><span class="hljs-keyword">var</span> baz = &#123;<span class="hljs-attr">foo</span>: foo&#125;;<br></code></pre></td></tr></table></figure>
+<p>除了属性可以简写，方法也可以简写</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> o = &#123;<br>    <span class="hljs-title function_">method</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hello&quot;</span>;<br>    &#125;<br>&#125;;<br><br><span class="hljs-comment">// 等同于</span><br><br><span class="hljs-keyword">var</span> o = &#123;<br>    <span class="hljs-attr">method</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hello&quot;</span>;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>适用于函数返回值，写起来会非常简洁和方便</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">getPoint</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">var</span> x = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">var</span> y = <span class="hljs-number">10</span>;<br>    <span class="hljs-keyword">return</span> &#123;x, y&#125;;<br>&#125;<br><br><span class="hljs-title function_">getPoint</span>() <span class="hljs-comment">// &#123;x: 1, y: 10&#125;</span><br></code></pre></td></tr></table></figure>
+<p>在使用Common JS中，输出的代码非常适合使用这种简洁写法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> ms = &#123;&#125;;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">getItem</span>(<span class="hljs-params">key</span>) &#123;<br>    <span class="hljs-keyword">return</span> key <span class="hljs-keyword">in</span> ms ? ms[key] : <span class="hljs-literal">null</span>;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">setItem</span>(<span class="hljs-params">key, value</span>) &#123;<br>    ms[key] = value;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">clear</span>(<span class="hljs-params"></span>) &#123;<br>    ms = &#123;&#125;;<br>&#125;<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123; getItem, setItem, clear &#125;<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>    <span class="hljs-attr">getItem</span>: getItem,<br>    <span class="hljs-attr">setItem</span>: setItem,<br>    <span class="hljs-attr">clear</span>: clear<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="属性名表达式"><a href="#属性名表达式" class="headerlink" title="属性名表达式"></a>属性名表达式</h2><p>JavaScript语言定义对象的属性，有如下种方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript">obj.<span class="hljs-property">foo</span> = <span class="hljs-literal">true</span>; <span class="hljs-comment">// 直接使用标识符作为属性名</span><br><br>obj[<span class="hljs-string">&#x27;a&#x27;</span> + <span class="hljs-string">&#x27;bc&#x27;</span>] = <span class="hljs-number">123</span>; <span class="hljs-comment">// 使用表达式作为属性名</span><br></code></pre></td></tr></table></figure>
+<p>ES6允许字面量定义对象时，用方法二作为对象的属性名，即将表达式放在括号内</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> propKey = <span class="hljs-string">&#x27;foo&#x27;</span>;<br><br><span class="hljs-keyword">let</span> obj = &#123;<br>    [propKey]: <span class="hljs-literal">true</span>,<br>    [<span class="hljs-string">&#x27;a&#x27;</span> + <span class="hljs-string">&#x27;bc&#x27;</span>]: <span class="hljs-number">123</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这里再举一个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> lastWord = <span class="hljs-string">&#x27;last word&#x27;</span>;<br><br><span class="hljs-keyword">var</span> a = &#123;<br>    <span class="hljs-string">&#x27;first word&#x27;</span>: <span class="hljs-string">&#x27;hello&#x27;</span>,<br>    [lastWord]: <span class="hljs-string">&#x27;world&#x27;</span><br>&#125;;<br><br>a[<span class="hljs-string">&#x27;first Word&#x27;</span>] <span class="hljs-comment">// hello</span><br>a[lastWord] <span class="hljs-comment">// World</span><br>a[<span class="hljs-string">&#x27;last word&#x27;</span>] <span class="hljs-comment">// World</span><br></code></pre></td></tr></table></figure>
+<p>注意：属性名表达式如果是一个对象，默认情况下会自动将对象转换为字符串。因此属性名表达式和简洁表示法不可以同时使用。一定要注意。</p>
+<h2 id="方法的name属性"><a href="#方法的name属性" class="headerlink" title="方法的name属性"></a>方法的<code>name</code>属性</h2><p>函数的<code>name</code>属性返回函数名。对象方法也是函数，因此也有<code>name</code>属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> person = &#123;<br>    <span class="hljs-title function_">sayName</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);<br>    &#125;,<br>    <span class="hljs-comment">// get为取值函数，存值用set</span><br>    <span class="hljs-keyword">get</span> <span class="hljs-title function_">firstName</span>() &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Nicholas&quot;</span>;<br>    &#125;<br>&#125;;<br><br>person.<span class="hljs-property">sayName</span>.<span class="hljs-property">name</span> <span class="hljs-comment">// sayName</span><br>person.<span class="hljs-property">firstName</span>.<span class="hljs-property">name</span> <span class="hljs-comment">// get firstName</span><br></code></pre></td></tr></table></figure>
+<p>有两个特例：如果是<code>bind</code>函数，函数名返回<code>bound</code> + 函数名称；如果是<code>function</code>关键字构造的函数（匿名函数），<code>name</code>属性值返回<code>anonymous</code>。</p>
+<h2 id="Object-is"><a href="#Object-is" class="headerlink" title="Object.is()"></a><code>Object.is()</code></h2><p>该方法用来比较两个值是否严格相等，与严格比较运算符<code>===</code>的作用一致。不同之处有两个：+0不等于-0；另一个是NaN等于自身。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript">+<span class="hljs-number">0</span> === -<span class="hljs-number">0</span> <span class="hljs-comment">// true</span><br><span class="hljs-title class_">NaN</span> === <span class="hljs-title class_">NaN</span> <span class="hljs-comment">// false</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">is</span>(+<span class="hljs-number">0</span>, -<span class="hljs-number">0</span>); <span class="hljs-comment">// false</span><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">is</span>(<span class="hljs-title class_">NaN</span>, <span class="hljs-title class_">NaN</span>) <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+<h2 id="Object-assign"><a href="#Object-assign" class="headerlink" title="Object.assign()"></a><code>Object.assign()</code></h2><h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>用于将对象合并，将源对象的所有可枚举属性赋值到目标对象。如果目标对象与源对象由同名属性，或多个源对象由同名属性，则后面的属性会覆盖前面的属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> target = &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">1</span> &#125;;<br><br><span class="hljs-keyword">var</span> source1 = &#123; <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> &#125;;<br><span class="hljs-keyword">var</span> source2 = &#123; <span class="hljs-attr">c</span>: <span class="hljs-number">3</span> &#125;;<br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(target, source1, source2);<br>target <span class="hljs-comment">// &#123; a: 1, b: 2, c: 3 &#125;</span><br></code></pre></td></tr></table></figure>
+<p>如果只有一个参数，会直接返回该参数；如果该参数不是对象，会先转换为对象，然后返回。由于<code>undefined</code>和<code>null</code>无法转换为对象，所以将它们作为参数传入会报错。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> obj = &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>&#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(obj) === obj <span class="hljs-comment">// true</span><br><br><span class="hljs-keyword">typeof</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-number">2</span>) <span class="hljs-comment">// object</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-literal">undefined</span>) <span class="hljs-comment">// error</span><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-literal">null</span>) <span class="hljs-comment">// error</span><br></code></pre></td></tr></table></figure>
+<p>如果<code>undefined</code>和<code>null</code>出现在非首参数，首先会尝试着转换为对象，如果转换失败会直接跳过。这意味着只要首参数可以转换为对象，就不会报错。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> obj = &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>&#125;;<br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(a, <span class="hljs-literal">undefined</span>) === obj <span class="hljs-comment">// true</span><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(a, <span class="hljs-literal">null</span>) === obj <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+<p>其他类型的值中，只有字符串会以数组的形式拷贝至对象中，其他值都不会产生效果；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> v1 = <span class="hljs-string">&#x27;abc&#x27;</span>;<br><span class="hljs-keyword">var</span> v2 = <span class="hljs-literal">true</span>;<br><span class="hljs-keyword">var</span> v3 = <span class="hljs-number">10</span>;<br><br><span class="hljs-keyword">var</span> obj = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;&#125;, v1, v2, v3);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(obj); <span class="hljs-comment">// &#123;&#x27;0&#x27;: &#x27;a&#x27;, &#x27;1&#x27;: &#x27;b&#x27;, &#x27;2&#x27;: &#x27;c&#x27;&#125;</span><br></code></pre></td></tr></table></figure>
+<p><code>Object.assign()</code>拷贝的属性是有限制的，只拷贝源对象的自身属性（不拷贝继承属性），也不拷贝不可枚举的属性（<code>enumerable: false</code>）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;<span class="hljs-attr">b</span>: <span class="hljs-string">&#x27;c&#x27;</span>&#125;, <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperty</span>(&#123;&#125;, <span class="hljs-string">&#x27;invisible&#x27;</span>, &#123;<br>    	<span class="hljs-attr">enumerable</span>: <span class="hljs-literal">false</span>,<br>    	<span class="hljs-attr">value</span>: <span class="hljs-string">&#x27;hello&#x27;</span><br>	&#125;)<br>)<br><span class="hljs-comment">// &#123;b: &#x27;c&#x27;&#125;</span><br></code></pre></td></tr></table></figure>
+<p>值得注意的是：<code>Object.assign()</code>执行的是浅拷贝，而不是深拷贝。如果源对象某个属性的值是对象，那么目标对象拷贝得到的仅仅是这个对象的引用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> obj1 = &#123;<span class="hljs-attr">a</span>: &#123;<span class="hljs-attr">b</span>: <span class="hljs-number">1</span>&#125;&#125;;<br><span class="hljs-keyword">var</span> obj2 = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;&#125;, obj1);<br><br>obj1.<span class="hljs-property">a</span>.<span class="hljs-property">b</span> = <span class="hljs-number">2</span>;<br>obj2.<span class="hljs-property">a</span>.<span class="hljs-property">b</span> <span class="hljs-comment">// 2</span><br></code></pre></td></tr></table></figure>
+<h3 id="Object-assign-方法有哪些用途呢？"><a href="#Object-assign-方法有哪些用途呢？" class="headerlink" title="Object.assign()方法有哪些用途呢？"></a>Object.assign()方法有哪些用途呢？</h3><h4 id="为对象添加属性"><a href="#为对象添加属性" class="headerlink" title="为对象添加属性"></a>为对象添加属性</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Point</span> &#123;<br>    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">x, y</span>) &#123;<br>        <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-variable language_">this</span>, &#123;x, y&#125;)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="为对象添加方法"><a href="#为对象添加方法" class="headerlink" title="为对象添加方法"></a>为对象添加方法</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">SomeClass</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, &#123;<br>    <span class="hljs-title function_">someMethod</span>(<span class="hljs-params">arg1, arg2</span>) &#123;<br>        ...<br>    &#125;,<br>    <span class="hljs-title function_">anotherMethod</span>(<span class="hljs-params"></span>) &#123;<br>        ...<br>    &#125;<br>&#125;);<br>        <br><span class="hljs-comment">// 等同于下面的写法</span><br><span class="hljs-title class_">SomeClass</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">someMethod</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">arg1, arg2</span>) &#123; ... &#125;;<br><span class="hljs-title class_">SomeClass</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">anotherMethod</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123; ... &#125;;<br></code></pre></td></tr></table></figure>
+<h4 id="克隆对象"><a href="#克隆对象" class="headerlink" title="克隆对象"></a>克隆对象</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 将原始对象拷贝到空对象中</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">clone</span> (origin) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;&#125;, origin);<br>&#125;<br><br><span class="hljs-comment">// 将原始对象和其继承的值拷贝到新对象中</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">clone</span> (origin) &#123;<br>    <span class="hljs-keyword">let</span> originProto = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getPrototypeOf</span>(origin);<br>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(originProto), origin);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="合并多个对象"><a href="#合并多个对象" class="headerlink" title="合并多个对象"></a>合并多个对象</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 将多个对象合并到某个对象</span><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">merge</span> = (<span class="hljs-params">target, ...source</span>) =&gt; <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(target, ...source);<br><br><span class="hljs-comment">// 合并后返回一个新对象</span><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">merge</span> = (<span class="hljs-params">...source</span>) =&gt; <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;&#125;, ...source);<br></code></pre></td></tr></table></figure>
+<h4 id="为属性指定默认值"><a href="#为属性指定默认值" class="headerlink" title="为属性指定默认值"></a>为属性指定默认值</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">DEFAULTS</span> = &#123;<br>    <span class="hljs-attr">logLevel</span>: <span class="hljs-number">0</span>,<br>    <span class="hljs-attr">outputFormat</span>: <span class="hljs-string">&#x27;html&#x27;</span><br>&#125;;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">processContent</span>(<span class="hljs-params">options</span>) &#123;<br>    options = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;&#125;, <span class="hljs-variable constant_">DEFAULTS</span>, options)<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="属性的可枚举性"><a href="#属性的可枚举性" class="headerlink" title="属性的可枚举性"></a>属性的可枚举性</h2><p><code>Object.getOwnPropertyDescriptor(obj, &#39;foo&#39;)</code>方法可以获取该属性的描述对象，其中描述对象有一个<code>enumerable</code>属性，称为“可枚举性”，如果该属性为false，就表示某些操作会忽略当前属性。</p>
+<p>ES6中有下面4个操作会忽略<code>enumerable</code>为false的属性。</p>
+<ul>
+<li><code>for ... in</code> 循环：只遍历对象自身的和继承的可枚举属性；</li>
+<li><code>Object.keys()</code>：返回对象自身的所有可枚举的属性键名；</li>
+<li><code>JSON.stringify()</code>：只串行化对象自身的可枚举属性；</li>
+<li><code>Object.assign()</code>：只拷贝对象自身的可枚举属性；</li>
+</ul>
+<p>上面4个操作中，只有<code>for ... in</code>会返回继承的属性。实际上引入<code>enumerable</code>的最初目的，就是让某些可以规避掉<code>for...in</code>的操作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptor</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, <span class="hljs-string">&#x27;toString&#x27;</span>).<span class="hljs-property">enumerable</span> <span class="hljs-comment">// false</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptor</span>([], <span class="hljs-string">&#x27;length&#x27;</span>).<span class="hljs-property">enumerable</span> <span class="hljs-comment">// false</span><br></code></pre></td></tr></table></figure>
+<p>另外ES6规定，所有Class的原型方法都是不可枚举的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptor</span>(<span class="hljs-keyword">class</span> &#123;<span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;&#125;&#125;.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, <span class="hljs-string">&#x27;foo&#x27;</span>).<span class="hljs-property">enumerable</span><br></code></pre></td></tr></table></figure>
+<h2 id="属性的遍历"><a href="#属性的遍历" class="headerlink" title="属性的遍历"></a>属性的遍历</h2><p>ES6中一共有5种方法可以遍历对象的属性</p>
+<h4 id="（1）for…in"><a href="#（1）for…in" class="headerlink" title="（1）for…in"></a>（1）for…in</h4><p>遍历对象自身和继承的可枚举属性</p>
+<h4 id="（2）Object-keys-obj"><a href="#（2）Object-keys-obj" class="headerlink" title="（2）Object.keys(obj)"></a>（2）Object.keys(obj)</h4><p>返回一个数组，包括对象自身的（不含继承）所有可枚举属性（不包括Symbol属性）</p>
+<h4 id="（3）Object-getOwnPropertyNames-obj"><a href="#（3）Object-getOwnPropertyNames-obj" class="headerlink" title="（3）Object.getOwnPropertyNames(obj)"></a>（3）Object.getOwnPropertyNames(obj)</h4><p>返回一个数组，包含对象自身的所有属性（不包括Symbol属性）</p>
+<h4 id="（4）Object-getOwnPropertySymbols-obj"><a href="#（4）Object-getOwnPropertySymbols-obj" class="headerlink" title="（4）Object.getOwnPropertySymbols(obj)"></a>（4）Object.getOwnPropertySymbols(obj)</h4><p>返回一个数组，包含对象自身的所有Symbol属性</p>
+<h4 id="（5）Reflect-ownKeys-obj"><a href="#（5）Reflect-ownKeys-obj" class="headerlink" title="（5）Reflect.ownKeys(obj)"></a>（5）Reflect.ownKeys(obj)</h4><p>返回一个数组，包含对象自身的所有属性，不管是属性名还是Symbol还是字符串，也不管是否可枚举。</p>
+<p>上面5种方法遍历对象属性，都遵循同样的属性遍历的次序规则。</p>
+<ul>
+<li>首先遍历所有属性名为数值的字符的属性，按照数字排序；</li>
+<li>其次遍历所有属性名为字符串的属性，按照生成时间排序；</li>
+<li>最后遍历所有属性名为Symbol值得属性，按照生成时间排序；</li>
+</ul>
+<p>一句话概括：遍历规则为数值 &gt; 字符串 &gt; Symbol；数值排序规则为数字，剩下两个排序规则为生成顺序；</p>
+<h2 id="proto-属性，Objects-setPrototypeOf-Object-getPrototypeOf"><a href="#proto-属性，Objects-setPrototypeOf-Object-getPrototypeOf" class="headerlink" title="__proto__属性，Objects.setPrototypeOf(), Object.getPrototypeOf()"></a><code>__proto__</code>属性，<code>Objects.setPrototypeOf()</code>, <code>Object.getPrototypeOf()</code></h2><h4 id="proto-属性"><a href="#proto-属性" class="headerlink" title="__proto__属性"></a><code>__proto__</code>属性</h4><p>用来读取或设置当前对象的<code>prototype</code>对象。目前所有浏览器都支持这个特性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> obj = &#123;<br>    <span class="hljs-attr">method</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;...&#125;<br>&#125;;<br>obj.<span class="hljs-property">__proto__</span> = someOtherObj;<br><br><span class="hljs-keyword">var</span> obj = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(someOtherObj);<br>obj.<span class="hljs-property">method</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;...&#125;;<br></code></pre></td></tr></table></figure>
+<p>这里和Python一样，使用双下划线标注的属性内部属性，而不是一个正式对外的API。因此在正式使用时不建议显示的设置。而是用<code>Object.setPrototypeOf()</code>、<code>Object.getPrototypeOf()</code>、<code>Object.create()</code>代替。</p>
+<h4 id="Object-setPrototypeOf"><a href="#Object-setPrototypeOf" class="headerlink" title="Object.setPrototypeOf()"></a><code>Object.setPrototypeOf()</code></h4><p>用来设置对象的<code>prototype</code>对象。是ES6推荐的设置原型对象的方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> proto = &#123;&#125;;<br><span class="hljs-keyword">let</span> obj = &#123; <span class="hljs-attr">x</span>: <span class="hljs-number">10</span>&#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">setPrototypeOf</span>(obj, proto);<br><br>proto.<span class="hljs-property">y</span> = <span class="hljs-number">20</span>;<br>proto.<span class="hljs-property">z</span> = <span class="hljs-number">40</span>;<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(obj.<span class="hljs-property">x</span>) <span class="hljs-comment">// 10</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(obj.<span class="hljs-property">y</span>) <span class="hljs-comment">// 20</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(obj.<span class="hljs-property">z</span>) <span class="hljs-comment">// 40</span><br></code></pre></td></tr></table></figure>
+<h4 id="Object-getPrototypeOf"><a href="#Object-getPrototypeOf" class="headerlink" title="Object.getPrototypeOf()"></a><code>Object.getPrototypeOf()</code></h4><p>与上面的set方法相反，用来获取一个对象的prototype对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Rectangle</span> () &#123;<br><br>&#125;<br><br><span class="hljs-keyword">var</span> rec = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Rectangle</span>();<br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getPrototypeOf</span>(rec) === <span class="hljs-title class_">Rectangle</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>; <span class="hljs-comment">// true</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">setPrototypeOf</span>(rec, <span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getPrototypeOf</span>(rec) === <span class="hljs-title class_">Rectangle</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>; <span class="hljs-comment">// false</span><br></code></pre></td></tr></table></figure>
+<h2 id="Object-values-Object-entries"><a href="#Object-values-Object-entries" class="headerlink" title="Object.values(), Object.entries()"></a><code>Object.values()</code>, <code>Object.entries()</code></h2><h4 id="Object-keys"><a href="#Object-keys" class="headerlink" title="Object.keys()"></a><code>Object.keys()</code></h4><p>返回一个数组，成员是参数对象自身的所有可遍历属性的键名（不含继承）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> obj = &#123; <span class="hljs-attr">foo</span>: <span class="hljs-string">&quot;bar&quot;</span>, <span class="hljs-attr">baz</span>: <span class="hljs-number">42</span> &#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(obj)<br><span class="hljs-comment">// [&quot;foo&quot;, &quot;baz&quot;]</span><br></code></pre></td></tr></table></figure>
+<p>目前ES7有一个新提案，引入了跟<code>Object.keys()</code>配套的<code>Object.values</code>和<code>Object.entries</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> &#123; keys, values, entries &#125; = <span class="hljs-title class_">Object</span>;<br><span class="hljs-keyword">let</span> obj = &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">c</span>: <span class="hljs-number">3</span> &#125;;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key  <span class="hljs-keyword">of</span> <span class="hljs-title function_">keys</span>(obj)) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(key);<br>&#125;<br><span class="hljs-comment">// &#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;</span><br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> value <span class="hljs-keyword">of</span> <span class="hljs-title function_">values</span>(obj)) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(value);<br>&#125;<br><span class="hljs-comment">// 1, 2, 3</span><br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title function_">entries</span>(obj)) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>([key, value]);<br>&#125;<br><span class="hljs-comment">//[&#x27;a&#x27;, 1], [&#x27;b&#x27;, 2], [&#x27;c&#x27;, 3]</span><br></code></pre></td></tr></table></figure>
+<h4 id="Object-values"><a href="#Object-values" class="headerlink" title="Object.values()"></a><code>Object.values()</code></h4><p>返回一个数组，成员是参数对象自身的（不含继承）所有可遍历（enumerable）属性的键值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> obj = &#123; <span class="hljs-attr">foo</span>: <span class="hljs-string">&quot;bar&quot;</span>, <span class="hljs-attr">baz</span>: <span class="hljs-number">42</span> &#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">values</span>(obj);<br><span class="hljs-comment">// [&#x27;baz&#x27;, 42]</span><br></code></pre></td></tr></table></figure>
+<h4 id="Object-entries"><a href="#Object-entries" class="headerlink" title="Object.entries"></a><code>Object.entries</code></h4><p>返回一个数组，成员是参数对象自身的（不含继承）所有可遍历属性的键值对数组。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> obj = &#123; <span class="hljs-attr">foo</span>: <span class="hljs-string">&#x27;bar&#x27;</span>, <span class="hljs-attr">baz</span>: <span class="hljs-number">42</span> &#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(obj);<br><span class="hljs-comment">// [ [ &#x27;foo&#x27;, &#x27;bar&#x27; ], [ &#x27;baz&#x27;, 42 ] ]</span><br></code></pre></td></tr></table></figure>
+<p>基本用途为遍历对象的属性，也可以将对象转换为Map</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> obj = &#123; <span class="hljs-attr">one</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">two</span>: <span class="hljs-number">2</span> &#125;;<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [k, v] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(obj)) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">$&#123;<span class="hljs-built_in">JSON</span>.stringify(k)&#125;</span> : <span class="hljs-subst">$&#123;<span class="hljs-built_in">JSON</span>.stringify(v)&#125;</span>`</span>)<br>&#125;<br><span class="hljs-comment">// &quot;one&quot;: 1</span><br><span class="hljs-comment">// &quot;two&quot;: 2</span><br><br><span class="hljs-comment">// 另一个用途是将对象转换为Map</span><br><span class="hljs-keyword">var</span> obj = &#123; <span class="hljs-attr">foo</span>: <span class="hljs-string">&#x27;bar&#x27;</span>, <span class="hljs-attr">baz</span>: <span class="hljs-number">42</span> &#125;;<br><span class="hljs-keyword">var</span> map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(obj));<br>map <span class="hljs-comment">// Map &#123;foo: &quot;bar&quot;, baz: 42 &#125;</span><br></code></pre></td></tr></table></figure>
+<h2 id="对象的扩展运算符"><a href="#对象的扩展运算符" class="headerlink" title="对象的扩展运算符"></a>对象的扩展运算符</h2><p>之前提到过扩展运算符（<code>...</code>），在对象中也有运用。</p>
+<h4 id="解构赋值"><a href="#解构赋值" class="headerlink" title="解构赋值"></a>解构赋值</h4><p>对象的解构赋值用于从一个对象取值，相当于将所有可遍历的、但尚未被读取的属性分配到指定的对象上。所有的键和值，都会拷贝到新对象上。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> &#123; x, y, ...z &#125; = &#123; <span class="hljs-attr">x</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">a</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">4</span> &#125;;<br>x <span class="hljs-comment">// 1</span><br>y <span class="hljs-comment">// 2</span><br>z <span class="hljs-comment">// &#123; a: 3, b: 4 &#125;</span><br></code></pre></td></tr></table></figure>
+<p>解构必须是最后一个参数，否则会报错，这和Java是完全一样的。注意一点：解构赋值时浅拷贝，如果一个键的值是复合类型的值（数组、对象、函数），那么解构赋值拷贝的是这个值的引用，而不是这个值的副本。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> obj = &#123; <span class="hljs-attr">a</span>: &#123; <span class="hljs-attr">b</span>: <span class="hljs-number">1</span> &#125;&#125;;<br><span class="hljs-keyword">let</span> &#123;...x&#125; = obj;<br>obj.<span class="hljs-property">a</span>.<span class="hljs-property">b</span> = <span class="hljs-number">2</span>;<br>x.<span class="hljs-property">a</span>.<span class="hljs-property">b</span> <span class="hljs-comment">// 2 (浅拷贝无疑了)</span><br></code></pre></td></tr></table></figure>
+<p>另外解构赋值不会拷贝继承自原型对象的属性。下面代码中，对象o3是o2的拷贝，但是只复制了o2自身的属性，没有复制它的原型对象o1的属性。</p>
+<p>解构赋值的一个用处，是扩展某个函数的参数，引入其他操作：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">baseFunction</span> (&#123;a, b&#125;) &#123;<br>    <span class="hljs-comment">// ...</span><br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">wrapperFunction</span> (&#123;x, y, ...restConfig&#125;) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">baseFunction</span>(restConfig);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>扩展运算符（<code>...</code>）用于取出参数对象的所有可遍历属性，拷贝到当前对象之中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> z = &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">4</span> &#125;;<br><span class="hljs-keyword">let</span> n = &#123; ...z &#125;;<br>n <span class="hljs-comment">// &#123; a: 3, b: 4 &#125;</span><br></code></pre></td></tr></table></figure>
+<p>还可以用于合并两个对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> ab = &#123; ...a, ...b &#125;;<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-keyword">let</span> ab = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;&#125;, a, b);<br></code></pre></td></tr></table></figure>
+<h2 id="Object-getOwnPropertyDescriptors"><a href="#Object-getOwnPropertyDescriptors" class="headerlink" title="Object.getOwnPropertyDescriptors()"></a><code>Object.getOwnPropertyDescriptors()</code></h2><p>前面提到了：这个方法是用来返回某个对象属性的描述对象的。ES7有个提案：返回指定对象所有自身属性（非继承性——的描述对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> obj = &#123;<br>    <span class="hljs-attr">foo</span>: <span class="hljs-number">123</span>,<br>    <span class="hljs-keyword">get</span> <span class="hljs-title function_">bar</span>() &#123; <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;abc&#x27;</span> &#125;<br>&#125;;<br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescription</span>(obj)<br><br><span class="hljs-comment">// 返回结果如下</span><br>&#123;<br>  <span class="hljs-attr">foo</span>: &#123; <span class="hljs-attr">value</span>: <span class="hljs-number">123</span>, <span class="hljs-attr">writable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span> &#125;,<br>  <span class="hljs-attr">bar</span>: &#123;<br>    <span class="hljs-attr">get</span>: [<span class="hljs-title class_">Function</span>: get bar],<br>    <span class="hljs-attr">set</span>: <span class="hljs-literal">undefined</span>,<br>    <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>该方法实现的目的：主要是为了解决<code>Object.assing()</code>无法正确拷贝<code>get</code>属性和<code>set</code>属性的问题。结合<code>Object.defineProperties</code>方法就可以实现正确拷贝。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> source = &#123;<br>    set foo (value) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(value);<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">const</span> target2 = &#123;&#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperties</span>(target2, <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptors</span>(source));<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptor</span>(target2, <span class="hljs-string">&#x27;foo&#x27;</span>)<br><br><span class="hljs-comment">// 返回结果</span><br>&#123;                           <br>  <span class="hljs-attr">get</span>: <span class="hljs-literal">undefined</span>,           <br>  <span class="hljs-attr">set</span>: [<span class="hljs-title class_">Function</span>: set foo], <br>  <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">true</span>,         <br>  <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span>        <br>&#125;                           <br></code></pre></td></tr></table></figure>
+<p>将上面两部分代码合并起来，就是这样。是不是突然觉得眼熟悉？（就是React Thunk的使用方法）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> <span class="hljs-title function_">shallowMerge</span> = (<span class="hljs-params">target, source</span>) =&gt; <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperties</span>(<br>	target,<br>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptors</span>(source)<br>);<br><br><span class="hljs-comment">// 浅拷贝对象</span><br><span class="hljs-keyword">const</span> clone = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getPrototypeOf</span>(obj),<br>                           <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptors</span>(obj));<br><span class="hljs-keyword">const</span> <span class="hljs-title function_">shallowClone</span> = (<span class="hljs-params">obj</span>) =&gt; <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<br>	<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getPrototypeOf</span>(obj),<br>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptors</span>(obj)<br>);<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6%E5%9F%BA%E7%A1%80/">ES6基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-symbol/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ES6 Symbol</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-function-expand/">
+                        <span class="hidden-mobile">ES6 函数扩展</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

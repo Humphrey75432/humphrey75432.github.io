@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="SymbolES5的对象属性名都是字符串，这容易造成属性名的冲突。如果存在一种机制，能够保证每个属性的名字都是独一无二的就可以解决这个问题。因此ES6中引入了Symbol。 ES6引入了一种新的原始数据类型Symbol，表示独一无二的值。可以称之为JavaScript的第七种数据类型。 Symbol是通过symbol函数生成的。也就是说，对象的属性名可以有两种类型，一种是原来就有的字符串，另一种是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6 Symbol">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/17/javascript/es6-symbol/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="SymbolES5的对象属性名都是字符串，这容易造成属性名的冲突。如果存在一种机制，能够保证每个属性的名字都是独一无二的就可以解决这个问题。因此ES6中引入了Symbol。 ES6引入了一种新的原始数据类型Symbol，表示独一无二的值。可以称之为JavaScript的第七种数据类型。 Symbol是通过symbol函数生成的。也就是说，对象的属性名可以有两种类型，一种是原来就有的字符串，另一种是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-17T07:15:26.000Z">
+<meta property="article:modified_time" content="2022-02-17T07:15:26.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="ES6基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>ES6 Symbol - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6 Symbol">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-17 15:15" pubdate>
+        2022年2月17日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      60 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6 Symbol</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Symbol"><a href="#Symbol" class="headerlink" title="Symbol"></a>Symbol</h1><p>ES5的对象属性名都是字符串，这容易造成属性名的冲突。如果存在一种机制，能够保证每个属性的名字都是独一无二的就可以解决这个问题。因此ES6中引入了Symbol。</p>
+<p>ES6引入了一种新的原始数据类型Symbol，表示独一无二的值。可以称之为JavaScript的第七种数据类型。</p>
+<p>Symbol是通过symbol函数生成的。也就是说，对象的属性名可以有两种类型，一种是原来就有的字符串，另一种是新增的Symbol类型。凡是属性名属于Symbol的，就是独一无二的，可以保证不会与其他属性名发生冲突。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> s = <span class="hljs-title class_">Symbol</span>();<br><span class="hljs-keyword">typeof</span> s <span class="hljs-comment">// symbol</span><br></code></pre></td></tr></table></figure>
+<p><code>Symbol</code>函数可以接收一个字符串作为参数，表示对Symbol实例的描述，主要是为了在控制台显示或者是转为字符串的过程中方便区分。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> s1 = <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;foo&#x27;</span>);<br><span class="hljs-keyword">var</span> s2 = <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;bar&#x27;</span>);<br><br>s1 <span class="hljs-comment">// Symbol(foo)</span><br>s2 <span class="hljs-comment">// Symbol(bar)</span><br><br>s1.<span class="hljs-title function_">toString</span>() <span class="hljs-comment">// &quot;Symbol(foo)&quot;</span><br>s2.<span class="hljs-title function_">toString</span>() <span class="hljs-comment">// &quot;Symbol(bar)&quot;</span><br></code></pre></td></tr></table></figure>
+<p>如果Symbol的参数是一个对象，那么就会调用该对象的<code>toString()</code>方法，将其转换为字符串，然后才生成一个Symbol值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> obj = &#123;<br>    <span class="hljs-title function_">toString</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;abc&#x27;</span>;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">const</span> sym = <span class="hljs-title class_">Symbol</span>(obj);<br>sym <span class="hljs-comment">// Symbol(abc)</span><br></code></pre></td></tr></table></figure>
+<p>Symbol值不能与其他类型的值进行运算，会报错；但是却可以显式转换为字符串</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> sym = <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;My Symbol&#x27;</span>);<br><br><span class="hljs-string">&quot;your symbol is &quot;</span> + sym <span class="hljs-comment">// Error</span><br><br><span class="hljs-title class_">String</span>(sym); <span class="hljs-comment">// Symbol(&#x27;My symbol&#x27;)</span><br>sym.<span class="hljs-title function_">toString</span>(); <span class="hljs-comment">// Symbol(My symbol)</span><br></code></pre></td></tr></table></figure>
+<h2 id="作为属性名的Symbol"><a href="#作为属性名的Symbol" class="headerlink" title="作为属性名的Symbol"></a>作为属性名的Symbol</h2><p>由于每一个Symbol值都是不相等的，这意味着Symbol可以作为标识符，用在对象的属性名，就能保证不会出现同名的属性。可以防止某一个键被不小心改写或覆盖。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> mySymbol = <span class="hljs-title class_">Symbol</span>();<br><br><span class="hljs-keyword">var</span> a = &#123;&#125;;<br>a[mySymbol] = <span class="hljs-string">&#x27;Hello!&#x27;</span>;<br><br><span class="hljs-keyword">var</span> a = &#123;<br>    [mySymbol]: <span class="hljs-string">&#x27;Hello&#x27;</span><br>&#125;;<br><br><span class="hljs-keyword">var</span> a = &#123;&#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperty</span>(a, mySymbol, &#123; <span class="hljs-attr">value</span>: <span class="hljs-string">&#x27;Hello&#x27;</span> &#125;);<br><br>a[mySymbol] <span class="hljs-comment">// &quot;Hello&quot;</span><br></code></pre></td></tr></table></figure>
+<p>Symbol值作为对象属性名时，不能用作点运算符。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> mySymbol = <span class="hljs-title class_">Symbol</span>();<br><span class="hljs-keyword">var</span> a = &#123;&#125;;<br><br>a.<span class="hljs-property">mySymbol</span> = <span class="hljs-string">&#x27;Hello&#x27;</span>;<br>a[mySymbol] <span class="hljs-comment">// undefined</span><br>a[<span class="hljs-string">&#x27;mySymbol&#x27;</span>] <span class="hljs-comment">// Hello</span><br></code></pre></td></tr></table></figure>
+<p>Symbol类型还可以用于定义一组常量，保证这组常量的值都是不相等的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript">log.<span class="hljs-property">levels</span> = &#123;<br>    <span class="hljs-attr">DEBUG</span>: <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;debug&#x27;</span>),<br>    <span class="hljs-attr">INFO</span>: <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;info&#x27;</span>),<br>    <span class="hljs-attr">WARN</span>: <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;warn&#x27;</span>)<br>&#125;;<br><br><span class="hljs-title function_">log</span>(log.<span class="hljs-property">levels</span>.<span class="hljs-property">DEBUG</span>, <span class="hljs-string">&#x27;debug message&#x27;</span>);<br><span class="hljs-title function_">log</span>(log.<span class="hljs-property">levels</span>.<span class="hljs-property">INFO</span>, <span class="hljs-string">&#x27;info message&#x27;</span>);<br></code></pre></td></tr></table></figure>
+<p>还有一个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> shapeType = &#123;<br>    <span class="hljs-attr">triangle</span>: <span class="hljs-title class_">Symbol</span>()<br>&#125;;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">getArea</span>(<span class="hljs-params">shape, options</span>) &#123;<br>    <span class="hljs-keyword">var</span> area = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">switch</span>(shape) &#123;<br>        <span class="hljs-keyword">case</span> shapeType.<span class="hljs-property">triangle</span>:<br>            area = <span class="hljs-number">.5</span> * options.<span class="hljs-property">width</span> * options.<span class="hljs-property">height</span>;<br>            <span class="hljs-keyword">break</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> area;<br>&#125;<br><br><span class="hljs-title function_">getArea</span>(shapeType.<span class="hljs-property">triangle</span>, &#123;<span class="hljs-attr">width</span>: <span class="hljs-number">100</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">100</span>&#125;); <span class="hljs-comment">// 5000</span><br></code></pre></td></tr></table></figure>
+<h2 id="属性名的遍历"><a href="#属性名的遍历" class="headerlink" title="属性名的遍历"></a>属性名的遍历</h2><p>Symbol作为属性名，不会出现在<code>for...in</code>、<code>for...of</code>循环中，也不会被<code>Object.keys()</code>、<code>Object.getOwnPropertyNames()</code>、<code>JSON.stringify()</code>返回。但是，它也不是私有属性，有一个<code>Object.getOwnPropertySymbols</code>方法，可以获取指定对象的所有Symbol属性名。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> obj = &#123;&#125;;<br><span class="hljs-keyword">var</span> a = <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;a&#x27;</span>);<br><span class="hljs-keyword">var</span> b = <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;b&#x27;</span>);<br><br>obj[a] = <span class="hljs-string">&#x27;Hello&#x27;</span>;<br>obj[b] = <span class="hljs-string">&#x27;World&#x27;</span>;<br><br><span class="hljs-keyword">var</span> objectSymbols = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertySymbols</span>(obj);<br><br>objSymbols <span class="hljs-comment">// [Symbol(a), Symbol(b)]</span><br></code></pre></td></tr></table></figure>
+<p>由于以Symbol值作为名称的属性，不会被常规方法遍历得到。因此可以利用这个特性，为对象定义一些非私有的、但又希望只用于内部的方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> size = <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;size&#x27;</span>);<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Collection</span> &#123;<br>    <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-variable language_">this</span>[size] = <span class="hljs-number">0</span>;<br>    &#125;<br>    <br>    <span class="hljs-title function_">add</span>(<span class="hljs-params">item</span>) &#123;<br>        <span class="hljs-variable language_">this</span>[<span class="hljs-variable language_">this</span>[size]] = item;<br>        <span class="hljs-variable language_">this</span>[size]++;<br>    &#125;<br>    <br>    <span class="hljs-keyword">static</span> <span class="hljs-title function_">sizeOf</span>(<span class="hljs-params">instance</span>) &#123;<br>        <span class="hljs-keyword">return</span> instance[size];<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">var</span> x = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Collection</span>();<br><span class="hljs-title class_">Collection</span>.<span class="hljs-title function_">sizeOf</span>(x) <span class="hljs-comment">// 0</span><br><br>x.<span class="hljs-title function_">add</span>(<span class="hljs-string">&#x27;foo&#x27;</span>);<br><span class="hljs-title class_">Collection</span>.<span class="hljs-title function_">sizeOf</span>(x) <span class="hljs-comment">// 1</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(x) <span class="hljs-comment">// [&#x27;0&#x27;]</span><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyNames</span>(x) <span class="hljs-comment">// [&#x27;0&#x27;]</span><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertySymbols</span>(x) <span class="hljs-comment">// [Symbol(size)]</span><br></code></pre></td></tr></table></figure>
+<h2 id="Symbol-for-Symbol-keyFor"><a href="#Symbol-for-Symbol-keyFor" class="headerlink" title="Symbol.for(), Symbol.keyFor()"></a>Symbol.for(), Symbol.keyFor()</h2><p>有时候希望重新使用同一个Symbol值，<code>Symbol.for</code>可以做到这一点。其接受一个字符串为参数，然后搜索有没有已该参数作为名称的Symbol值，有就返回，没有就以这个名称创建一个Symbol值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> s1 = <span class="hljs-title class_">Symbol</span>.<span class="hljs-title function_">for</span>(<span class="hljs-string">&#x27;foo&#x27;</span>)<br><span class="hljs-keyword">var</span> s2 = <span class="hljs-title class_">Symbol</span>.<span class="hljs-title function_">for</span>(<span class="hljs-string">&#x27;foo&#x27;</span>)<br>s1 === s2 <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+<p><code>Symbol.keyFor</code>方法返回一个已经登记的Symbol类型值的<code>key</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> s1 = <span class="hljs-title class_">Symbol</span>.<span class="hljs-title function_">for</span>(<span class="hljs-string">&quot;foo&quot;</span>);<br><span class="hljs-title class_">Symbol</span>.<span class="hljs-title function_">keyFor</span>(s1) <span class="hljs-comment">// foo</span><br><br><span class="hljs-keyword">var</span> s2 = <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&quot;Foo&quot;</span>);<br><span class="hljs-title class_">Symbol</span>.<span class="hljs-title function_">keyFor</span>(s2) <span class="hljs-comment">// undefined</span><br></code></pre></td></tr></table></figure>
+<h3 id="模块的单例模式"><a href="#模块的单例模式" class="headerlink" title="模块的单例模式"></a>模块的单例模式</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">FOO_KEY</span> = <span class="hljs-title class_">Symbol</span>.<span class="hljs-title function_">for</span>(<span class="hljs-string">&#x27;foo&#x27;</span>);<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">A</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">foo</span> = <span class="hljs-string">&#x27;hello&#x27;</span>;<br>&#125;<br><br><span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">global</span>[<span class="hljs-variable constant_">FOO_KEY</span>]) &#123;<br>  <span class="hljs-variable language_">global</span>[<span class="hljs-variable constant_">FOO_KEY</span>] = <span class="hljs-keyword">new</span> <span class="hljs-title function_">A</span>();<br>&#125;<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-variable language_">global</span>[<span class="hljs-variable constant_">FOO_KEY</span>];<br></code></pre></td></tr></table></figure>
+<p>上面的代码中，可以保证<code>global[FOO_KEY]</code>不会被无意间覆盖，但还是可以被改写。</p>
+<h2 id="内置的Symbol值"><a href="#内置的Symbol值" class="headerlink" title="内置的Symbol值"></a>内置的Symbol值</h2><p>除了定义自己使用的Symbol值以外，ES6还提供了11个内置的Symbol值，指向语言内部使用的方法。</p>
+<h3 id="Symbol-hasInstance"><a href="#Symbol-hasInstance" class="headerlink" title="Symbol.hasInstance"></a>Symbol.hasInstance</h3><p>指向一个内部方法。当其他对象使用<code>instanceof</code>运算符，判断是否为该对象的实例时，会调用此方法。例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;<br>  [<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">hasIntance</span>](foo) &#123;<br>    <span class="hljs-keyword">return</span> foo <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Array</span>;<br>  &#125;<br>&#125;<br><br>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>] <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyClass</span>() <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+<h3 id="Symbol-isConcatSpreadable"><a href="#Symbol-isConcatSpreadable" class="headerlink" title="Symbol.isConcatSpreadable"></a>Symbol.isConcatSpreadable</h3><p>等于一个布尔值，表示该对象使用<code>Array.prototype.concat()</code>时，是否可以展开。默认情况下是可以展开的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> arr1 = [<span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>];<br>[<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>].<span class="hljs-title function_">concat</span>(arr1, <span class="hljs-string">&#x27;e&#x27;</span>] <span class="hljs-comment">// [&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;, &#x27;d&#x27;, &#x27;e&#x27;]</span><br>arr1[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">isConcatSpreadable</span>] <span class="hljs-comment">// undefined</span><br><br><span class="hljs-keyword">let</span> arr2 = [<span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>];<br>arr2[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">isConcatSpreadable</span>] = <span class="hljs-literal">false</span>;<br>[<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>].<span class="hljs-title function_">concat</span>(arr2, <span class="hljs-string">&#x27;e&#x27;</span>] <span class="hljs-comment">// [&#x27;a&#x27;, &#x27;b&#x27;, [&#x27;c&#x27;, &#x27;d&#x27;], &#x27;e&#x27;]</span><br></code></pre></td></tr></table></figure>
+<h3 id="Symbol-species"><a href="#Symbol-species" class="headerlink" title="Symbol.species"></a>Symbol.species</h3><p>指向一个方法，该对象作为构造函数创造实例时，会调用这个方法，如果<code>this.constructor[Symbol.species]</code>存在，会使用这个属性作为构造函数，来创造新的实例对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 默认读取器如下</span><br><span class="hljs-keyword">static</span> get [<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">species</span>] &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="Symbol-match"><a href="#Symbol-match" class="headerlink" title="Symbol.match"></a>Symbol.match</h3><p>指向一个函数，当执行<code>str.match(myObject)</code>时，如果该属性存在，会调用它，返回该方法的返回值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">String</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-title function_">match</span>(regexp);<br><span class="hljs-comment">// 等同于</span><br>regexp[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">match</span>](<span class="hljs-variable language_">this</span>);<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyMatcher</span> &#123;<br>  [<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">match</span>](string) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;hello world&#x27;</span>.<span class="hljs-title function_">indexOf</span>(string);<br>  &#125;<br>&#125;<br><br><span class="hljs-string">&#x27;e&#x27;</span>.<span class="hljs-title function_">match</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">MyMatcher</span>()]; <span class="hljs-comment">// 1</span><br></code></pre></td></tr></table></figure>
+<h3 id="Symbol-replace"><a href="#Symbol-replace" class="headerlink" title="Symbol.replace"></a>Symbol.replace</h3><p>指向一个方法，当该对象被<code>Symbol.prototype.replace</code>方法调用时，会返回该方法的返回值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">String</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-title function_">replace</span>(searchValue, replaceValue);<br><span class="hljs-comment">// 等同于</span><br>searchValue[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">replace</span>](<span class="hljs-variable language_">this</span>, replaceValue);<br></code></pre></td></tr></table></figure>
+<p>下面有一个例子说明这个问题：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> x = &#123;&#125;;<br>x[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">replace</span>] = &#123;...s&#125; =&gt; <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s);<br><br><span class="hljs-string">&#x27;Hello&#x27;</span>.<span class="hljs-title function_">replace</span>(x, <span class="hljs-string">&#x27;World&#x27;</span>) <span class="hljs-comment">// [&quot;Hello&quot;, &quot;World&quot;]</span><br></code></pre></td></tr></table></figure>
+<p>第一个参数是replace方法正在坐拥的对象，第二个参数替换后的值。</p>
+<h3 id="Symbol-search"><a href="#Symbol-search" class="headerlink" title="Symbol.search"></a>Symbol.search</h3><p>指向一个方法，当该对象被<code>String.prototype.search</code>方法调用时，会返回该方法的返回值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">String</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-title function_">search</span>(regexp);<br><span class="hljs-comment">// 等同于</span><br>regexp[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">search</span>](<span class="hljs-variable language_">this</span>);<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MySearch</span> &#123;<br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">value</span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> = value;<br>  &#125;<br>  [<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">search</span>](string) &#123;<br>    <span class="hljs-keyword">return</span> string.<span class="hljs-title function_">indexOf</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>);<br>  &#125;<br>&#125;<br><span class="hljs-string">&#x27;foobar&#x27;</span>.<span class="hljs-title function_">search</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">MySearch</span>(<span class="hljs-string">&#x27;foo&#x27;</span>)) <span class="hljs-comment">// 0</span><br></code></pre></td></tr></table></figure>
+<h3 id="Symbol-split"><a href="#Symbol-split" class="headerlink" title="Symbol.split"></a>Symbol.split</h3><p>指向一个方法，当该对象被<code>String.prototype.split</code>方法调用时，会返回该方法的返回值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">String</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-title function_">split</span>(separator, limit);<br><span class="hljs-comment">// 等同于</span><br>separator[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">split</span>](<span class="hljs-variable language_">this</span>, limit);<br></code></pre></td></tr></table></figure>
+<h3 id="Symbol-iterator"><a href="#Symbol-iterator" class="headerlink" title="Symbol.iterator"></a>Symbol.iterator</h3><p>指向该对象的默认遍历方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> myIterable = &#123;&#125;;<br>myIterable[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">iterator</span>] = <span class="hljs-keyword">function</span>* () &#123;<br>  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;<br>  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>;<br>  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>;<br>&#125;;<br><br>[...myIterable] <span class="hljs-comment">// [1, 2, 3]</span><br></code></pre></td></tr></table></figure>
+<h3 id="Symbol-toPrimitive"><a href="#Symbol-toPrimitive" class="headerlink" title="Symbol.toPrimitive"></a>Symbol.toPrimitive</h3><p>指向一个方法。该对象被转化为原始类型的值时，会调用这个方法，返回该对象对应的原始类型值。</p>
+<p>该方法被调用时，会接受一个字符串参数，表示当前运算的模式，共有三种模式：</p>
+<ul>
+<li>Number：该场合需要转换成数值</li>
+<li>String：该场合需要转换成字符串</li>
+<li>Defaul：该场合既可以转换成数值，也可以转换成字符串</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> obj = &#123;<br>  [<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">toPrimitive</span>](hint) &#123;<br>    <span class="hljs-keyword">switch</span>(hint) &#123;<br>      <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;number&#x27;</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">123</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;string&#x27;</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;str&#x27;</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;default&#x27;</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;default&#x27;</span>;<br>      <span class="hljs-attr">default</span>:<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>();<br>    &#125;<br>  &#125;<br>&#125;;<br><br><span class="hljs-number">2</span> * obj <span class="hljs-comment">// 246</span><br><span class="hljs-number">3</span> + obj <span class="hljs-comment">// 3default</span><br>obj == <span class="hljs-string">&#x27;default&#x27;</span> <span class="hljs-comment">// true</span><br><span class="hljs-title class_">String</span>(obj) <span class="hljs-comment">// str</span><br></code></pre></td></tr></table></figure>
+<h3 id="Symbol-toStringTag"><a href="#Symbol-toStringTag" class="headerlink" title="Symbol.toStringTag"></a>Symbol.toStringTag</h3><p>指向一个方法，在该对象上面调用<code>Object.prototye.toString</code>方法时，如果这个属性存在，它的返回值会出现在<code>toString</code>方法返回的字符串之中，表示对象的类型。这个属性可以用于定制<code>[object Object]</code>或者<code>[object Array]</code>中<code>object</code>后面的那个字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript">(&#123;[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">toStringTag</span>]: <span class="hljs-string">&#x27;Foo&#x27;</span>&#125;.<span class="hljs-title function_">toString</span>())<br><span class="hljs-comment">// [object Object]</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Collection</span> &#123;<br>  get [<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">toStringTag</span>]() &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;xxx&#x27;</span>;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">var</span> x = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Collection</span>();<br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(x); <span class="hljs-comment">// [object xxx]</span><br></code></pre></td></tr></table></figure>
+<h3 id="Symbol-unscopables"><a href="#Symbol-unscopables" class="headerlink" title="Symbol.unscopables"></a>Symbol.unscopables</h3><p>指向一个对象。该对象指定了使用<code>with</code>关键字时，哪些属性会被<code>with</code>环境排除。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">unscopables</span>]<br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">unscopables</span>])<br></code></pre></td></tr></table></figure>
+<p>上面的代码说明，数组有6个属性，会被<code>with</code>命令排除。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;<br>  <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;&#125;<br>&#125;<br><br><span class="hljs-keyword">var</span> foo = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;&#125;<br><br><span class="hljs-keyword">with</span> [<span class="hljs-title class_">MyClass</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>] &#123;<br>  <span class="hljs-title function_">foo</span>();<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;<br>  <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;&#125;<br>  get [<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">unscopables</span>]() &#123;<br>    <span class="hljs-keyword">return</span> &#123;<span class="hljs-attr">foo</span>: <span class="hljs-literal">true</span>&#125;;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">var</span> foo = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;&#125;<br><span class="hljs-keyword">with</span> (<span class="hljs-title class_">MyClass</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>) &#123;<br>  <span class="hljs-title function_">foo</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6%E5%9F%BA%E7%A1%80/">ES6基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-set-and-map/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ES6 Set和Map</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-object-expand/">
+                        <span class="hidden-mobile">ES6 对象扩展</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

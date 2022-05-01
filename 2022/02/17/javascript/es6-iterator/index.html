@@ -1,0 +1,495 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Iterator和for…of循环Iterator基本概念遍历器是是一种机制：它是一种接口，为各种不同的数据结构提供统一的访问机制。任何数据结构只要部署了Iterator接口，就可以完成遍历操作。 数据结构的默认Iterator接口目的在于为所有数据结构，提供一种统一的访问机制，即for...of循环。因此一种数据结构只要部署了Iterator接口，我们就可以成为该数据结构是可遍历的。 ES6规定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6 迭代">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/17/javascript/es6-iterator/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="Iterator和for…of循环Iterator基本概念遍历器是是一种机制：它是一种接口，为各种不同的数据结构提供统一的访问机制。任何数据结构只要部署了Iterator接口，就可以完成遍历操作。 数据结构的默认Iterator接口目的在于为所有数据结构，提供一种统一的访问机制，即for...of循环。因此一种数据结构只要部署了Iterator接口，我们就可以成为该数据结构是可遍历的。 ES6规定">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-17T07:27:58.000Z">
+<meta property="article:modified_time" content="2022-02-17T07:27:58.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="ES6基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>ES6 迭代 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6 迭代">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-17 15:27" pubdate>
+        2022年2月17日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.4k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      37 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6 迭代</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Iterator和for…of循环"><a href="#Iterator和for…of循环" class="headerlink" title="Iterator和for…of循环"></a>Iterator和for…of循环</h1><h2 id="Iterator"><a href="#Iterator" class="headerlink" title="Iterator"></a>Iterator</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>遍历器是是一种机制：它是一种接口，为各种不同的数据结构提供统一的访问机制。任何数据结构只要部署了Iterator接口，就可以完成遍历操作。</p>
+<h3 id="数据结构的默认Iterator接口"><a href="#数据结构的默认Iterator接口" class="headerlink" title="数据结构的默认Iterator接口"></a>数据结构的默认Iterator接口</h3><p>目的在于为所有数据结构，提供一种统一的访问机制，即<code>for...of</code>循环。因此一种数据结构只要部署了Iterator接口，我们就可以成为该数据结构是可遍历的。</p>
+<p>ES6规定：默认的Iterator接口部署在数据结构的<code>Symbol.iterator</code>属性，也就是说：一个数据结构只要具有该属性，就可以认为是可遍历的。<code>Symbol.iterator</code>属性本身是一个函数，就是当前数据结构默认的遍历器生成函数。例子如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> obj = &#123;<br>    [<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">iterator</span>] : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> &#123;<br>            <span class="hljs-attr">next</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>                <span class="hljs-keyword">return</span> &#123;<br>                    <span class="hljs-attr">value</span>: <span class="hljs-number">1</span>,<br>                    <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span><br>                &#125;;<br>            &#125;<br>        &#125;;<br>    &#125;<br>&#125;;<br><br><span class="hljs-comment">// obj对象是可遍历的，因为具有Symbol.iterator属性。</span><br></code></pre></td></tr></table></figure>
+<p>一个对象如果想要在<code>for...of</code>循环上调用Iterator接口，就必须在<code>Symbol.iterator</code>的属性上部署遍历器生成方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">class</span> <span class="hljs-title class_">RangeIterator</span> &#123;<br>    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">start, stop</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> = start;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stop</span> = stop;<br>    &#125;<br><br>    [<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">iterator</span>]() &#123; <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>; &#125;<br><br>    <span class="hljs-title function_">next</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">var</span> value = <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>;<br>        <span class="hljs-keyword">if</span> (value &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">stop</span>) &#123;<br>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> ++;<br>            <span class="hljs-keyword">return</span> &#123;<span class="hljs-attr">done</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">value</span>: value&#125;;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> &#123;<span class="hljs-attr">done</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">value</span>: <span class="hljs-literal">undefined</span>&#125;;<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">range</span>(<span class="hljs-params">start ,stop</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RangeIterator</span>(start, stop);<br>&#125;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> value <span class="hljs-keyword">of</span> <span class="hljs-title function_">range</span>(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>)) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(value);<br>&#125;<br><span class="hljs-comment">// 0</span><br><span class="hljs-comment">// 1</span><br><span class="hljs-comment">// 2</span><br></code></pre></td></tr></table></figure>
+<h2 id="调用Iterator接口的场合"><a href="#调用Iterator接口的场合" class="headerlink" title="调用Iterator接口的场合"></a>调用Iterator接口的场合</h2><h3 id="（1）解构赋值"><a href="#（1）解构赋值" class="headerlink" title="（1）解构赋值"></a>（1）解构赋值</h3><p>对数组和Set结构进行解构赋值时，会默认调用<code>Symbol.iterator</code>方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>().<span class="hljs-title function_">add</span>(<span class="hljs-string">&#x27;a&#x27;</span>).<span class="hljs-title function_">add</span>(<span class="hljs-string">&#x27;b&#x27;</span>).<span class="hljs-title function_">add</span>(<span class="hljs-string">&#x27;c&#x27;</span>);<br><br><span class="hljs-keyword">let</span> [x, y] = set;<br><br><span class="hljs-keyword">let</span> [first, ...rest] = set;<br></code></pre></td></tr></table></figure>
+<h3 id="（2）扩展运算符"><a href="#（2）扩展运算符" class="headerlink" title="（2）扩展运算符"></a>（2）扩展运算符</h3><p>扩展运算符默认也会调用<code>Symbol.iterator</code>接口，前面章节已经有很多例子，这里就不再展示了。</p>
+<h3 id="（3）yield"><a href="#（3）yield" class="headerlink" title="（3）yield*"></a>（3）yield*</h3><p>yield* 后面跟的也是一个可遍历结构，它会调用该结构的遍历器接口</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> generator = <span class="hljs-keyword">function</span>* () &#123;<br>    <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">yield</span>* [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>];<br>    <span class="hljs-keyword">yield</span> <span class="hljs-number">5</span>;<br>&#125;;<br><br><span class="hljs-keyword">var</span> iterator = <span class="hljs-title function_">generator</span>();<br><br>iterator.<span class="hljs-title function_">next</span>(<span class="hljs-params"></span>)<br>&#123; <span class="hljs-attr">value</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125;<br><br>iterator.<span class="hljs-title function_">next</span>(<span class="hljs-params"></span>)<br>&#123; <span class="hljs-attr">value</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125;<br><br>iterator.<span class="hljs-title function_">next</span>(<span class="hljs-params"></span>)<br>&#123; <span class="hljs-attr">value</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125;<br><br>iterator.<span class="hljs-title function_">next</span>(<span class="hljs-params"></span>)<br>&#123; <span class="hljs-attr">value</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125;<br><br>iterator.<span class="hljs-title function_">next</span>(<span class="hljs-params"></span>)<br>&#123; <span class="hljs-attr">value</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125;<br><br>iterator.<span class="hljs-title function_">next</span>(<span class="hljs-params"></span>)<br>&#123; <span class="hljs-attr">value</span>: <span class="hljs-literal">undefined</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span> &#125;<br></code></pre></td></tr></table></figure>
+<h3 id="（4）其他场合"><a href="#（4）其他场合" class="headerlink" title="（4）其他场合"></a>（4）其他场合</h3><p>由于数组的遍历会调用遍历器接口，所以任何接受数组作为参数的场合，其实都是调用了遍历器接口的。</p>
+<h2 id="字符串的Iterator接口"><a href="#字符串的Iterator接口" class="headerlink" title="字符串的Iterator接口"></a>字符串的Iterator接口</h2><p>字符串是一个类似数组的对象，也原生具有Iterator接口。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> someString = <span class="hljs-string">&quot;hi&quot;</span>;<br><span class="hljs-keyword">typeof</span> someString[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">iterator</span>]<br><span class="hljs-comment">// &quot;function&quot;</span><br><br><span class="hljs-keyword">var</span> iterator = someString[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">iterator</span>]();<br><br>iterator.<span class="hljs-title function_">next</span>()  <span class="hljs-comment">// &#123; value: &quot;h&quot;, done: false &#125;</span><br>iterator.<span class="hljs-title function_">next</span>()  <span class="hljs-comment">// &#123; value: &quot;i&quot;, done: false &#125;</span><br>iterator.<span class="hljs-title function_">next</span>()  <span class="hljs-comment">// &#123; value: undefined, done: true &#125;</span><br></code></pre></td></tr></table></figure>
+<h2 id="Iterator接口与Generator函数"><a href="#Iterator接口与Generator函数" class="headerlink" title="Iterator接口与Generator函数"></a>Iterator接口与Generator函数</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> myIterable = &#123;&#125;;<br><br>myIterable[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">iterator</span>] = <span class="hljs-keyword">function</span>* () &#123;<br>  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;<br>  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>;<br>  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>;<br>&#125;;<br>[...myIterable] <span class="hljs-comment">// [1, 2, 3]</span><br><br><span class="hljs-comment">// 或者采用下面的简洁写法</span><br><br><span class="hljs-keyword">let</span> obj = &#123;<br>  * [<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">iterator</span>]() &#123;<br>    <span class="hljs-keyword">yield</span> <span class="hljs-string">&#x27;hello&#x27;</span>;<br>    <span class="hljs-keyword">yield</span> <span class="hljs-string">&#x27;world&#x27;</span>;<br>  &#125;<br>&#125;;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x <span class="hljs-keyword">of</span> obj) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(x);<br>&#125;<br><span class="hljs-comment">// hello</span><br><span class="hljs-comment">// world</span><br></code></pre></td></tr></table></figure>
+<h2 id="遍历器对象的return-，throw"><a href="#遍历器对象的return-，throw" class="headerlink" title="遍历器对象的return()，throw()"></a>遍历器对象的return()，throw()</h2><p>遍历器除了有<code>next</code>方法以外，还可以拥有<code>return</code>和<code>throw</code>方法。其中<code>next</code>方法是必须部署的，而<code>return</code>和<code>throw</code>却是可选的。</p>
+<p><code>return</code>方法的使用场景是：如果一个对象要在完成遍历前，需要清理或者释放资源，就需要部署。</p>
+<p><code>throw</code>方法主要结合Generator函数使用。这里不做过多解释。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">readLinesSync</span>(<span class="hljs-params">file</span>) &#123;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-title function_">next</span>(<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-keyword">if</span> (file.<span class="hljs-title function_">isAtEndOfFile</span>()) &#123;<br>        file.<span class="hljs-title function_">close</span>();<br>        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span> &#125;;<br>      &#125;<br>    &#125;,<br>    <span class="hljs-keyword">return</span>() &#123;<br>      file.<span class="hljs-title function_">close</span>();<br>      <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span> &#125;;<br>    &#125;,<br>  &#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="for…of循环"><a href="#for…of循环" class="headerlink" title="for…of循环"></a>for…of循环</h2><p>一个数据结构只要部署了<code>Symbol.iterator</code>属性，就被视为具有iterator接口，就可以使用<code>for...of</code>循环遍历。也就是说<code>for...of</code>循环内部调用的是数据结构的<code>Symbol.iterator</code>方法。</p>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>数组具备iterator接口，可以通过下面的代码证明：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> arr = [<span class="hljs-string">&#x27;red&#x27;</span>, <span class="hljs-string">&#x27;gree&#x27;</span>, <span class="hljs-string">&#x27;blue&#x27;</span>];<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> v <span class="hljs-keyword">of</span> arr) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(v);<br>&#125;<br><br><span class="hljs-keyword">const</span> obj = &#123;&#125;;<br>obj[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">iterator</span>] = arr[<span class="hljs-title class_">Symbol</span>.<span class="hljs-property">iterator</span>].<span class="hljs-title function_">bind</span>(arr);<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> v <span class="hljs-keyword">of</span> obj) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(v);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="Set和Map结构"><a href="#Set和Map结构" class="headerlink" title="Set和Map结构"></a>Set和Map结构</h3><p>Set和Map结构也原生具有Iterator接口，可以直接使用<code>for...of</code>循环。前面有例子演示过，不再赘述。</p>
+<h3 id="类似数组的对象"><a href="#类似数组的对象" class="headerlink" title="类似数组的对象"></a>类似数组的对象</h3><p>类似数组的对象，包括：DON NodeList对象，arguments对象。都可以使用<code>for...of</code>来循环遍历。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 字符串</span><br><span class="hljs-keyword">let</span> str = <span class="hljs-string">&quot;hello&quot;</span>;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> s <span class="hljs-keyword">of</span> str) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s); <span class="hljs-comment">// h e l l o</span><br>&#125;<br><br><span class="hljs-comment">// DOM NodeList对象</span><br><span class="hljs-keyword">let</span> paras = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;p&quot;</span>);<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> p <span class="hljs-keyword">of</span> paras) &#123;<br>  p.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;test&quot;</span>);<br>&#125;<br><br><span class="hljs-comment">// arguments对象</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">printArgs</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x <span class="hljs-keyword">of</span> <span class="hljs-variable language_">arguments</span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(x);<br>  &#125;<br>&#125;<br><span class="hljs-title function_">printArgs</span>(<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>);<br><span class="hljs-comment">// &#x27;a&#x27;</span><br><span class="hljs-comment">// &#x27;b&#x27;</span><br></code></pre></td></tr></table></figure>
+<h3 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h3><p>对于普通对象，<code>for...of</code>不能直接使用，会报错；必须部署了iterator接口后才能使用。但是即便是这样：<code>for...of</code>依旧可以用来遍历键名。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> es6 = &#123;<br>  <span class="hljs-attr">edition</span>: <span class="hljs-number">6</span>,<br>  <span class="hljs-attr">committee</span>: <span class="hljs-string">&quot;TC39&quot;</span>,<br>  <span class="hljs-attr">standard</span>: <span class="hljs-string">&quot;ECMA-262&quot;</span><br>&#125;;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> e <span class="hljs-keyword">in</span> es6) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);<br>&#125;<br><span class="hljs-comment">// edition</span><br><span class="hljs-comment">// committee</span><br><span class="hljs-comment">// standard</span><br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> e <span class="hljs-keyword">of</span> es6) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);<br>&#125;<br><span class="hljs-comment">// TypeError: es6 is not iterable</span><br></code></pre></td></tr></table></figure>
+<h2 id="for-in循环的缺点"><a href="#for-in循环的缺点" class="headerlink" title="for...in循环的缺点"></a><code>for...in</code>循环的缺点</h2><p><code>for...in</code>循环也是有缺点的：</p>
+<ul>
+<li>数组的键名是数字，但是<code>for...in</code>循环是字符串作为键名的；</li>
+<li>除了循环数字键名，还会遍历手动添加的其他键，甚至包括原型链上的键；</li>
+<li>某些情况下，<code>for...in</code>循环会以任何顺序遍历键名；</li>
+</ul>
+<h2 id="for-of循环的优点"><a href="#for-of循环的优点" class="headerlink" title="for...of循环的优点"></a><code>for...of</code>循环的优点</h2><ul>
+<li>有着和for…in循环一样简洁的语法，但是没有for…in那些缺点；</li>
+<li>不同于forEach方法，可以结合return, continue和break使用；</li>
+<li>提供了遍历所有数据结构的统一操作接口；</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6%E5%9F%BA%E7%A1%80/">ES6基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-generator-function/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ES6 Generator函数</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-proxy-and-reflect/">
+                        <span class="hidden-mobile">ES6 Proxy和Reflect</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

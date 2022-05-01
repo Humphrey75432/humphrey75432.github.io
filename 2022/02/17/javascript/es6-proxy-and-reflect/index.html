@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Proxy和ReflectProxy概述Proxy用于修改某些操作的默认行为，等同于在语言层面做修改，所以属于一种“元编程”。Proxy可以理解为在目标对象之前架设一层拦截，外界对该对象的访问必须先通过这层拦截，因此提供了一种机制：可以对外界的访问进行过滤和改写。例子如下： 12345678910var obj &#x3D; new Proxy(&amp;#123;&amp;#125;, &amp;#123;    get: fu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6 Proxy和Reflect">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/17/javascript/es6-proxy-and-reflect/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="Proxy和ReflectProxy概述Proxy用于修改某些操作的默认行为，等同于在语言层面做修改，所以属于一种“元编程”。Proxy可以理解为在目标对象之前架设一层拦截，外界对该对象的访问必须先通过这层拦截，因此提供了一种机制：可以对外界的访问进行过滤和改写。例子如下： 12345678910var obj &#x3D; new Proxy(&amp;#123;&amp;#125;, &amp;#123;    get: fu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-17T07:18:01.000Z">
+<meta property="article:modified_time" content="2022-02-17T07:18:01.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="ES6基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>ES6 Proxy和Reflect - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6 Proxy和Reflect">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-17 15:18" pubdate>
+        2022年2月17日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      61 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6 Proxy和Reflect</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Proxy和Reflect"><a href="#Proxy和Reflect" class="headerlink" title="Proxy和Reflect"></a>Proxy和Reflect</h1><h2 id="Proxy"><a href="#Proxy" class="headerlink" title="Proxy"></a>Proxy</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Proxy用于修改某些操作的默认行为，等同于在语言层面做修改，所以属于一种“元编程”。Proxy可以理解为在目标对象之前架设一层拦截，外界对该对象的访问必须先通过这层拦截，因此提供了一种机制：可以对外界的访问进行过滤和改写。例子如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> obj = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(&#123;&#125;, &#123;<br>    <span class="hljs-attr">get</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">target, key, receiver</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`getting <span class="hljs-subst">$&#123;key&#125;</span>!`</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">get</span>(target, key, receiver);<br>    &#125;,<br>    <span class="hljs-attr">set</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">target, key, value, receiver</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`setting <span class="hljs-subst">$&#123;key&#125;</span>`</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">set</span>(target, key, value, receiver);<br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>ES6原生提供了Proxy构造函数，用来生成Proxy实例。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(target, handler);<br></code></pre></td></tr></table></figure>
+<p>其中target表示所要拦截的对象，handler用来定制拦截行为。例子如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(&#123;&#125;, &#123;<br>    <span class="hljs-attr">get</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">target, property</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">35</span>;<br>    &#125;<br>&#125;);<br><br>proxy.<span class="hljs-property">time</span> <span class="hljs-comment">// 35</span><br>proxy.<span class="hljs-property">name</span> <span class="hljs-comment">// 35</span><br>proxy.<span class="hljs-property">titile</span> <span class="hljs-comment">// 35</span><br></code></pre></td></tr></table></figure>
+<p>需要说明的是：如果handler没有设置任何拦截对象，那么将继续保持原对象的行为不变。并且同一个拦截函数可以设置多个拦截操作：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> handler = &#123;<br>    <span class="hljs-attr">get</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">target, name</span>) &#123;<br>        <span class="hljs-keyword">if</span> (name === <span class="hljs-string">&#x27;prototype&#x27;</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Hello, &#x27;</span> + name;<br>    &#125;,<br><br>    <span class="hljs-attr">apply</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">target, thisBinding, args</span>) &#123;<br>        <span class="hljs-keyword">return</span> args[<span class="hljs-number">0</span>];<br>    &#125;,<br>    <span class="hljs-attr">construct</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">target, args</span>) &#123;<br>        <span class="hljs-keyword">return</span> &#123;<span class="hljs-attr">value</span>: args[<span class="hljs-number">1</span>]&#125;;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">var</span> fproxy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>)&#123;<br>    <span class="hljs-keyword">return</span> x + y;<br>&#125;, handler);<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">fproxy</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)); <span class="hljs-comment">// 1</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">new</span> <span class="hljs-title function_">fproxy</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)); <span class="hljs-comment">// &#123;value: 2&#125;</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(fproxy.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> === <span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>); <span class="hljs-comment">// true</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(fproxy.<span class="hljs-property">foo</span>) <span class="hljs-comment">// &quot;Hello, foo&quot;</span><br></code></pre></td></tr></table></figure>
+<p>下面是Proxy支持的拦截操作一览：</p>
+<ul>
+<li>get(target, propKey, receiver)：拦截对象属性的读取</li>
+<li>set(target, propKey, value, receiver)：拦截对象属性的设置</li>
+<li>has(target, propKey)：拦截<code>propKey in proxy</code>的操作，以及对象的<code>hasOwnProperty</code>方法，返回一个布尔值</li>
+<li>deleteProperty(target, propKey)：拦截delete proxy[propKey]的操作，返回一个布尔值；</li>
+<li>ownKeys(target)：拦截<code>Object.getOwnPropertyNames(proxy)</code>、<code>Object.getOwnPropertySymbols(proxy)</code>、<code>Object.keys(proxy)</code>返回一个数组。该方法返回对象所有自身的属性</li>
+<li>getOwnPropertyDescriptor(target, propKey)：拦截<code>Object.getOwnPropertyDescriptor(proxy, propKey)</code>返回属性的描述对象。</li>
+<li>defineProperty(target, propKey, propDesc)：拦截<code>Object.defineProperty(proxy, propKey, propDesc)</code>返回一个布尔值；</li>
+<li>preventExtensions(target)：拦截<code>Object.preventExtensions(proxy)</code>，返回一个布尔值；</li>
+<li>getPrototypeOf(target)：拦截<code>Object.getPropertyOf(proxy)</code>返回一个对象</li>
+<li>isExtensible(target)：拦截<code>Object.isExtensible(target)</code>，返回一个布尔值</li>
+<li>setPrototypeOf(target, proto)：拦截<code>Object.setPrototypeOf(proxy, proto)</code>返回一个布尔值；</li>
+<li>apply(target, object, args)：拦截Proxy实例作为函数的调用操作</li>
+<li>construct(target, args)：拦截Proxy实例作为构造函数调用的操作</li>
+</ul>
+<h3 id="实例方法"><a href="#实例方法" class="headerlink" title="实例方法"></a>实例方法</h3><h4 id="get"><a href="#get" class="headerlink" title="get()"></a>get()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> person = &#123;<br>    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;zhangsan&quot;</span><br>&#125;;<br><br><span class="hljs-keyword">var</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(person, &#123;<br>    <span class="hljs-attr">get</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">target, property</span>) &#123;<br>        <span class="hljs-keyword">if</span> (property <span class="hljs-keyword">in</span> target) &#123;<br>            <span class="hljs-keyword">return</span> target[property];<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ReferenceError</span>(<span class="hljs-string">&quot;Property \&quot;&quot;</span> + property + <span class="hljs-string">&quot;\&quot; doesn&#x27;t exist.&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+<h4 id="set"><a href="#set" class="headerlink" title="set()"></a>set()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> validator = &#123;<br>    <span class="hljs-attr">set</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">target, prop, value</span>) &#123;<br>        <span class="hljs-keyword">if</span> (prop === <span class="hljs-string">&#x27;age&#x27;</span>) &#123;<br>            <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-title function_">isInteger</span>(value)) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeError</span>(<span class="hljs-string">&#x27;The age is not an integer&#x27;</span>);<br>            &#125;<br>            <span class="hljs-keyword">if</span> (value &gt; <span class="hljs-number">200</span>) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RangeError</span>(<span class="hljs-string">&#x27;The age seems invalid&#x27;</span>);<br>            &#125;<br>        &#125;<br><br>        target[prop] = value;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">let</span> person = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(&#123;&#125;, validator);<br>person.<span class="hljs-property">age</span> = <span class="hljs-number">100</span>;<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(person.<span class="hljs-property">age</span>);<br>person.<span class="hljs-property">age</span> = <span class="hljs-string">&#x27;young&#x27;</span>;<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(person.<span class="hljs-property">age</span>);<br></code></pre></td></tr></table></figure>
+<h4 id="apply"><a href="#apply" class="headerlink" title="apply()"></a>apply()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> target = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123; <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;I am the target;&quot;</span>; &#125;;<br><span class="hljs-keyword">var</span> handler = &#123;<br>    <span class="hljs-attr">apply</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;I am the proxy&quot;</span>;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(target, handler);<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">p</span>()); <span class="hljs-comment">// I am the proxy</span><br></code></pre></td></tr></table></figure>
+<h4 id="has"><a href="#has" class="headerlink" title="has()"></a>has()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> stu1 = &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;zhangsan&#x27;</span>, <span class="hljs-attr">score</span>: <span class="hljs-number">59</span> &#125;;<br><span class="hljs-keyword">let</span> stu2 = &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;lisi&#x27;</span>, <span class="hljs-attr">score</span>: <span class="hljs-number">99</span> &#125;;<br><br><span class="hljs-keyword">let</span> handler = &#123;<br>    <span class="hljs-title function_">has</span>(<span class="hljs-params">target, prop</span>) &#123;<br>        <span class="hljs-keyword">if</span> (prop === <span class="hljs-string">&#x27;score&#x27;</span> &amp;&amp; target[prop] &lt; <span class="hljs-number">60</span>) &#123;<br>            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">$&#123;target.name&#125;</span> 不及格`</span>);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>        <span class="hljs-keyword">return</span> prop <span class="hljs-keyword">in</span> target;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">let</span> oproxy1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(stu1, handler);<br><span class="hljs-keyword">let</span> oproxy2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(stu2, handler);<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;score&#x27;</span> <span class="hljs-keyword">in</span> oproxy1)<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;score&#x27;</span> <span class="hljs-keyword">in</span> oproxy2)<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> a <span class="hljs-keyword">in</span> oproxy1) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(oproxy1[a]);<br>&#125;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> b <span class="hljs-keyword">in</span> oproxy2) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(oproxy2[b]);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="construct"><a href="#construct" class="headerlink" title="construct()"></a>construct()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;, &#123;<br>    <span class="hljs-attr">construct</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">target, args</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;called: &#x27;</span> + args.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;, &#x27;</span>));<br>        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">value</span>: args[<span class="hljs-number">0</span>] * <span class="hljs-number">10</span> &#125;;<br>    &#125;<br>&#125;);<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">new</span> <span class="hljs-title function_">p</span>(<span class="hljs-number">1</span>).<span class="hljs-property">value</span>);<br></code></pre></td></tr></table></figure>
+<h4 id="deleteProperty"><a href="#deleteProperty" class="headerlink" title="deleteProperty()"></a>deleteProperty()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> handler = &#123;<br>    <span class="hljs-title function_">deleteProperty</span>(<span class="hljs-params">target, key</span>) &#123;<br>        <span class="hljs-title function_">invariant</span>(key, <span class="hljs-string">&#x27;delete&#x27;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">invariant</span>(<span class="hljs-params">key, action</span>) &#123;<br>    <span class="hljs-keyword">if</span> (key[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;_&#x27;</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Invalid attempt to <span class="hljs-subst">$&#123;action&#125;</span> private &quot;<span class="hljs-subst">$&#123;key&#125;</span>&quot; property`</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">var</span> target = &#123; <span class="hljs-attr">_prop</span>: <span class="hljs-string">&#x27;foo&#x27;</span> &#125;;<br><span class="hljs-keyword">var</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(target, handler);<br><span class="hljs-keyword">delete</span> proxy.<span class="hljs-property">_prop</span><br></code></pre></td></tr></table></figure>
+<h4 id="defineProperty"><a href="#defineProperty" class="headerlink" title="defineProperty()"></a>defineProperty()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> handler = &#123;<br>    <span class="hljs-title function_">defineProperty</span>(<span class="hljs-params">target, key, descriptor</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">var</span> target = &#123;&#125;;<br><span class="hljs-keyword">var</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(target, handler);<br>proxy.<span class="hljs-property">foo</span> = <span class="hljs-string">&#x27;bar&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<h4 id="getOwnPropertyDescriptor"><a href="#getOwnPropertyDescriptor" class="headerlink" title="getOwnPropertyDescriptor()"></a>getOwnPropertyDescriptor()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> handler = &#123;<br>  getOwnPropertyDescriptor (target, key) &#123;<br>    <span class="hljs-keyword">if</span> (key[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;_&#x27;</span>) &#123;<br>      <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptor</span>(target, key);<br>  &#125;<br>&#125;;<br><span class="hljs-keyword">var</span> target = &#123; <span class="hljs-attr">_foo</span>: <span class="hljs-string">&#x27;bar&#x27;</span>, <span class="hljs-attr">baz</span>: <span class="hljs-string">&#x27;tar&#x27;</span> &#125;;<br><span class="hljs-keyword">var</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(target, handler);<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptor</span>(proxy, <span class="hljs-string">&#x27;wat&#x27;</span>)<br><span class="hljs-comment">// undefined</span><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptor</span>(proxy, <span class="hljs-string">&#x27;_foo&#x27;</span>)<br><span class="hljs-comment">// undefined</span><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptor</span>(proxy, <span class="hljs-string">&#x27;baz&#x27;</span>)<br><span class="hljs-comment">// &#123; value: &#x27;tar&#x27;, writable: true, enumerable: true, configurable: true &#125;</span><br></code></pre></td></tr></table></figure>
+<h4 id="getPrototypeOf"><a href="#getPrototypeOf" class="headerlink" title="getPrototypeOf()"></a>getPrototypeOf()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> proto = &#123;&#125;;<br><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(&#123;&#125;, &#123;<br>    <span class="hljs-title function_">getPrototypeOf</span>(<span class="hljs-params">target</span>) &#123;<br>        <span class="hljs-keyword">return</span> proto;<br>    &#125;<br>&#125;);<br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getPrototypeOf</span>(p) === proto <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+<h4 id="isExtensible"><a href="#isExtensible" class="headerlink" title="isExtensible()"></a>isExtensible()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(&#123;&#125;, &#123;<br>    <span class="hljs-attr">isExtensible</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">target</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;called&#x27;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;);<br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">isExtensible</span>(p)<br></code></pre></td></tr></table></figure>
+<h4 id="ownKeys"><a href="#ownKeys" class="headerlink" title="ownKeys()"></a>ownKeys()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> target = &#123;<br>    <span class="hljs-attr">_bar</span>: <span class="hljs-string">&#x27;foo&#x27;</span>,<br>    <span class="hljs-attr">_prop</span>: <span class="hljs-string">&#x27;bar&#x27;</span>,<br>    <span class="hljs-attr">prop</span>: <span class="hljs-string">&#x27;baz&#x27;</span><br>&#125;;<br><br><span class="hljs-keyword">let</span> handler = &#123;<br>    <span class="hljs-title function_">ownKeys</span>(<span class="hljs-params">target</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">ownKeys</span>(target).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> key[<span class="hljs-number">0</span>] !== <span class="hljs-string">&#x27;_&#x27;</span>);<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">let</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(target, handler);<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(proxy)) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(target[key]); <span class="hljs-comment">// baz</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="取消代理"><a href="#取消代理" class="headerlink" title="取消代理"></a>取消代理</h3><p>Proxy.revocable()方法返回一个可取消的Proxy实例。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> target = &#123;&#125;;<br><span class="hljs-keyword">let</span> handler = &#123;&#125;;<br><br><span class="hljs-keyword">let</span> &#123;proxy, revoke&#125; = <span class="hljs-title class_">Proxy</span>.<span class="hljs-title function_">revocable</span>(target, handler);<br><br>proxy.<span class="hljs-property">foo</span> = <span class="hljs-number">123</span>;<br>proxy.<span class="hljs-property">foo</span> <span class="hljs-comment">// 123</span><br><br><span class="hljs-title function_">revoke</span>();<br>proxy.<span class="hljs-property">foo</span> <span class="hljs-comment">// TypeError: Revoked</span><br></code></pre></td></tr></table></figure>
+<h3 id="this问题"><a href="#this问题" class="headerlink" title="this问题"></a>this问题</h3><p>虽然Proxy可以代理针对目标对象的访问，但不是目标对象的透明代理：即不做任何拦截的情况下，也无法保证与目标对象的行为一致。主要原因是在Proxy代理的情况下，目标对象内部的<code>this</code>关键字会指向Proxy代理。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> _name = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WeakMap</span>();<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> &#123;<br>    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">name</span>) &#123;<br>        _name.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>, name);<br>    &#125;<br><br>    <span class="hljs-keyword">get</span> <span class="hljs-title function_">name</span>() &#123;<br>        <span class="hljs-keyword">return</span> _name.<span class="hljs-title function_">get</span>(<span class="hljs-variable language_">this</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">const</span> jane = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Person</span>(<span class="hljs-string">&#x27;Jane&#x27;</span>);<br>jane.<span class="hljs-property">name</span>; <span class="hljs-comment">// &quot;Jane&quot;</span><br><br><span class="hljs-keyword">const</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(jane, &#123;&#125;);<br>proxy.<span class="hljs-property">name</span> <span class="hljs-comment">// undefined</span><br></code></pre></td></tr></table></figure>
+<h2 id="Reflect"><a href="#Reflect" class="headerlink" title="Reflect"></a>Reflect</h2><h3 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h3><p>Reflect也是ES6为了操作对象而提供的新API，其设计目的主要有几个：</p>
+<ol>
+<li>将Object对象的一些明显属于语言内部的方法放到Reflect对象上。</li>
+<li>修改某些Object方法返回的结果，让其变得合理。</li>
+<li>让Object的操作都变成函数行为。某些Object操作是命令式的；</li>
+<li>Reflect对象的方法与Proxy对象的方法一一对应，只要是Proxy对象的方法，就能在Reflect对象上找到对应的方法。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> loggedObj = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(obj, &#123;<br>    <span class="hljs-title function_">get</span>(<span class="hljs-params">target, name</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;get&#x27;</span>, target, name);<br>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">get</span>(target, name);<br>    &#125;,<br>    <span class="hljs-title function_">deleteProperty</span>(<span class="hljs-params">target, name</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;delete&#x27;</span> + name);<br>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">deleteProperty</span>(target, name);<br>    &#125;,<br>    <span class="hljs-title function_">has</span>(<span class="hljs-params">target, name</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;has&#x27;</span> + name);<br>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">has</span>(target, name);<br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+<h3 id="Reflect对象的方法"><a href="#Reflect对象的方法" class="headerlink" title="Reflect对象的方法"></a>Reflect对象的方法</h3><p>大体上和Object对象的同名方法的作用是相同的，而且与Proxy对象的方法是一一对应的。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6%E5%9F%BA%E7%A1%80/">ES6基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-iterator/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ES6 迭代</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-set-and-map/">
+                        <span class="hidden-mobile">ES6 Set和Map</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 为什么使用Spring IoC技术，容器帮忙管理依赖对象，不需要自己创建和管理依赖对象，更轻松实现程序解耦； 事务支持，使得操作事务更加方便； 提供面向切面的编程，可以更方便地处理某一类的问题； 更方便集成其他框架，比如Mybatis和Hibernate；  2. 什么是AOP面向切面编程，通过预编译的方式和运行期动态代理实现程序功能的统一维护的技术；简单来说就是统一处理“切面”类问题的编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring知识汇总">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/24/spring/spring-summary/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="1. 为什么使用Spring IoC技术，容器帮忙管理依赖对象，不需要自己创建和管理依赖对象，更轻松实现程序解耦； 事务支持，使得操作事务更加方便； 提供面向切面的编程，可以更方便地处理某一类的问题； 更方便集成其他框架，比如Mybatis和Hibernate；  2. 什么是AOP面向切面编程，通过预编译的方式和运行期动态代理实现程序功能的统一维护的技术；简单来说就是统一处理“切面”类问题的编程">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-24T11:45:04.000Z">
+<meta property="article:modified_time" content="2022-02-24T11:45:04.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="Spring框架">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Spring知识汇总 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Spring知识汇总">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-24 19:45" pubdate>
+        2022年2月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      24 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Spring知识汇总</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-为什么使用Spring"><a href="#1-为什么使用Spring" class="headerlink" title="1. 为什么使用Spring"></a>1. 为什么使用Spring</h1><ul>
+<li>IoC技术，容器帮忙管理依赖对象，不需要自己创建和管理依赖对象，更轻松实现程序解耦；</li>
+<li>事务支持，使得操作事务更加方便；</li>
+<li>提供面向切面的编程，可以更方便地处理某一类的问题；</li>
+<li>更方便集成其他框架，比如Mybatis和Hibernate；</li>
+</ul>
+<h1 id="2-什么是AOP"><a href="#2-什么是AOP" class="headerlink" title="2. 什么是AOP"></a>2. 什么是AOP</h1><p>面向切面编程，通过预编译的方式和运行期动态代理实现程序功能的统一维护的技术；简单来说就是统一处理“切面”类问题的编程思想，比如统一处理日志，异常等；</p>
+<h1 id="3-什么是IoC"><a href="#3-什么是IoC" class="headerlink" title="3. 什么是IoC"></a>3. 什么是IoC</h1><p>IoC是Spring的核心，对于Spring框架来说，由Spring来负责控制对象的生命周期和对象之间的关系；</p>
+<p>控制指的是当前对象对内部成员的控制权；控制反转指的是这种控制权不由当前对象管理，由其他（类、第三方容器）来管理；</p>
+<h1 id="4-Spring模块"><a href="#4-Spring模块" class="headerlink" title="4. Spring模块"></a>4. Spring模块</h1><ul>
+<li>spring core：框架基础，提供IoC和依赖注入</li>
+<li>spring context：构建于core封装包基础上的context封装包，提供一种框架式的对象访问方法</li>
+<li>spring dao：提供JDBC抽象层</li>
+<li>spring aop：提供面向切面的编程实现，可以自定义拦截器、切点</li>
+<li>spring web：提供针对web开发的集成特性，例如文件上传，利用servlet listeners进行ioc容器初始化和针对web的ApplicationContext；</li>
+<li>spring web mvc：提供了web应用的Mode-View-Controller的实现；</li>
+</ul>
+<h1 id="5-Spring常见的注入方式"><a href="#5-Spring常见的注入方式" class="headerlink" title="5. Spring常见的注入方式"></a>5. Spring常见的注入方式</h1><ul>
+<li>setter属性注入</li>
+<li>构造方法注入</li>
+<li>注解方式注入</li>
+</ul>
+<h1 id="6-Spring的bean是线程安全的吗？"><a href="#6-Spring的bean是线程安全的吗？" class="headerlink" title="6. Spring的bean是线程安全的吗？"></a>6. Spring的bean是线程安全的吗？</h1><p>Spring的bean默认是单例模式，并且Spring框架没有对单例bean进行多线程的封装处理；但由于大部分时候spring bean是无状态的，因此某种程度上来说bean也是安全的，如果bean有状态的话，就需要开发者自己保证线程安全。</p>
+<p>最简单的就是改变bean的作用域，将singleton变更为prototype，这样请求bean就相当于new Bean了，就可以保证线程安全；</p>
+<ul>
+<li>有状态就是有数据存储功能</li>
+<li>无状态就是不会保存数据</li>
+</ul>
+<h1 id="7-Spring支持的Bean作用域"><a href="#7-Spring支持的Bean作用域" class="headerlink" title="7. Spring支持的Bean作用域"></a>7. Spring支持的Bean作用域</h1><ul>
+<li>singleton：Spring IoC容器只存在一个bean实例，bean以单例模式存在，是系统默认</li>
+<li>prototype：每次从容器调用bean都会创建一个新的实例；</li>
+<li>Web环境下的作用域<ul>
+<li>request：每次http请求都会创建一个bean；</li>
+<li>session：同一个http session共享一个bean实例；</li>
+<li>global-session：用于portlet容器，每个portlet有单独的session，globalsession提供一个全局性的http session;</li>
+</ul>
+</li>
+</ul>
+<p><strong>注意：</strong>使用prototype作用域需要慎重考虑，因为频繁创建和销毁session会带来很大的性能开销；</p>
+<h1 id="8-Spring自动装配Bean的方式"><a href="#8-Spring自动装配Bean的方式" class="headerlink" title="8. Spring自动装配Bean的方式"></a>8. Spring自动装配Bean的方式</h1><ul>
+<li>no：默认值，没有自动装配，使用显式bean引用进行装配</li>
+<li>byName：根据bean名称注入对象依赖项；</li>
+<li>byType：根据类型注入对象依赖项；</li>
+<li>构造函数：通过构造函数注入依赖，需要设置大量参数；</li>
+</ul>
+<h1 id="9-Spring事务实现方式"><a href="#9-Spring事务实现方式" class="headerlink" title="9. Spring事务实现方式"></a>9. Spring事务实现方式</h1><ul>
+<li>声明式事务：基于XML配置文件和注解方式（在类上添加<code>@Transaction</code>注解）；</li>
+<li>编码方式：提供编码的形式管理和维护事务；</li>
+</ul>
+<h1 id="10-Spring事务的隔离"><a href="#10-Spring事务的隔离" class="headerlink" title="10. Spring事务的隔离"></a>10. Spring事务的隔离</h1><ul>
+<li>ISOLATION_DEFAULT：使用底层数据库的隔离级别，数据库设置什么我就用什么；</li>
+<li>ISOLATION_READ_UNCOMMITED：未提交读，最低隔离级别，事务未提交时，就可被其他事务读取（出现幻读、脏读、不可重复读）；</li>
+<li>ISOLATION_READ_COMMITED：提交读，一个事务提交后才能被其他事务读取到（会造成幻读、不可重复读），sql server 的默认级别；</li>
+<li>ISOLATION_REPEATABLE_READ：可重复读，保证多次读取同一个数据时，其值都和事务开始时候的内容是一致，禁止读取到别的事务未提交的数据（会造成幻读），mysql 的默认级别；</li>
+<li>ISOLATION_SERIALIZABLE：序列化，代价最高最可靠的隔离级别，该隔离级别能防止脏读、不可重复读、幻读。</li>
+</ul>
+<h1 id="11-Spring-MVC的运行流程"><a href="#11-Spring-MVC的运行流程" class="headerlink" title="11. Spring MVC的运行流程"></a>11. Spring MVC的运行流程</h1><ul>
+<li>spring mvc 先将请求发送给 DispatcherServlet。</li>
+<li>DispatcherServlet 查询一个或多个 HandlerMapping，找到处理请求的 Controller。</li>
+<li>DispatcherServlet 再把请求提交到对应的 Controller。</li>
+<li>Controller 进行业务逻辑处理后，会返回一个ModelAndView。</li>
+<li>Dispathcher 查询一个或多个 ViewResolver 视图解析器，找到 ModelAndView 对象指定的视图对象。</li>
+<li>视图对象负责渲染返回给客户端。</li>
+</ul>
+<h1 id="12-Spring-MVC的组件"><a href="#12-Spring-MVC的组件" class="headerlink" title="12. Spring MVC的组件"></a>12. Spring MVC的组件</h1><ul>
+<li>前置控制器 DispatcherServlet。</li>
+<li>映射控制器 HandlerMapping。</li>
+<li>处理器 Controller。</li>
+<li>模型和视图 ModelAndView。</li>
+<li>视图解析器 ViewResolver。</li>
+</ul>
+<h1 id="13-Autowired和Resource的区别"><a href="#13-Autowired和Resource的区别" class="headerlink" title="13. @Autowired和Resource的区别"></a>13. @Autowired和Resource的区别</h1><h2 id="Autowired注解"><a href="#Autowired注解" class="headerlink" title="Autowired注解"></a>Autowired注解</h2><ul>
+<li>Autowired有一个问题：当一个类型有多个bean值的时候会造成无法选择具体注入哪一个的情况，此时需要配合@Qualifier使用；</li>
+<li>Autowired为Spring提供的注解；</li>
+</ul>
+<h2 id="Resource注解"><a href="#Resource注解" class="headerlink" title="Resource注解"></a>Resource注解</h2><ul>
+<li>由J2EE提供；</li>
+<li>默认byName自动注入；</li>
+<li>同时指定了name和type，则从Spring上下文中找到唯一匹配的bean进行装配，找不到则抛异常；</li>
+<li>指定了name，从上下文查找名称匹配的bean进行装配，找不到抛异常；</li>
+<li>指定了type，从上下文找到类似匹配的唯一bean进行装配，找不到或者找到多个，都会抛异常；</li>
+</ul>
+<p>总结：使用@Resource可以减少代码和Spring之间的耦合</p>
+<h1 id="14-什么是Spring-Boot"><a href="#14-什么是Spring-Boot" class="headerlink" title="14. 什么是Spring Boot"></a>14. 什么是Spring Boot</h1><p>为Spring服务，用来简化Spring应用的初始化搭建以及开发过程；</p>
+<p>Spring Boot有下列好处，这也是为什么现在流行广泛的原因；</p>
+<ul>
+<li>配置简单</li>
+<li>独立运行</li>
+<li>自动装配</li>
+<li>无代码生成和xml配置</li>
+<li>提供应用监控</li>
+<li>容易上手</li>
+<li>提升开发效率</li>
+</ul>
+<h1 id="15-Spring-Boot的核心配置文件"><a href="#15-Spring-Boot的核心配置文件" class="headerlink" title="15. Spring Boot的核心配置文件"></a>15. Spring Boot的核心配置文件</h1><p>Spring Boot核心的两个配置文件：</p>
+<ul>
+<li>bootstrap.yml：有ApplicationContext加载，比application优先加载，且bootstrap里面的属性值不能被覆盖；</li>
+<li>application.yml：用于spring boot项目的自动化配置；</li>
+</ul>
+<h1 id="16-Spring-Boot实现热部署"><a href="#16-Spring-Boot实现热部署" class="headerlink" title="16. Spring Boot实现热部署"></a>16. Spring Boot实现热部署</h1><ul>
+<li>使用Devtools启动热部署，添加devtools库，在配置文件中把spring.devtools.restart.enabled设置为true;</li>
+<li>使用IntelliJ IDEA编译器，勾上自动编译或手动编译；</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Spring/">Spring</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Spring%E6%A1%86%E6%9E%B6/">Spring框架</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/03/02/middleware/kafka-learning/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Apache Kafka盘点</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/24/java-core/java-thread-summary/">
+                        <span class="hidden-mobile">Java多线程面试汇总</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

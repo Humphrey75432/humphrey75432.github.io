@@ -1,0 +1,600 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 二进制—计算机表示数据的方式1.1 十进制表示数的方式 以123来说，使用十进制表示可以写为:   123 &#x3D; 1 \times 10 ^2 + 2 \times 10 ^1 + 3 \times 10 ^ 0 按照类比规则推算，N进制数字abc有如下表示，其中k为位权：   abc_{(N)} &#x3D; a \times k^m + b \times k^{m-1} + c \times k^{">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java编程原理——计算机执行的二进制逻辑">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/16/java-core/ch02/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="1. 二进制—计算机表示数据的方式1.1 十进制表示数的方式 以123来说，使用十进制表示可以写为:   123 &#x3D; 1 \times 10 ^2 + 2 \times 10 ^1 + 3 \times 10 ^ 0 按照类比规则推算，N进制数字abc有如下表示，其中k为位权：   abc_{(N)} &#x3D; a \times k^m + b \times k^{m-1} + c \times k^{">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-16T06:51:30.000Z">
+<meta property="article:modified_time" content="2022-02-16T06:51:30.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="Java基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Java编程原理——计算机执行的二进制逻辑 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Java编程原理——计算机执行的二进制逻辑">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-16 14:51" pubdate>
+        2022年2月16日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Java编程原理——计算机执行的二进制逻辑</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-二进制—计算机表示数据的方式"><a href="#1-二进制—计算机表示数据的方式" class="headerlink" title="1. 二进制—计算机表示数据的方式"></a>1. 二进制—计算机表示数据的方式</h1><h3 id="1-1-十进制表示数的方式"><a href="#1-1-十进制表示数的方式" class="headerlink" title="1.1 十进制表示数的方式"></a>1.1 十进制表示数的方式</h3><ol>
+<li>以123来说，使用十进制表示可以写为:<br/></li>
+</ol>
+<script type="math/tex; mode=display">
+123 = 1 \times 10 ^2 + 2 \times 10 ^1 + 3 \times 10 ^ 0</script><ol>
+<li>按照类比规则推算，N进制数字abc有如下表示，其中k为位权：</li>
+</ol>
+<script type="math/tex; mode=display">
+abc_{(N)} = a \times k^m + b \times k^{m-1} + c \times k^{m-2} + ...</script><h3 id="1-2-二进制的数字表示"><a href="#1-2-二进制的数字表示" class="headerlink" title="1.2 二进制的数字表示"></a>1.2 二进制的数字表示</h3><p>二进制的位权为2，基本数字只有0和1，整好符合计算机的高低电平。因此十进制数4可以表示为:</p>
+<script type="math/tex; mode=display">
+4_{(10)} = 1 \times 2^2 + 0 \times 2^1 + 0 \times 2^0 = 100_{(2)}</script><p>十进制的负数只需要在数字前面加上负号就表示负数了，而二进制的负数与十进制类似，在最高添加一个符号为，1表示负数，0表示整数，每种类型的数据都是最左边的一位。但负数实际上不是简单的给最高位设置符号。例如：</p>
+<ol>
+<li>-1的8位二进制按概念应是10000001，实际上为11111111</li>
+<li>-127的8位二进制按概念应是11111111，实际上为10000001<br/><br>因此我们需要注意下列计算机表示二进制的机器码。</li>
+</ol>
+<ul>
+<li>原码：符合我们==日常逻辑的编码==为原码：例如1的8位原码为<u>00000001</u>;</li>
+<li>反码：在==原码的基础上按位取反==为反码：例如<u>00000001</u>的反码为<u>11111110</u>;</li>
+<li>补码：在==反码的基础上再加1==就为补码：例如<u>00000001</u>的补码为<u>11111111</u>;</li>
+</ul>
+<p>使用补码表示是因为计算机只会计算加法，通过补码的表示计算机能够通过加法做减法运算。</p>
+<h3 id="1-3-十六进制—二进制的简化"><a href="#1-3-十六进制—二进制的简化" class="headerlink" title="1.3 十六进制—二进制的简化"></a>1.3 十六进制—二进制的简化</h3><p>由于二进制书写不方便，加上越大的数，二进制越长，因此使用16进制来替代二进制。十六进制的数字分别为(0~9、A[10]、B[11]、C[12]、D[13]、E[14]和F[15])</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">二进制</th>
+<th style="text-align:center">十进制</th>
+<th style="text-align:center">十六进制</th>
+<th style="text-align:center">二进制</th>
+<th style="text-align:center">十进制</th>
+<th style="text-align:center">十六进制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1010</td>
+<td style="text-align:center">10</td>
+<td style="text-align:center">A</td>
+<td style="text-align:center">1011</td>
+<td style="text-align:center">11</td>
+<td style="text-align:center">B</td>
+</tr>
+<tr>
+<td style="text-align:center">1100</td>
+<td style="text-align:center">12</td>
+<td style="text-align:center">C</td>
+<td style="text-align:center">1101</td>
+<td style="text-align:center">13</td>
+<td style="text-align:center">D</td>
+</tr>
+<tr>
+<td style="text-align:center">1110</td>
+<td style="text-align:center">14</td>
+<td style="text-align:center">E</td>
+<td style="text-align:center">1111</td>
+<td style="text-align:center">15</td>
+<td style="text-align:center">F</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h5 id="1-4-位运算"><a href="#1-4-位运算" class="headerlink" title="1.4 位运算"></a>1.4 位运算</h5><ol>
+<li>左移(&lt;&lt;)：左移一位表示乘以2（高位舍去，右侧补0）；</li>
+<li>右移(&gt;&gt;)：右移一位表示除以2（低位舍去，高位按原先补充）；</li>
+</ol>
+<h5 id="1-5-查看浮点数的具体二进制形式"><a href="#1-5-查看浮点数的具体二进制形式" class="headerlink" title="1.5 查看浮点数的具体二进制形式"></a>1.5 查看浮点数的具体二进制形式</h5><figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><pre><code class="hljs java">Integer.toBinaryString(Float.floatToIntBits(value));<br>Long.toBinaryString(Double.doubleToLongBits(value));<br></code></pre></td></tr></table></figure>
+<h1 id="2-字符集与编码"><a href="#2-字符集与编码" class="headerlink" title="2. 字符集与编码"></a>2. 字符集与编码</h1><h5 id="2-1-非Unicode编码"><a href="#2-1-非Unicode编码" class="headerlink" title="2.1 非Unicode编码"></a>2.1 非Unicode编码</h5><ol>
+<li><strong>ASCII：</strong>覆盖键盘上的绝大多数的字符，对美国等英语国家够用；</li>
+<li><strong>ISO 8859-1：</strong> 在ASCII码的基础上对支持的字符集进行了扩展，新增了西欧字符；</li>
+<li><strong>Windows-1252：</strong>在ISO 8859-1的基础上新增了欧元以及其他的符号，用途广泛；</li>
+<li><strong>GB2312：</strong>简体中文编码规范，使用两个字节表示汉字；</li>
+<li><strong>GBK：</strong>GB2312的扩充，支持更多的汉字编码；</li>
+<li><strong>GB18030：</strong>在GBK的基础上扩充更多汉字编码以及中日韩统一字符，使用2~4个字节表示字符；</li>
+<li><strong>Big5：</strong>针对繁体中文编码，用于中国香港、中国澳门和中国台湾地区；</li>
+</ol>
+<h5 id="2-2-Unicode编码"><a href="#2-2-Unicode编码" class="headerlink" title="2.2 Unicode编码"></a>2.2 Unicode编码</h5><p>为全世界的字符进行统一编码，它没有规定编码如何对应二进制表示。常用的字符二进制编码方案有如下几种：</p>
+<ol>
+<li>UTF-32：字符编号的整数二进制形式，4字节</li>
+<li>UTF-16：变长字节表示，编号在U+0000~U+FFFF使用两字节；编号在U+10000~U+10FFFF使用四字节。使用U+D800~U+DBFF的就是4字节，否则为2字节；</li>
+<li>UTF-8：依旧使用变长字节表示，每个字符使用的字节个数与Unicode编号的大小有关；</li>
+</ol>
+<h5 id="2-3-编码转换"><a href="#2-3-编码转换" class="headerlink" title="2.3 编码转换"></a>2.3 编码转换</h5><ol>
+<li>假设字符需要从编码A转换为编码B，那么首先需要知道字符所对应的编码A的格式，通过编码A的Unicode字符映射表找到其Unicode编号，然后通过Unicode编号再查找编码B的映射表。<div class="code-wrapper"><pre class="mermaid">graph LR;
+ 字符s的编码A --> 字符s对应Unicode的序号 --> 字符s的编码B</pre></div>
+
+</li>
+</ol>
+<p>编码转换实际上只是改变了字符的二进制内容，但并没有改变字符看上去的样子。</p>
+<ol>
+<li>乱码的原因：要么是字符在不同的语言环境对应不同编码导致，要么是字符在错误的编码下又再次进行了转码导致无法恢复。</li>
+<li>乱码的解决：第一种情况比较简单，只需要换成对应的编码即可重新查看，第二种情况就是对错误的编码进行逆向操作，从而达到恢复原先编码的问题。</li>
+<li>使用Java恢复乱码：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">str</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;value to encdoe&quot;</span>;<br><span class="hljs-type">String</span> <span class="hljs-variable">newStr</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(str.getBytes(<span class="hljs-string">&quot;Windows-1252&quot;</span>), <span class="hljs-string">&quot;GB18030&quot;</span>);<br>System.out.println(newStr);<br></code></pre></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Java/">Java</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/16/java-core/ch03/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java编程原理——面向对象基础</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/16/hello-world/">
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js" ></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({"theme":"default"});
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

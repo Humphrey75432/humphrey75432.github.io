@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="函数的扩展函数参数的默认值ES6以前函数参数是不能有默认值的，而ES6中对这个规则进行了修改了，函数参数也可以带默认参数。即直接写在参数定义的后面。 1234567function log(x, y &#x3D; &amp;#x27;World&amp;#x27;) &amp;#123;    console.log(x, y);&amp;#125;log(&amp;#x27;Hello&amp;#x27;) &#x2F;&#x2F; Hello Worldlog(&amp;#x2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6 函数扩展">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/17/javascript/es6-function-expand/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="函数的扩展函数参数的默认值ES6以前函数参数是不能有默认值的，而ES6中对这个规则进行了修改了，函数参数也可以带默认参数。即直接写在参数定义的后面。 1234567function log(x, y &#x3D; &amp;#x27;World&amp;#x27;) &amp;#123;    console.log(x, y);&amp;#125;log(&amp;#x27;Hello&amp;#x27;) &#x2F;&#x2F; Hello Worldlog(&amp;#x2">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-17T07:07:14.000Z">
+<meta property="article:modified_time" content="2022-02-17T07:07:14.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="ES6基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>ES6 函数扩展 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6 函数扩展">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-17 15:07" pubdate>
+        2022年2月17日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      72 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6 函数扩展</h1>
+            
+            <div class="markdown-body">
+              <h1 id="函数的扩展"><a href="#函数的扩展" class="headerlink" title="函数的扩展"></a>函数的扩展</h1><h2 id="函数参数的默认值"><a href="#函数参数的默认值" class="headerlink" title="函数参数的默认值"></a>函数参数的默认值</h2><p>ES6以前函数参数是不能有默认值的，而ES6中对这个规则进行了修改了，函数参数也可以带默认参数。即直接写在参数定义的后面。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">log</span>(<span class="hljs-params">x, y = <span class="hljs-string">&#x27;World&#x27;</span></span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(x, y);<br>&#125;<br><br><span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Hello&#x27;</span>) <span class="hljs-comment">// Hello World</span><br><span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Hello&#x27;</span>, <span class="hljs-string">&#x27;China&#x27;</span>) <span class="hljs-comment">// Hello China</span><br><span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Hello&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>) <span class="hljs-comment">// Hello</span><br></code></pre></td></tr></table></figure>
+<p>这样的写法有两个好处：一个是阅读代码的人可以立刻意识到哪些参数是可以省略的，不需要查看函数体；其次有利于代码将来的优化。即便在未来的版本对外接口中，彻底拿掉这个参数也不会导致原有代码无法运行。</p>
+<h3 id="结合解构赋值"><a href="#结合解构赋值" class="headerlink" title="结合解构赋值"></a>结合解构赋值</h3><p>参数默认值当然可以使用前面章节提到的解构特性进行赋值了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params">&#123;x, y = <span class="hljs-number">5</span>&#125;</span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(x, y);<br>&#125;<br><br><span class="hljs-title function_">foo</span>(&#123;&#125;) <span class="hljs-comment">// undefined, 5</span><br><span class="hljs-title function_">foo</span>(&#123;<span class="hljs-attr">x</span>: <span class="hljs-number">1</span>&#125;) <span class="hljs-comment">// 1, 5</span><br><span class="hljs-title function_">foo</span>(&#123;<span class="hljs-attr">x</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">2</span>&#125;) <span class="hljs-comment">// 1, 2</span><br><span class="hljs-title function_">foo</span>() <span class="hljs-comment">// Error</span><br></code></pre></td></tr></table></figure>
+<h3 id="参数默认值的位置"><a href="#参数默认值的位置" class="headerlink" title="参数默认值的位置"></a>参数默认值的位置</h3><p>一般情况下定义了默认值的参数应该是函数的尾部，这样比较容易看出来，如果是非尾部的参数设置默认值，实际上该参数是没法省略的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> (<span class="hljs-params">x = <span class="hljs-number">1</span>, y</span>) &#123;<br>    <span class="hljs-keyword">return</span> [x, y];<br>&#125;<br><br><span class="hljs-title function_">f</span>() <span class="hljs-comment">// [1, undefined]</span><br><span class="hljs-title function_">f</span>(<span class="hljs-number">2</span>) <span class="hljs-comment">// [2, undefined]</span><br><span class="hljs-title function_">f</span>(, <span class="hljs-number">1</span>) <span class="hljs-comment">// Error</span><br><span class="hljs-title function_">f</span>(<span class="hljs-literal">undefined</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// [1, 1]</span><br><br><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y = <span class="hljs-number">5</span>, z</span>) &#123;<br>    <span class="hljs-keyword">return</span> [x, y, z];<br>&#125;<br><span class="hljs-title function_">f</span>() <span class="hljs-comment">// [undefined, 5, undefined]</span><br><span class="hljs-title function_">f</span>(<span class="hljs-number">1</span>) <span class="hljs-comment">// [1, 5, undefined]</span><br><span class="hljs-title function_">f</span>(<span class="hljs-number">1</span>, ,<span class="hljs-number">2</span>) <span class="hljs-comment">// Error</span><br><span class="hljs-title function_">f</span>(<span class="hljs-number">1</span>, undefinied, <span class="hljs-number">2</span>) <span class="hljs-comment">// [1, 5, 2]</span><br></code></pre></td></tr></table></figure>
+<h3 id="length属性"><a href="#length属性" class="headerlink" title="length属性"></a>length属性</h3><p>函数的length属性将返回没有指定默认值的参数个数。也就是说：指定了默认值后，length属性将失真；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript">(<span class="hljs-keyword">function</span> (<span class="hljs-params">a</span>) &#123;&#125;).<span class="hljs-property">length</span> <span class="hljs-comment">// 1</span><br>(<span class="hljs-keyword">function</span> (<span class="hljs-params">a = <span class="hljs-number">5</span></span>) &#123;&#125;).<span class="hljs-property">length</span> <span class="hljs-comment">// 0</span><br>(<span class="hljs-keyword">function</span> (<span class="hljs-params">a, b, c = <span class="hljs-number">5</span></span>) &#123;&#125;).<span class="hljs-property">length</span> <span class="hljs-comment">// 2</span><br></code></pre></td></tr></table></figure>
+<p>如果设置了默认值的参数不是尾参数，那么length属性也不再记入后面的参数了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript">(<span class="hljs-keyword">function</span> (<span class="hljs-params">a = <span class="hljs-number">0</span>, b, c</span>) &#123;&#125;).<span class="hljs-property">length</span> <span class="hljs-comment">// 0</span><br>(<span class="hljs-keyword">function</span> (<span class="hljs-params">a, b = <span class="hljs-number">1</span>, c</span>) &#123;&#125;).<span class="hljs-property">length</span> <span class="hljs-comment">// 1</span><br></code></pre></td></tr></table></figure>
+<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p>如果参数默认值是一个变量，则该变量所处的作用域与其他变量的作用域规则是一样的。即先是当前函数的作用域，然后才是全局作用域。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> x = <span class="hljs-number">1</span>;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params">x, y = x</span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(y);<br>&#125;<br><br><span class="hljs-title function_">f</span>(<span class="hljs-number">2</span>) <span class="hljs-comment">// 2</span><br></code></pre></td></tr></table></figure>
+<p>如果参数的默认值是一个函数，该函数的作用域是其声明时所在的作用域</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> foo = <span class="hljs-string">&#x27;outer&#x27;</span>;<br><br><span class="hljs-comment">// func为一个默认匿名函数，返回值为变量foo</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">bar</span>(<span class="hljs-params">func = x =&gt; foo</span>) &#123;<br>    <span class="hljs-keyword">let</span> foo = <span class="hljs-string">&#x27;inner&#x27;</span>;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">func</span>());<br>&#125;<br><br><span class="hljs-title function_">bar</span>(); <span class="hljs-comment">// outer</span><br></code></pre></td></tr></table></figure>
+<h3 id="默认参数的用途一目了然"><a href="#默认参数的用途一目了然" class="headerlink" title="默认参数的用途一目了然"></a>默认参数的用途一目了然</h3><p>利用默认参数值，可以指定某一个参数不得省略，一旦省略就抛出一个错误；如果想省略这个参数，只要设置成<code>undefined</code>就行了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">throwIfMissing</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;Missing parameters&#x27;</span>);<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params">mustBeProvided = throwIfMissing()</span>) &#123;<br>    <span class="hljs-keyword">return</span> mustBeProvided;<br>&#125;<br><br><span class="hljs-title function_">foo</span>(); <span class="hljs-comment">// Error: Missing Parameters</span><br></code></pre></td></tr></table></figure>
+<h3 id="rest参数"><a href="#rest参数" class="headerlink" title="rest参数"></a>rest参数</h3><p>顾名思义：就是入参的个数是不确定的，跟Java中的多参数语法类似。这里就不再赘述了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">...values</span>) &#123;<br>    <span class="hljs-keyword">let</span> sum = <span class="hljs-number">0</span>;<br>    <br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> val <span class="hljs-keyword">of</span> values) &#123;<br>        sum += val;<br>    &#125;<br>    <br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br><br><span class="hljs-title function_">add</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>) <span class="hljs-comment">// 10</span><br></code></pre></td></tr></table></figure>
+<h2 id="扩展运算符"><a href="#扩展运算符" class="headerlink" title="扩展运算符"></a>扩展运算符</h2><p>扩展运算符为三个点<code>...</code>，是将一个数组转化为用逗号分隔的参数序列，是rest参数的逆运算。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(...[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]) <span class="hljs-comment">// 1 2 3</span><br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">1</span>, ...[<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>], <span class="hljs-number">5</span>) <span class="hljs-comment">// 1 2 3 4 5</span><br><br>[...<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;div&#x27;</span>)] <span class="hljs-comment">// [&lt;div&gt;, &lt;div&gt;, &lt;div&gt;]</span><br></code></pre></td></tr></table></figure>
+<p>该运算符主要用于函数调用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">push</span>(<span class="hljs-params">array, ...items</span>) &#123;<br>    array.<span class="hljs-title function_">push</span>(...items);<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">x, y</span>) &#123;<br>    <span class="hljs-keyword">return</span> x + y;<br>&#125;<br><br><span class="hljs-keyword">var</span> numbers = [<span class="hljs-number">4</span>, <span class="hljs-number">38</span>];<br><span class="hljs-title function_">add</span>(...numbers) <span class="hljs-comment">// 42</span><br></code></pre></td></tr></table></figure>
+<h3 id="扩展运算符的应用"><a href="#扩展运算符的应用" class="headerlink" title="扩展运算符的应用"></a>扩展运算符的应用</h3><h4 id="（1）合并数组"><a href="#（1）合并数组" class="headerlink" title="（1）合并数组"></a>（1）合并数组</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> arr1 = [<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>];<br><span class="hljs-keyword">var</span> arr2 = [<span class="hljs-string">&#x27;c&#x27;</span>];<br><span class="hljs-keyword">var</span> arr3 = [<span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;f&#x27;</span>];<br><br>[...arr1, ...arr2, ...arr3] <span class="hljs-comment">// [&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;, &#x27;e&#x27;, &#x27;f&#x27;]</span><br></code></pre></td></tr></table></figure>
+<h4 id="（2）-与解构赋值结合"><a href="#（2）-与解构赋值结合" class="headerlink" title="（2） 与解构赋值结合"></a>（2） 与解构赋值结合</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs javascript">a = list[<span class="hljs-number">0</span>], rest = list.<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>)<br><br>[a, ...rest] = list<br><br><span class="hljs-keyword">const</span> [first, ...rest] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>];<br>first <span class="hljs-comment">// 1</span><br>rest <span class="hljs-comment">// [2, 3, 4, 5]</span><br><br><span class="hljs-keyword">const</span> [first, ...rest] = []<br>first <span class="hljs-comment">// undefined</span><br>rest <span class="hljs-comment">// []</span><br><br><span class="hljs-keyword">const</span> [first, ...rest] = [<span class="hljs-string">&#x27;foo&#x27;</span>]<br>first <span class="hljs-comment">// foo</span><br>rest <span class="hljs-comment">// []</span><br></code></pre></td></tr></table></figure>
+<h4 id="（3）函数返回值"><a href="#（3）函数返回值" class="headerlink" title="（3）函数返回值"></a>（3）函数返回值</h4><p>JavaScript的函数只能返回一个值，如果需要返回多个值，只能返回数组或对象。扩展运算符提供了解决这个问题的一种办法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> dateFields = <span class="hljs-title function_">readDateFields</span>(database);<br><span class="hljs-keyword">var</span> d = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(...dateFields);<br></code></pre></td></tr></table></figure>
+<h4 id="（4）字符串"><a href="#（4）字符串" class="headerlink" title="（4）字符串"></a>（4）字符串</h4><p>可以将字符串转换为真正的数组。因为扩展运算符可以很好地识别Unicode字符，因此最好都用扩展运算符；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript">[...<span class="hljs-string">&#x27;hello&#x27;</span>]<br><span class="hljs-comment">// [&#x27;h&#x27;, &#x27;e&#x27;, &#x27;l&#x27;, &#x27;l&#x27;, &#x27;o&#x27;]</span><br></code></pre></td></tr></table></figure>
+<h4 id="（5）实现了Iterator接口的对象"><a href="#（5）实现了Iterator接口的对象" class="headerlink" title="（5）实现了Iterator接口的对象"></a>（5）实现了Iterator接口的对象</h4><p>任何Iterator接口的对象，都可以用扩展运算符转换为真正的数组，之前已经提过了，这里不再赘述</p>
+<h4 id="（6）Map和Set结构、Generator函数"><a href="#（6）Map和Set结构、Generator函数" class="headerlink" title="（6）Map和Set结构、Generator函数"></a>（6）Map和Set结构、Generator函数</h4><p>承接第（5）点，Map和Set也部署了Iterator接口，所以也可以使用扩展运算符，Generator函数运行后返回的是一个遍历器对象，因此也可以使用扩展运算符。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> go = <span class="hljs-keyword">function</span>* () &#123;<br>    <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>;<br>&#125;;<br>[...<span class="hljs-title function_">go</span>()] <span class="hljs-comment">// [1, 2, 3]</span><br></code></pre></td></tr></table></figure>
+<h2 id="严格模式"><a href="#严格模式" class="headerlink" title="严格模式"></a>严格模式</h2><p>从ES5开始，函数内部可以使用严格模式，在ES2016中做了一点修改。规定只要函数参数使用了默认值、解构赋值、或者扩展运算符，那么函数内部就不能显式设定为严格模式。</p>
+<p>这样规定的原因是：函数内部的严格模式同时适用于函数体和函数参数。但是函数执行时会先执行函数参数代码，再执行函数体代码。因此只有从函数体代码之中才能知道参数代码是否应该以严格模式执行，但是函数参数代码又要先于函数体执行。所以这就导致了不合理的存在。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">doSomething</span>(<span class="hljs-params">value = <span class="hljs-number">070</span></span>) &#123; <span class="hljs-comment">// value = 070 先执行</span><br>    <span class="hljs-string">&#x27;use strict&#x27;</span>; <span class="hljs-comment">// 设置了严格模式</span><br>    <span class="hljs-keyword">return</span> value; <span class="hljs-comment">// 后执行</span><br>&#125;<br><span class="hljs-comment">// Illegal &#x27;use strict&#x27; directive in function with non-simple parameter list</span><br></code></pre></td></tr></table></figure>
+<h3 id="但是我想要用严格模式限定时该怎么办呢？"><a href="#但是我想要用严格模式限定时该怎么办呢？" class="headerlink" title="但是我想要用严格模式限定时该怎么办呢？"></a>但是我想要用严格模式限定时该怎么办呢？</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-meta">&#x27;use strict&#x27;</span> <span class="hljs-comment">// 全局严格模式</span><br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">doSomething</span>(<span class="hljs-params">a, b = a</span>) &#123;&#125;<br><br><span class="hljs-comment">// 由于函数参数部分会先执行：那很简单，将函数包在一个无参数的立即执行函数中</span><br><span class="hljs-keyword">const</span> doSomething = (<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-string">&#x27;use strict&#x27;</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params">value = <span class="hljs-number">42</span></span>) &#123;<br>        <span class="hljs-keyword">return</span> value;<br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+<h2 id="name属性"><a href="#name属性" class="headerlink" title="name属性"></a>name属性</h2><p>函数的<code>name</code>属性返回的是函数的名称。如果是将匿名函数赋给一个变量，在ES5中会返回空串，但是在ES6中会将变量名作为函数的名称。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span> () &#123;&#125;<br>foo.<span class="hljs-property">name</span> <span class="hljs-comment">// &#x27;foo&#x27;</span><br><br><span class="hljs-keyword">var</span> func1 = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;&#125;<br><br><span class="hljs-comment">// ES5</span><br>func1.<span class="hljs-property">name</span> <span class="hljs-comment">// &quot;&quot;</span><br><br><span class="hljs-comment">// ES6</span><br>func1.<span class="hljs-property">name</span> <span class="hljs-comment">// &quot;func1&quot;</span><br></code></pre></td></tr></table></figure>
+<h2 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h2><p>ES6中允许使用箭头<code>=&gt;</code>来定义函数，定义效果和你使用<code>function</code>创建函数是等价的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> <span class="hljs-title function_">f</span> = v =&gt; v;<br><br><span class="hljs-comment">// 等同于</span><br><br><span class="hljs-keyword">var</span> f = <span class="hljs-keyword">function</span>(<span class="hljs-params">v</span>) &#123;<br>    <span class="hljs-keyword">return</span> v;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>如果箭头函数不需要参数或者需要多个参数，就是用圆括号来代表参数部分。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> <span class="hljs-title function_">f</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-number">5</span>;<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-keyword">var</span> f = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<span class="hljs-keyword">return</span> <span class="hljs-number">5</span>;&#125;<br><br><span class="hljs-keyword">var</span> <span class="hljs-title function_">sum</span> = (<span class="hljs-params">num1, num2</span>) =&gt; num1 + num2;<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-keyword">var</span> sum = <span class="hljs-keyword">function</span>(<span class="hljs-params">num1, num2</span>) &#123;<br>    <span class="hljs-keyword">return</span> num1 + num2;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如果箭头函数的代码块部分超过一条语句，就是用大括号将它们围起来，必须在对象外面加上括号。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> <span class="hljs-title function_">sum</span> = (<span class="hljs-params">num1, num2</span>) =&gt; &#123;<span class="hljs-keyword">return</span> num1 + num2;&#125;<br><br><span class="hljs-comment">//大括号会解释为代码块，所以如果是用箭头函数返回对象，必须在对象外层加上大括号</span><br><span class="hljs-keyword">var</span> <span class="hljs-title function_">getTemplate</span> = id =&gt; (&#123;<span class="hljs-attr">id</span>: id, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Temp&quot;</span>&#125;);<br></code></pre></td></tr></table></figure>
+<p>箭头函数也可以与变量解构结合</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> <span class="hljs-title function_">full</span> = (<span class="hljs-params">&#123; first ,last &#125;</span>) =&gt; first + <span class="hljs-string">&#x27; &#x27;</span> + last;<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">full</span>(<span class="hljs-params">person</span>) &#123;<br>    <span class="hljs-keyword">return</span> person.<span class="hljs-property">first</span> + <span class="hljs-string">&#x27; &#x27;</span> + person.<span class="hljs-property">last</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>使用箭头函数需要注意几个地方：</p>
+<ul>
+<li>函数体内的<code>this</code>对象，就是定义时所在的对象，而不是使用时所在的对象；</li>
+<li>不可以当做构造函数；（<code>this</code>对象的指向是可变的，而在箭头函数中是固定的）</li>
+<li>不可以使用<code>arguments</code>对象，如果要用，可以使用Rest参数代替；</li>
+<li>不可以使用<code>yield</code>命令，因此箭头函数不可以用作Generator函数</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;id:&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">id</span>);<br>    &#125;, <span class="hljs-number">100</span>);<br>&#125;<br><br><span class="hljs-keyword">var</span> id = <span class="hljs-number">21</span>;<br>foo.<span class="hljs-title function_">call</span>(&#123; <span class="hljs-attr">id</span>: <span class="hljs-number">42</span> &#125;);<br><span class="hljs-comment">// id: 42</span><br></code></pre></td></tr></table></figure>
+<h2 id="绑定this"><a href="#绑定this" class="headerlink" title="绑定this"></a>绑定this</h2><p>箭头函数可以绑定<code>this</code>对象，因此大大减少了显式绑定<code>this</code>对象的写法（<code>apply</code>、<code>call</code>、<code>bind</code>）。但是见图函数并不适用于任何场合，因此ES7提出了函数绑定运算符。语法为两个并排的冒号：<code>::</code>。双冒号左边是一个对象，右边是一个函数。该运算符会自动将左边的对象，作为上下文环境，绑定到右边的函数上面。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-attr">foo</span>::bar <span class="hljs-comment">// bar.bind(foo)</span><br><br><span class="hljs-attr">foo</span>::<span class="hljs-title function_">bar</span>(...<span class="hljs-variable language_">arguments</span>); <span class="hljs-comment">// bar.bind(foo, arguments)</span><br><br><span class="hljs-keyword">const</span> hasOwnProperty = <span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">hasOwnProperty</span>;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">hasOwn</span>(<span class="hljs-params">obj, key</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-attr">obj</span>::<span class="hljs-title function_">hasOwnProperty</span>(key);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如果双冒号左边为空（对需要绑定的对象为空），则等于将该方法绑定在对象上面。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> method = <span class="hljs-attr">obj</span>::obj.<span class="hljs-property">foo</span>;<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-keyword">var</span> method = ::obj.<span class="hljs-property">foo</span>;<br><br><span class="hljs-keyword">let</span> log = ::<span class="hljs-variable language_">console</span>.<span class="hljs-property">log</span>;<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-keyword">var</span> log = <span class="hljs-variable language_">console</span>.<span class="hljs-property">log</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">console</span>);<br></code></pre></td></tr></table></figure>
+<p>由于双冒号运算符返回的还是原对象，因此可以采用链式写法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> &#123; map, takeWhile, forEach &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;iterlib&quot;</span>;<br><br><span class="hljs-comment">// 例1</span><br><span class="hljs-title function_">getPlayers</span>()<br>::<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.<span class="hljs-title function_">character</span>())<br>::<span class="hljs-title function_">takeWhile</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.<span class="hljs-property">strength</span> &gt; <span class="hljs-number">100</span>)<br>::<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(x));<br><br><span class="hljs-comment">// 例2</span><br><span class="hljs-keyword">let</span> &#123; find, html &#125; = jake;<br><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;div.myClass&quot;</span>);<br>::<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;p&quot;</span>)<br>::<span class="hljs-title function_">html</span>(<span class="hljs-string">&quot;hahahh&quot;</span>);<br></code></pre></td></tr></table></figure>
+<h2 id="尾调用优化"><a href="#尾调用优化" class="headerlink" title="尾调用优化"></a>尾调用优化</h2><p>尾调用是函数式编程中的一个重要概念：就是指某个函数的最后一步调用是另一个函数。例如下面的例子：函数f的最后一步是调用函数g。尾调用优化只在严格模式下才生效。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params">x</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">g</span>(x);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>下面三种情况都不属于尾调用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params">x</span>) &#123;<br>    <span class="hljs-keyword">let</span> y = <span class="hljs-title function_">g</span>(x);<br>    <span class="hljs-keyword">return</span> y;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params">x</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">g</span>(x) + <span class="hljs-number">1</span>;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params">x</span>) &#123;<br>    <span class="hljs-title function_">g</span>(x);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>尾调用不一定出现在函数尾部，只要是最后一步操作即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> (<span class="hljs-params">x</span>) &#123;<br>    <span class="hljs-keyword">if</span> (x &gt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">m</span>(x);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">n</span>(x);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>通常来说：函数调用会在内存中形成一个“调用记录”，也称为调用帧。保存调用位置和内部变量等信息。</p>
+<p>由于尾调用是函数最后一步操作，因此不需要保留外层函数的调用帧，因为调用位置、内部变量等信息都不会再用到了，只要直接用内层函数的调用帧，取代外层函数的调用帧即可。</p>
+<p>这里有一个前提条件：只有不再用到外层函数的内部变量，内层函数的调用帧才会取代外层函数的调用帧，否则就无法进行“尾部调用优化”；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">let</span> m = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">let</span> n = <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">g</span>(m + n);<br>&#125;<br><span class="hljs-title function_">f</span>()<br><br><span class="hljs-comment">// 等同于</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">g</span>(<span class="hljs-number">3</span>)<br>&#125;<br><span class="hljs-title function_">f</span>();<br><br><span class="hljs-comment">// 等同于</span><br><span class="hljs-title function_">g</span>(<span class="hljs-number">3</span>)<br></code></pre></td></tr></table></figure>
+<h3 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a>尾递归</h3><p>基于上述尾部调用优化的特性：因此对于尾递归来说，由于只存在一个调用帧，因此永远也不会发生“栈溢出”错误。（注：将函数的多参数转换为单参数的范式成为”柯里化“）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 非尾递归写法</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">factorial</span>(<span class="hljs-params">n</span>) &#123;<br>    <span class="hljs-keyword">if</span> (n === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">return</span> n * <span class="hljs-title function_">factorial</span>(n - <span class="hljs-number">1</span>);<br>&#125;<br><br><span class="hljs-title function_">factorial</span>(<span class="hljs-number">5</span>) <span class="hljs-comment">// 120</span><br><br><span class="hljs-comment">// 尾递归写法</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">factorial</span>(<span class="hljs-params">n, total = <span class="hljs-number">1</span></span>) &#123;<br>    <span class="hljs-keyword">if</span> (n === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> total;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">factorial</span>(n - <span class="hljs-number">1</span>, n * total);<br>&#125;<br><br><span class="hljs-title function_">factorial</span>(<span class="hljs-number">5</span>) <span class="hljs-comment">// 120</span><br></code></pre></td></tr></table></figure>
+<p>还有斐波那契数列的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 非尾递归写法</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Fibonacci</span>(<span class="hljs-params">n</span>) &#123;<br>    <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) &#123; <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> &#125;;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Fibonacci</span>(n - <span class="hljs-number">1</span>) + <span class="hljs-title class_">Fibonacci</span>(n - <span class="hljs-number">2</span>);<br>&#125;<br><span class="hljs-title class_">Fibonacci</span>(<span class="hljs-number">10</span>); <span class="hljs-comment">// 89</span><br><span class="hljs-title class_">Fibonacci</span>(<span class="hljs-number">1000</span>); <span class="hljs-comment">// 运行很慢</span><br><br><span class="hljs-comment">// 尾递归写法</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Fibonacci</span>(<span class="hljs-params">n, ac1 = <span class="hljs-number">1</span>, ac2 = <span class="hljs-number">1</span></span>) &#123;<br>    <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) &#123; <span class="hljs-keyword">return</span> ac2; &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Fibonacci</span>(n - <span class="hljs-number">1.</span> ac2, ac1 + ac2);<br>&#125;<br><br><span class="hljs-title class_">Fibonacci2</span>(<span class="hljs-number">100</span>) <span class="hljs-comment">// 573147844013817200000</span><br><span class="hljs-title class_">Fibonacci2</span>(<span class="hljs-number">1000</span>) <span class="hljs-comment">// 7.0330367711422765e+208</span><br></code></pre></td></tr></table></figure>
+<p>可以看出“尾部调用优化”对于“尾递归”的意义重大，所以一些函数式编程语言将其写入了语言规格。换句话来说只要使用尾递归来实现就不会发生栈溢出，从而节省内存。</p>
+<h3 id="蹦床函数"><a href="#蹦床函数" class="headerlink" title="蹦床函数"></a>蹦床函数</h3><p>由于尾部递归只能在严格模式下生效，理由如下：</p>
+<p>正常模式下函数有两个变量，可以用于跟踪和记录函数调用：</p>
+<ul>
+<li><code>func.arguments</code>：返回调用时的函数参数；</li>
+<li><code>func.caller</code>：返回调用当前的函数；</li>
+</ul>
+<p>尾部调用发生时，调用栈的记录会被改写，因此上面两个变量就会失真。而在严格模式下会禁用上面两个变量，因此尾部调用只能在严格模式下生效。</p>
+<p>那么，如果我现在正常模式下实现尾部递归的写法又该如何做呢？可以将递归转换为循环执行。也就是俗称的“蹦床函数”：如下所示：<code>sum</code>函数每执行一次，都会返回自身的另一个版本。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">trampoline</span>(<span class="hljs-params">f</span>) &#123;<br>    <span class="hljs-keyword">while</span> (f &amp;&amp; f <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Function</span>) &#123;<br>        f = <span class="hljs-title function_">f</span>();<br>    &#125;<br>    <span class="hljs-keyword">return</span> f;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">sum</span>(<span class="hljs-params">x, y</span>) &#123;<br>    <span class="hljs-keyword">if</span> (y &gt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span> sum.<span class="hljs-title function_">bind</span>(<span class="hljs-literal">null</span>, x + <span class="hljs-number">1</span>, y - <span class="hljs-number">1</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">return</span> x;<br>    &#125;<br>&#125;<br><br><span class="hljs-title function_">trampoline</span>(<span class="hljs-title function_">sum</span>(<span class="hljs-number">1</span>, <span class="hljs-number">100000</span>)); <span class="hljs-comment">// 100001</span><br></code></pre></td></tr></table></figure>
+<p>但是上面的蹦床函数并不是真正的尾调用优化。下面这段代码来自官网教程。细细品位。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">tco</span>(<span class="hljs-params">f</span>) &#123;<br>    <span class="hljs-keyword">var</span> value;<br>    <span class="hljs-keyword">var</span> active = <span class="hljs-literal">false</span>; <span class="hljs-comment">// 默认情况下该变量不激活</span><br>    <span class="hljs-keyword">var</span> accumulated = [];<br>    <br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">accumulator</span>(<span class="hljs-params"></span>) &#123;<br>        accumulated.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">arguments</span>);<br>        <span class="hljs-keyword">if</span> (!active) &#123;<br>            active = <span class="hljs-literal">true</span>; <span class="hljs-comment">// 进入尾调用函数后激活</span><br>            <span class="hljs-keyword">while</span>(accumulated.<span class="hljs-property">length</span>) &#123;<br>                value = f.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, accumulated.<span class="hljs-title function_">shift</span>());<br>            &#125;<br>            active = <span class="hljs-literal">false</span>; <span class="hljs-comment">// 调用完毕后关闭</span><br>            <span class="hljs-keyword">return</span> value;<br>        &#125;<br>    &#125;;<br>&#125;<br><br><span class="hljs-keyword">var</span> sum = <span class="hljs-title function_">tco</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>)&#123;<br>    <span class="hljs-keyword">if</span> (y &gt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">sum</span>(x + <span class="hljs-number">1</span>, y - <span class="hljs-number">1</span>)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">return</span> x;<br>    &#125;<br>&#125;);<br><br><span class="hljs-title function_">sum</span>(<span class="hljs-number">1</span>, <span class="hljs-number">10000</span>) <span class="hljs-comment">// 10001</span><br></code></pre></td></tr></table></figure>
+<h2 id="函数参数的尾逗号"><a href="#函数参数的尾逗号" class="headerlink" title="函数参数的尾逗号"></a>函数参数的尾逗号</h2><p>ES7将允许函数的最后一个参数有尾逗号。在此之前，不允许最后一个参数携带逗号;</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">clownsEveryWhere</span>(<span class="hljs-params"></span><br><span class="hljs-params"> param1,</span><br><span class="hljs-params"> param2,</span><br><span class="hljs-params"></span>) &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6%E5%9F%BA%E7%A1%80/">ES6基础</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-object-expand/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ES6 对象扩展</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/17/javascript/es6-array-expand/">
+                        <span class="hidden-mobile">ES6 数组扩展</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、Java基础1. JDK和JRE有什么区别？ JDK：Java Development Kit的简称，提供Java开发环境和运行环境； JRE：Java Runtime Environment的简称，Java运行环境；  简单来说：JDK包含JRE，想要开发Java程序需要安装JDK；想要运行Java运行只需要JRE； 2. &#x3D;&#x3D; 和 equals的区别2.1 基本区别 基本类型：比较值是否相">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java面试汇总">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/24/java-core/java-summary/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="一、Java基础1. JDK和JRE有什么区别？ JDK：Java Development Kit的简称，提供Java开发环境和运行环境； JRE：Java Runtime Environment的简称，Java运行环境；  简单来说：JDK包含JRE，想要开发Java程序需要安装JDK；想要运行Java运行只需要JRE； 2. &#x3D;&#x3D; 和 equals的区别2.1 基本区别 基本类型：比较值是否相">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220224165841246.png">
+<meta property="article:published_time" content="2022-02-24T07:57:25.000Z">
+<meta property="article:modified_time" content="2022-02-24T07:57:25.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220224165841246.png">
+  
+  
+  <title>Java面试汇总 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Java面试汇总">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-24 15:57" pubdate>
+        2022年2月24日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      30 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Java面试汇总</h1>
+            
+            <div class="markdown-body">
+              <h1 id="一、Java基础"><a href="#一、Java基础" class="headerlink" title="一、Java基础"></a>一、Java基础</h1><h2 id="1-JDK和JRE有什么区别？"><a href="#1-JDK和JRE有什么区别？" class="headerlink" title="1. JDK和JRE有什么区别？"></a>1. JDK和JRE有什么区别？</h2><ul>
+<li>JDK：Java Development Kit的简称，提供Java开发环境和运行环境；</li>
+<li>JRE：Java Runtime Environment的简称，Java运行环境；</li>
+</ul>
+<p>简单来说：JDK包含JRE，想要开发Java程序需要安装JDK；想要运行Java运行只需要JRE；</p>
+<h2 id="2-和-equals的区别"><a href="#2-和-equals的区别" class="headerlink" title="2. == 和 equals的区别"></a>2. == 和 equals的区别</h2><h3 id="2-1-基本区别"><a href="#2-1-基本区别" class="headerlink" title="2.1 基本区别"></a>2.1 基本区别</h3><ul>
+<li>基本类型：比较值是否相同</li>
+<li>引用类型：比较引用是否相同</li>
+</ul>
+<p>equals本质上也是 ==，只不过String和Integer重写了equals方法，所以变成了值比较；</p>
+<p>如果要保证两个对象相等就要重写它的equals方法</p>
+<h3 id="2-2-equals和hashCode的区别"><a href="#2-2-equals和hashCode的区别" class="headerlink" title="2.2 equals和hashCode的区别"></a>2.2 equals和hashCode的区别</h3><ul>
+<li>两个对象的hashCode()相同，equals()不一定相同；</li>
+<li>两个对象equals()相同，hashCode()一定相同；</li>
+</ul>
+<h2 id="3-final在java类中的作用"><a href="#3-final在java类中的作用" class="headerlink" title="3. final在java类中的作用"></a>3. final在java类中的作用</h2><ul>
+<li>final修饰的类不能被继承；</li>
+<li>final修饰的方法不能被重写；</li>
+<li>final修饰的量叫常量，常量必须初始化，初始化后的值不能被修改；</li>
+</ul>
+<h2 id="4-Java的基础类型"><a href="#4-Java的基础类型" class="headerlink" title="4. Java的基础类型"></a>4. Java的基础类型</h2><p>有8种，分别是：byte, boolean, char, short, float, long和double</p>
+<p>String不属于Java的基本类型，属于对象；</p>
+<h2 id="5-Java操作字符串的类"><a href="#5-Java操作字符串的类" class="headerlink" title="5. Java操作字符串的类"></a>5. Java操作字符串的类</h2><p>有：String，StringBuilder和StringBuffer。其中StringBuffer是线程安全的，而StringBuilder是非线程安全的。但是StringBuilder的性能高于StringBuffer。所以单线程环境下使用StringBuilder，多线程环境下使用StringBuffer；</p>
+<h2 id="6-String-str-“i”和String-str-new-String-“i”-区别"><a href="#6-String-str-“i”和String-str-new-String-“i”-区别" class="headerlink" title="6. String str = “i”和String str = new String(“i”)区别"></a>6. String str = “i”和String str = new String(“i”)区别</h2><ul>
+<li><p>String str = “i”会在JVM虚拟机中分配到常量池</p>
+</li>
+<li><p>String str = new String(“i”)会被分配到堆内存中（并且会产生冗余对象）；</p>
+</li>
+</ul>
+<h2 id="7-String类的常用方法"><a href="#7-String类的常用方法" class="headerlink" title="7. String类的常用方法"></a>7. String类的常用方法</h2><ul>
+<li>indexOf()：返回指定字符串的索引</li>
+<li>charAt()：返回指定索引处的字符</li>
+<li>replace()：字符串替换；</li>
+<li>trim()：去除字符串两端的空白</li>
+<li>split()：分割字符串，返回一个分割后的字符串数组</li>
+<li>getBytes()：返回字符串的byte类型数组</li>
+<li>length()：返回字符串长度</li>
+<li>toLowerCase()：字符串转小写</li>
+<li>toUpperCase()：字符串转大写</li>
+<li>substring()：截取字符串</li>
+<li>equals()：字符串比较</li>
+</ul>
+<h2 id="8-抽象类必须要有抽象方法吗？"><a href="#8-抽象类必须要有抽象方法吗？" class="headerlink" title="8. 抽象类必须要有抽象方法吗？"></a>8. 抽象类必须要有抽象方法吗？</h2><p>不需要，抽象类不一定非要有抽象方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Cat</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sayHi</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;hi~&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>普通类不能包括抽象方法，抽象类可以包括抽象方法；</li>
+<li>抽象类不能直接实例化，普通类可以直接实例化；</li>
+<li>抽象类不能被final修饰（因为final 修饰的类不能被继承）</li>
+</ul>
+<h2 id="9-接口和抽象类的区别"><a href="#9-接口和抽象类的区别" class="headerlink" title="9. 接口和抽象类的区别"></a>9. 接口和抽象类的区别</h2><p>实现：抽象子类使用<code>extends</code>继承，接口必须使用<code>implements</code>实现；</p>
+<p>构造函数：抽象类有构造函数，接口没有（当然1.8中接口可以有default方法）</p>
+<p>实现数量：类可以实现很多个接口，但是只能继承一个抽象类；</p>
+<p>访问修饰符：接口的方法默认使用public修饰，抽象类无此限制；</p>
+<h2 id="10-Java-I-O流"><a href="#10-Java-I-O流" class="headerlink" title="10. Java I/O流"></a>10. Java I/O流</h2><ul>
+<li>功能分类：输入流、输出流</li>
+<li>类型分类：字节流（8位）和字符流（16位）</li>
+</ul>
+<h2 id="11-BIO、NIO、AIO区别"><a href="#11-BIO、NIO、AIO区别" class="headerlink" title="11. BIO、NIO、AIO区别"></a>11. BIO、NIO、AIO区别</h2><ul>
+<li>BIO：Block IO同步阻塞式IO，平常使用的传统IO，特点是简单方便使用，并发能力低；</li>
+<li>NIO：同步非阻塞IO，客户端和服务端通过Channel（通道）通讯，实现了多路复用；</li>
+<li>AIO：异步非阻塞IO，异步IO的操作基于事件和回调机制；</li>
+</ul>
+<h2 id="12-File常用方法"><a href="#12-File常用方法" class="headerlink" title="12. File常用方法"></a>12. File常用方法</h2><ul>
+<li>exists()：检测文件路径是否存在；</li>
+<li>createFile()：创建文件；</li>
+<li>createDirectory()：创建目录；</li>
+<li>delete()：删除一个文件或者目录</li>
+<li>copy()：复制文件</li>
+<li>move()：移动文件</li>
+<li>size()：查看文件个数</li>
+<li>read()：读取文件</li>
+<li>write()：写入文件</li>
+</ul>
+<h1 id="二、容器"><a href="#二、容器" class="headerlink" title="二、容器"></a>二、容器</h1><h2 id="13-java容器分类"><a href="#13-java容器分类" class="headerlink" title="13. java容器分类"></a>13. java容器分类</h2><p><img src="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220224165841246.png" srcset="/img/loading.gif" lazyload alt="image-20220224165841246"></p>
+<h2 id="14-HashMap和Hashtable的区别"><a href="#14-HashMap和Hashtable的区别" class="headerlink" title="14. HashMap和Hashtable的区别"></a>14. HashMap和Hashtable的区别</h2><ul>
+<li>存储：HashMap允许key和value为null，而Hashtable不允许；</li>
+<li>线程安全：Hashtable是线程安全的，而HashMap是非线程安全的；</li>
+<li>推荐使用：Hashtable是保留类不建议使用，单线程环境用HashMap，多线程用ConcurrentHashMap；</li>
+</ul>
+<h2 id="15-如何决定使用HashMap还是TreeMap"><a href="#15-如何决定使用HashMap还是TreeMap" class="headerlink" title="15. 如何决定使用HashMap还是TreeMap"></a>15. 如何决定使用HashMap还是TreeMap</h2><ul>
+<li>想要对一个key集合进行有序遍历，使用TreeMap；</li>
+<li>只做插入、删除、定位一个元素的操作，使用HashMap；</li>
+</ul>
+<h2 id="16-HashMap-HashSet的实现原理"><a href="#16-HashMap-HashSet的实现原理" class="headerlink" title="16. HashMap/HashSet的实现原理"></a>16. HashMap/HashSet的实现原理</h2><p>开个专题学习</p>
+<h2 id="17-ArrayList和LinkedList的区别"><a href="#17-ArrayList和LinkedList的区别" class="headerlink" title="17. ArrayList和LinkedList的区别"></a>17. ArrayList和LinkedList的区别</h2><ul>
+<li><p><strong>数据结构：</strong>ArrayList是动态数组，LinkedList是双链表结构；</p>
+</li>
+<li><p><strong>随机访问：</strong>ArrayList是数组结构，所以随机访问效率高；LinkedList是线性数据存储，所以需要移动指针从前往后遍历；</p>
+</li>
+<li><p><strong>增加和删除效率：</strong>非首尾增加删除操作，LinkedList效率比ArrayList高；</p>
+</li>
+</ul>
+<p>综述：需要频繁读取集合中的元素，推荐使用ArrayList，插入删除操作比较多就用LinkedList；</p>
+<h2 id="18-数组和List的转换"><a href="#18-数组和List的转换" class="headerlink" title="18. 数组和List的转换"></a>18. 数组和List的转换</h2><ul>
+<li>数组转List：<code>Arrays.asList(array)</code>；</li>
+<li>List转数组：List自带的toArray()方法；</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;String&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>list.add(<span class="hljs-string">&quot;sdv&quot;</span>);<br>list.add(<span class="hljs-string">&quot;drgd&quot;</span>);<br>Object[] objects = list.toArray();<br>System.out.println(Arrays.toString(objects));<br><br>String[] array = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[]&#123;<span class="hljs-string">&quot;ssdv&quot;</span>, <span class="hljs-string">&quot;svsdfb&quot;</span>&#125;;<br>System.out.println(Arrays.asList(array));<br></code></pre></td></tr></table></figure>
+<h2 id="19-ArrayList和Vector的区别"><a href="#19-ArrayList和Vector的区别" class="headerlink" title="19. ArrayList和Vector的区别"></a>19. ArrayList和Vector的区别</h2><ul>
+<li>线程安全：Vector使用Synchronized实现同步，是线程安全的；而ArrayList是非线程安全的；</li>
+<li>性能：ArrayList性能优于Vector；</li>
+<li>扩容：两者都会根据实际需要动态扩容，但是Vector扩容每次增加1倍，ArrayList只会增加50%；</li>
+</ul>
+<h2 id="20-Queue中的poll-和remove-的区别"><a href="#20-Queue中的poll-和remove-的区别" class="headerlink" title="20. Queue中的poll()和remove()的区别"></a>20. Queue中的poll()和remove()的区别</h2><ul>
+<li>相同：返回第一个元素，并在队列中删除返回的对象；</li>
+<li>不同：poll()没元素返回null，remove()会直接抛出NoSuchElementException异常；</li>
+</ul>
+<h2 id="21-哪些集合类是线程安全的"><a href="#21-哪些集合类是线程安全的" class="headerlink" title="21. 哪些集合类是线程安全的"></a>21. 哪些集合类是线程安全的</h2><p>Vector、Hashtable、Stack是线程安全的，HashMap是非线程安全的，对应的线程安全类是ConcurrentHashMap;</p>
+<h2 id="22-迭代器iterator是什么"><a href="#22-迭代器iterator是什么" class="headerlink" title="22. 迭代器iterator是什么"></a>22. 迭代器iterator是什么</h2><p>提供遍历任何Collection的接口，可以从一个Collection中使用迭代器方法获取迭代器实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;String&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>Iterator&lt;String&gt; it = List.iterator();<br><span class="hljs-keyword">while</span>(it.hasNext()) &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">obj</span> <span class="hljs-operator">=</span> it.next();<br>    System.out.println(obj);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>Iterator特点是安全，因为可以确保在当前遍历集合元素被更改时，抛出ConcurrentModificationException异常；</p>
+<h2 id="23-怎么确保一个集合不能被更改"><a href="#23-怎么确保一个集合不能被更改" class="headerlink" title="23. 怎么确保一个集合不能被更改"></a>23. 怎么确保一个集合不能被更改</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;String&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>list.add(<span class="hljs-string">&quot;x&quot;</span>);<br>Collection&lt;String&gt; clist = Collections.unmodifiableCollection(list);<br>clist.add(<span class="hljs-string">&quot;y&quot;</span>); <span class="hljs-comment">// throw error</span><br>System.out.println(list.size());<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7/">面试技巧</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java/">Java</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/24/java-core/java-thread-summary/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java多线程面试汇总</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/21/jvm/jvm-learning/">
+                        <span class="hidden-mobile">JVM知识汇总</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

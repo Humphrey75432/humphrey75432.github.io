@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Sass 基本教程简介Sass一个CSS预处理器，属于CSS的扩展语言，因此语法完全兼容CSS；最早是由Hampton Catlin设计并由Natalie Weizenbaum开发的层叠样式表语言。Sass全称（Syntactically Awesome Stylesheets） Sass的文件后缀为.scss，因此Scss生成的格式化良好的代码，易于组织和维护；出现Scss的原因是CSS原本的语">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS3之Sass学习">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/02/18/frontend/css3/css3-ch03/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="Sass 基本教程简介Sass一个CSS预处理器，属于CSS的扩展语言，因此语法完全兼容CSS；最早是由Hampton Catlin设计并由Natalie Weizenbaum开发的层叠样式表语言。Sass全称（Syntactically Awesome Stylesheets） Sass的文件后缀为.scss，因此Scss生成的格式化良好的代码，易于组织和维护；出现Scss的原因是CSS原本的语">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-18T12:50:30.000Z">
+<meta property="article:modified_time" content="2022-02-18T12:50:30.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="CSS3">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>CSS3之Sass学习 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="CSS3之Sass学习">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-18 20:50" pubdate>
+        2022年2月18日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      30 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">CSS3之Sass学习</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Sass-基本教程"><a href="#Sass-基本教程" class="headerlink" title="Sass 基本教程"></a>Sass 基本教程</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Sass一个CSS预处理器，属于CSS的扩展语言，因此语法完全兼容CSS；最早是由Hampton Catlin设计并由Natalie Weizenbaum开发的层叠样式表语言。Sass全称（Syntactically Awesome Stylesheets）</p>
+<p>Sass的文件后缀为<code>.scss</code>，因此Scss生成的格式化良好的代码，易于组织和维护；出现Scss的原因是CSS原本的语法不够强大，导致重复编写一些代码，无法实现复用，而且维护起来也不方便；</p>
+<h2 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h2><p>安装也非常简单，可以用NPM来安装，如果是苹果用户可以用Homebrew；</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><pre><code class="hljs sh">$ npm install -g sass<br><br>$ brew install sass/sass/sass<br></code></pre></td></tr></table></figure>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><h3 id="基础示例"><a href="#基础示例" class="headerlink" title="基础示例"></a>基础示例</h3><p>安装好scss后就可以使用了，可以贴上一个例子：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-variable">$bgcolor</span>: lightblue;<br><span class="hljs-variable">$textcolor</span>: darkblue;<br><span class="hljs-variable">$fontsize</span>: <span class="hljs-number">18px</span>;<br><br><span class="hljs-selector-tag">body</span> &#123;<br>    <span class="hljs-attribute">background-color</span>: <span class="hljs-variable">$bgcolor</span>;<br>    <span class="hljs-attribute">color</span>: <span class="hljs-variable">$textcolor</span>;<br>    <span class="hljs-attribute">font-size</span>: <span class="hljs-variable">$fontsize</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>变量用于存储一些信息，它可以重复使用，可以存储以下信息：</p>
+<ul>
+<li>字符串</li>
+<li>数字</li>
+<li>颜色值</li>
+<li>布尔值</li>
+<li>列表</li>
+<li>null值</li>
+</ul>
+<p>Sass变量使用<code>$</code>符号，Sass变量的作用域只能在当前层级上有效果</p>
+<p>如果要设置全局作用域，可以使用<code>!global</code>关键词来设置，例子如下：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-variable">$myColor</span>: red;<br><br><span class="hljs-selector-tag">h1</span> &#123;<br>    <span class="hljs-variable">$myColor</span>: green !global;<br>    <span class="hljs-attribute">color</span>: <span class="hljs-variable">$myColor</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="嵌套规则与属性"><a href="#嵌套规则与属性" class="headerlink" title="嵌套规则与属性"></a>嵌套规则与属性</h2><p>Sass嵌套CSS选择器类似于HTML的嵌套规则，例如：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-selector-tag">nav</span> &#123;<br>    <span class="hljs-selector-tag">ul</span> &#123;<br>        <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>;<br>        <span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span>;<br>        <span class="hljs-attribute">list-style</span>: none;<br>    &#125;<br>    <br>    <span class="hljs-selector-tag">li</span> &#123;<br>        <span class="hljs-attribute">display</span>: inline-block;<br>    &#125;<br>    <br>    <span class="hljs-selector-tag">a</span> &#123;<br>        <span class="hljs-attribute">display</span>: block;<br>        <span class="hljs-attribute">padding</span>: <span class="hljs-number">6px</span> <span class="hljs-number">12px</span>;<br>        <span class="hljs-attribute">text-decoration</span>: none;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>很多CSS属性都有同样的前缀，例如font-family，font-size和font-weight，text-align，text-transform和text-overflow，在Sass中可以使用嵌套属性来编写，例如：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-attribute">font</span>: &#123;<br>    family: Helvetica, sans-serif;<br>    size: <span class="hljs-number">18px</span>;<br>    weight: bold;<br>&#125;<br><br>text: &#123;<br>    align: center;<br>    <span class="hljs-attribute">transform</span>: lowercase;<br>    <span class="hljs-attribute">overflow</span>: hidden;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>以上代码会被转换成如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-attribute">font-family</span>: Helvetica, sans-serif;<br><span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;<br><span class="hljs-attribute">font-weight</span>: bold;<br><br><span class="hljs-attribute">text-align</span>: center;<br><span class="hljs-attribute">text-transform</span>: lowercase;<br><span class="hljs-attribute">text-overflow</span>: hidden;<br></code></pre></td></tr></table></figure>
+<h2 id="import-和-Partials"><a href="#import-和-Partials" class="headerlink" title="@import 和 Partials"></a>@import 和 Partials</h2><h3 id="import"><a href="#import" class="headerlink" title="@import"></a>@import</h3><p>Sass可以帮助减少重复的CSS代码，节省开发时间。</p>
+<p>类似CSS，Sass支持<code>@import</code>指令，可以让我们导入其他文件等内容；例如：</p>
+<p>创建一个<code>reset.scss</code>文件</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-selector-tag">html</span>,<br><span class="hljs-selector-tag">body</span>,<br><span class="hljs-selector-tag">ul</span>,<br><span class="hljs-selector-tag">ol</span> &#123;<br>    <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>;<br>    <span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>然后在<code>standard.scss</code>文件中使用<code>@import</code>指令导入<code>reser.scss</code>文件；</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-keyword">@import</span> <span class="hljs-string">&quot;reset&quot;</span>;<br><br><span class="hljs-selector-tag">body</span> &#123;<br>    <span class="hljs-attribute">font-family</span>: Helvetica, sans-serif;<br>    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;<br>    <span class="hljs-attribute">color</span>: red;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="Partials"><a href="#Partials" class="headerlink" title="Partials"></a>Partials</h3><p>如果你不希望将一个Sass代码编译到CSS文件中，可以在文件名的开头添加一个下划线。这将告诉Sass不要将Sass编译到CSS文件中。</p>
+<p>例如我创建一个<code>_colors.sass</code>文件，但是不会被编译成<code>_colors.css</code>；</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-variable">$myPink</span>: <span class="hljs-number">#ee82ee</span>;<br><span class="hljs-variable">$myBlue</span>: <span class="hljs-number">#4169e1</span>;<br><span class="hljs-variable">$myGreen</span>: <span class="hljs-number">#8fbc8f</span>;<br></code></pre></td></tr></table></figure>
+<p>如果需要导入该文件，则不需要使用下划线；</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-keyword">@import</span> <span class="hljs-string">&quot;colors&quot;</span>;<br><br><span class="hljs-selector-tag">body</span> &#123;<br>    <span class="hljs-attribute">font-family</span>: Helvetica, sans-serif;<br>    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;<br>    <span class="hljs-attribute">color</span>: <span class="hljs-variable">$myBlue</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>需要注意的是：不要将待下划线与不带下划线的同名文件放置在同一个文件目录下，比如：<code>_colors.scss</code>和<code>colors.scss</code>不能同时存在于一个目录下，否则带下划线的文件将会被忽略；</p>
+<h2 id="mixin-和-include"><a href="#mixin-和-include" class="headerlink" title="@mixin 和 @include"></a>@mixin 和 @include</h2><p><code>@mixin</code>指令允许我们定义一个可以在争个光样式表中重复使用的样式，语法为<code>@mixin name &#123;property: value&#125;</code></p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-keyword">@mixin</span> important-text &#123;<br>    <span class="hljs-attribute">color</span>: red;<br>    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">25px</span>;<br>    <span class="hljs-attribute">font-weight</span>: bold;<br>    <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> solid blue;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>@include</code>指令可以将混入（mixin）引入文档中；同样地，包含important-text混入代码如下：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-selector-class">.danger</span> &#123;<br>    <span class="hljs-keyword">@include</span> important-text;<br>    <span class="hljs-attribute">background-color</span>: green;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>除此之外，混入可以接收参数，我们可以向混入传递变量，定义可以接收参数的混入：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-keyword">@mixin</span> bordered(<span class="hljs-variable">$color</span>, <span class="hljs-variable">$width</span>) &#123;<br>    <span class="hljs-attribute">border</span>: <span class="hljs-variable">$width</span> solid <span class="hljs-variable">$color</span>;<br>&#125;<br><br><span class="hljs-selector-class">.myArticle</span> &#123;<br>    <span class="hljs-keyword">@include</span> bordered(blue, <span class="hljs-number">1px</span>);<br>&#125;<br><br><span class="hljs-selector-class">.myNotes</span> &#123;<br>    <span class="hljs-keyword">@include</span> bordered(red, <span class="hljs-number">2px</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>除此之外，混入也可以定义默认值，语法格式如下：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-keyword">@mixin</span> bordered(<span class="hljs-variable">$color</span>: blue, <span class="hljs-variable">$width</span>: <span class="hljs-number">1px</span>) &#123;<br>    <span class="hljs-attribute">border</span>: <span class="hljs-variable">$width</span> solid <span class="hljs-variable">$color</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>有时候不能确定混入（mixin）或者一个函数（function）使用多少个参数，这个时候我们就可以使用<code>...</code>来设置可变参数，例如：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-keyword">@mixin</span> box-shadow(<span class="hljs-variable">$shadows</span>...) &#123;<br>    -moz-<span class="hljs-attribute">box-shadow</span>: <span class="hljs-variable">$shadows</span>;<br>    -webkit-<span class="hljs-attribute">box-shadow</span>: <span class="hljs-variable">$shadows</span>;<br>    <span class="hljs-attribute">box-shadow</span>: <span class="hljs-variable">$shadows</span>;<br>&#125;<br><br><span class="hljs-selector-class">.shadows</span> &#123;<br>    <span class="hljs-keyword">@include</span>: box-shadow(<span class="hljs-number">0px</span> <span class="hljs-number">4px</span> <span class="hljs-number">5px</span> <span class="hljs-number">#666</span>, <span class="hljs-number">2px</span> <span class="hljs-number">6px</span> <span class="hljs-number">10px</span> <span class="hljs-number">#999</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>浏览器前缀使用混入也是十分方便的；</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-keyword">@mixin</span> transform(<span class="hljs-variable">$property</span>) &#123;<br>    -webkit-<span class="hljs-attribute">transform</span>: <span class="hljs-variable">$property</span>;<br>    -ms-<span class="hljs-attribute">transform</span>: <span class="hljs-variable">$property</span>;<br>    <span class="hljs-attribute">transform</span>: <span class="hljs-variable">$property</span>;<br>&#125;<br><br><span class="hljs-selector-class">.myBox</span> &#123;<br>    <span class="hljs-keyword">@include</span>: transform(rotate(<span class="hljs-number">20deg</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="extend-和继承"><a href="#extend-和继承" class="headerlink" title="@extend 和继承"></a>@extend 和继承</h2><p><code>@extend</code>指令告诉Sass一个选择器的样式从另一个选择器继承；</p>
+<p>如果一个样式与另一个样式几乎相同，只有少量区别，则使用@extend就显得更有用；例如：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-selector-class">.button-basic</span> &#123;<br>    <span class="hljs-attribute">border</span>: none;<br>    <span class="hljs-attribute">padding</span>: <span class="hljs-number">15px</span> <span class="hljs-number">30px</span>;<br>    <span class="hljs-attribute">text-align</span>: center;<br>    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">16px</span>;<br>    <span class="hljs-attribute">cursor</span>: pointer;<br>&#125;<br><br><span class="hljs-selector-class">.button-reporter</span> &#123;<br>    <span class="hljs-keyword">@extend</span> .button-basic;<br>    <span class="hljs-attribute">background-color</span>: red;<br>&#125;<br><br><span class="hljs-selector-class">.button-submit</span> &#123;<br>    <span class="hljs-keyword">@extend</span> .button-basic;<br>    <span class="hljs-attribute">background-color</span>: green;<br>    <span class="hljs-attribute">color</span>: white;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>通过将公共代码抽离出来公用给其他CSS样式从而实现代码的复用，真棒；</p>
+<h2 id="Sass函数"><a href="#Sass函数" class="headerlink" title="Sass函数"></a>Sass函数</h2><p>Sass定义了各种类型的函数，可以通过CSS语句直接调用；这里就不再赘述，有需要可以自行查询文档了解；</p>
+<ul>
+<li>字符串相关函数</li>
+<li>数字相关函数</li>
+<li>列表相关函数</li>
+<li>映射相关函数</li>
+<li>选择器相关函数</li>
+<li>Introspection相关函数</li>
+<li>颜色相关函数</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/CSS3/">CSS3</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/19/spring/springcloud-getting-started/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">初识Spring Cloud</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/18/frontend/css3/css3-ch02/">
+                        <span class="hidden-mobile">CSS3进阶操作</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
