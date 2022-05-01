@@ -50,16 +50,16 @@ jobs:
             git config --global user.name "Circle CI"
             git config --global user.email "bot@circleci.com"
             sh deploy.sh
-  verify:
-    docker:
-      - image: circleci/node:16
-    steps:
-      - run:
-          name: Install BLC
-          command: sudo npm install -g broken-link-checker
-      - run:
-          name: Check broken internal links
-          command: blc https://humphrey75432.github.io/ -roe
+  # verify:
+  #   docker:
+  #     - image: circleci/node:16
+  #   steps:
+  #     - run:
+  #         name: Install BLC
+  #         command: sudo npm install -g broken-link-checker
+  #     - run:
+  #         name: Check broken internal links
+  #         command: blc https://humphrey75432.github.io/ -roe
 
 workflows:
   version: 2
@@ -77,6 +77,6 @@ workflows:
           filters:
             branches:
               only: develop
-      - verify:
-          requires:
-            - deploy
+      # - verify:
+      #     requires:
+      #       - deploy
