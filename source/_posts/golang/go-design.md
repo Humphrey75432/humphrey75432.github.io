@@ -114,3 +114,96 @@ func G() {
 假如支持可重入锁，那么在`F()`方法执行完毕后就会跳到`G()`方法中，但是问题在于：**你完全不知道`F`和`G`方法在加锁后是不是做了什么事情**。从而导致破坏了不变量。
 
 综上所述：Go语言不支持可重入锁，因为可重入锁会违反前面所提到的设计理念。因此要保证这些变量的不变性保持，不会在后续过程中被破坏。
+
+## 2.2 并发读写
+
+Go语言中的slice和map是非线程安全的。可以通过下面两个例子来说明：
+
+### （1）Slice并发
+
+```go
+func main() {
+    var s []string
+    go func(){
+        for i := 0; i < 9999; i++ {
+            s = append(s, i)
+        }
+    }()
+}
+fmt.Printf("Len is %d\n", len(s))
+```
+
+这段程序每次执行都会发现结果不一样，但确定的是，slice的长度无论如何都达不到9999，很显然，一个协程写的数据被其他的协程覆盖了。导致其出现非线程安全的情况。
+
+很显然，Go语言的设计者在一开始设计切片就希望不会在并发情况下使用，按照Java的逻辑，对容器中元素的维护需要对其索引进行修改，这对于Go语言这种追求极简方式的设计哲学格格不入。所以官方就没有对其实现。
+
+### （2）Map的并发
+
+我们再来看一下Map对并发情况的支持如何：
+
+```go
+func main() {
+    s := make(map[string]string)
+    go func() {
+        for i := 0; i < 99; i++ {
+            s["Name"] = "Time"
+        }
+    }()
+}
+fmt.Printf("Total is %d times\n", len(s))
+```
+
+这段程序直接执行会报错。错误如下：
+
+```shell
+fatal error: concurrent map writes
+
+goroutine 52 [running]:
+runtime.throw({0x10a5618?, 0x0?})
+	/usr/local/go/src/runtime/panic.go:992 +0x71 fp=0xc000123748 sp=0xc000123718 pc=0x102f0f1
+runtime.mapassign_faststr(0x0?, 0x0?, {0x10a2b55, 0x4})
+	/usr/local/go/src/runtime/map_faststr.go:212 +0x39c fp=0xc0001237b0 sp=0xc000123748 pc=0x101009c
+main.main.func1(
+/golang_learning/concurrent/unsafe2.go:10 +0x30 fp=0xc0001237e0 sp=0xc0001237b0 pc=0x108ad30
+runtime.goexit()
+	/usr/local/go/src/runtime/asm_amd64.s:1571 +0x1 fp=0xc0001237e8 sp=0xc0001237e0 pc=0x105a521
+created by main.main
+```
+
+可以看出，Go语言设计者对Map也不支持并发操作。因为Go官方不支持Map读写。原因如下：
+
++ map的典型使用场景不需要从goroutine中进行安全访问；
++ 非典型场景：map可能只是一些更大的数据结构已经同步计算的一部分；
++ 性能场景考虑：若只是为少数程序添加安全性，导致Map的所有处理都需要Mutex操作，将会极大降低程序的性能
+
+综上所述，Go官方认为map不需要支持并发访问。
+
+那如果我非要使用并发访问Map应该怎么做呢？可以使用Go语言支持的`sync.Map`：
+
+```go
+var m sync.Map
+
+func main() {
+	data := []string{"Hello1", "Hello2", "Hello3", "Hello4"}
+	for i := 0; i < 4; i++ {
+		go func(i int) {
+			m.Store(i, data[i])
+		}(i)
+	}
+	time.Sleep(time.Second)
+
+	v, ok := m.Load(0)
+	fmt.Printf("Load: %v, %v\n", v, ok)
+
+	m.Delete(1)
+
+	v, ok = m.LoadOrStore(1, "Fuck2")
+	fmt.Printf("Load: %v, %v\n", v, ok)
+
+	m.Range(func(key, value any) bool {
+		fmt.Printf("Range: %v, %v\n", key, value)
+		return true
+	})
+}
+```
+
