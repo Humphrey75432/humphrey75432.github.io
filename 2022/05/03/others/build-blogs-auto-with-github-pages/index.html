@@ -1,0 +1,511 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、前言这个系列的文章网上估计已经烂大街了，但我还是有必要将自己搭建Hexo中遇到的一些坑记录下来。 1.1 起因事情是这样，之前一直有个想法：把自己散落在各大博客网站的文章聚合起来，形成自己的知识体系。所以在二月份就有了自建博客网站的想法。俗话说：“凡事预则立，不立则废”，于是我按照Hexo官网的教程搭建了博客。 早期是使用Travis CI来自动发布博客的，但是呢，Travis CI现在开始收">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Github Pages来自动部署Hexo博客">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/05/03/others/build-blogs-auto-with-github-pages/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="一、前言这个系列的文章网上估计已经烂大街了，但我还是有必要将自己搭建Hexo中遇到的一些坑记录下来。 1.1 起因事情是这样，之前一直有个想法：把自己散落在各大博客网站的文章聚合起来，形成自己的知识体系。所以在二月份就有了自建博客网站的想法。俗话说：“凡事预则立，不立则废”，于是我按照Hexo官网的教程搭建了博客。 早期是使用Travis CI来自动发布博客的，但是呢，Travis CI现在开始收">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503114735833.png">
+<meta property="og:image" content="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503120354326.png">
+<meta property="og:image" content="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503121853836.png">
+<meta property="og:image" content="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503122014940.png">
+<meta property="og:image" content="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503122549571.png">
+<meta property="og:image" content="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503122700995.png">
+<meta property="article:published_time" content="2022-05-03T03:40:33.000Z">
+<meta property="article:modified_time" content="2022-05-03T03:40:33.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="自建博客">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503114735833.png">
+  
+  
+  <title>使用Github Pages来自动部署Hexo博客 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="使用Github Pages来自动部署Hexo博客">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-05-03 11:40" pubdate>
+        2022年5月3日 中午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">使用Github Pages来自动部署Hexo博客</h1>
+            
+            <div class="markdown-body">
+              <h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>这个系列的文章网上估计已经烂大街了，但我还是有必要将自己搭建Hexo中遇到的一些坑记录下来。</p>
+<h2 id="1-1-起因"><a href="#1-1-起因" class="headerlink" title="1.1 起因"></a>1.1 起因</h2><p>事情是这样，之前一直有个想法：把自己散落在各大博客网站的文章聚合起来，形成自己的知识体系。所以在二月份就有了自建博客网站的想法。俗话说：“凡事预则立，不立则废”，于是我按照Hexo官网的教程搭建了博客。</p>
+<p>早期是使用Travis CI来自动发布博客的，但是呢，Travis CI现在开始收费了，我在免费用了一个月的Travis CI后发现3月23号之后的文章都无法再发布。登上去Travis CI才发现试用结束，要花钱买。挣钱嘛，不寒碜。于是我去看了下Travis CI的订阅价格：</p>
+<p><img src="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503114735833.png" srcset="/img/loading.gif" lazyload alt="image-20220503114735833"></p>
+<p>Umm……虽说已经是工作快5年的社畜，身上还是有一点积蓄的。但关键是这玩意儿我不常用啊（谁能保证自己天天都有时间写博客呢），这样下来很不经济。Umm……我猜是新冠疫情让Travis CI嗅到了敏锐的商机，所以才这么堂而皇之的割韭菜吧。Umm。算啦，劳资不用它了。</p>
+<h2 id="1-2-Travis-CI的替代品"><a href="#1-2-Travis-CI的替代品" class="headerlink" title="1.2 Travis CI的替代品"></a>1.2 Travis CI的替代品</h2><p>Umm，到这里大家可能都会想到Github Actions，这个官方出品的自动化CI/CD工具它不香吗，而且一个月有20000分钟的免费构建时长（说实话这个构建次数对我来说已经完全足够了）。好，那我就用它来构建Hexo博客。</p>
+<h1 id="二、艰难的配置历程"><a href="#二、艰难的配置历程" class="headerlink" title="二、艰难的配置历程"></a>二、艰难的配置历程</h1><h2 id="2-1-Jekyll真的垃圾"><a href="#2-1-Jekyll真的垃圾" class="headerlink" title="2.1 Jekyll真的垃圾"></a>2.1 Jekyll真的垃圾</h2><p>说实话，要搭建好这一切其实并不容易，我从开始网上寻找文档到真正弄好也花了好几天的时间，期间也踩坑不少。首先需要明白几点：</p>
+<ul>
+<li>Github Pages采用了Jekyll来生成静态内容，如果使用Hexo来构建博客，必定会死在主题构建这一步（我踏马当时被这个东西折腾的那叫一个难受啊）</li>
+<li>Jekyll的主题真是太特么丑了，还是Hexo的主题好看一些；</li>
+<li>如果是使用github-pages建站，写了CI/CD脚本会交给一个叫”pages-build-deployments”的机器人执行，只有它完成构建，你的博客才能顺理成章地发布；</li>
+</ul>
+<p>可想而知当时被Jekyll这个垃圾坑的有多惨了（每次都是在构建主题失败了）</p>
+<h2 id="2-2-临时解决方案"><a href="#2-2-临时解决方案" class="headerlink" title="2.2 临时解决方案"></a>2.2 临时解决方案</h2><p>如果没办法使用自动部署，那么每次发布博客的步骤是这样：</p>
+<ol>
+<li>提前按照hexo-deploy-git插件；</li>
+<li>每次写完博客在本地执行<code>hexo clean &amp;&amp; hexo deploy</code>，插件会自动将静态内容发布到gh-pages分支上；</li>
+<li>再把本地提交推到master分支；</li>
+</ol>
+<p>相当于你要提交两次代码，我觉得完全没必要做重复工作，所以我觉得摸索Github Actions来实现一次提交和部署；</p>
+<h1 id="三、正确的打开方式"><a href="#三、正确的打开方式" class="headerlink" title="三、正确的打开方式"></a>三、正确的打开方式</h1><p>好在办法总比困难多，我最终还是找到了自动化构建的方式，我们去Github Marketplace搜索下面这款插件：<code>GitHub Pages action</code>，这款插件已经有了非常丰富的文档。你只需要按照文档的操作步骤来做就行了。</p>
+<p><img src="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503120354326.png" srcset="/img/loading.gif" lazyload alt="image-20220503120354326"></p>
+<p>言归正传，我们说一下具体的配置方法：</p>
+<h3 id="（1）创建Github-Action的配置文件"><a href="#（1）创建Github-Action的配置文件" class="headerlink" title="（1）创建Github Action的配置文件"></a>（1）创建Github Action的配置文件</h3><p>使用终端路由到博客的根目录，执行下面的命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> ~/your_hexo_directory</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">mkdir</span> -p .github/workflows</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> .github/workflows &amp;&amp; <span class="hljs-built_in">touch</span> deploy-hexo.yml</span><br></code></pre></td></tr></table></figure>
+<p>YAML文件的名称随意就行</p>
+<h3 id="（2）指定构建分支"><a href="#（2）指定构建分支" class="headerlink" title="（2）指定构建分支"></a>（2）指定构建分支</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">name:</span> <span class="hljs-string">Deploy</span> <span class="hljs-string">to</span> <span class="hljs-string">gh-pages</span><br><br><span class="hljs-attr">on:</span><br>  <span class="hljs-attr">push:</span><br>    <span class="hljs-attr">branches:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">master</span><br></code></pre></td></tr></table></figure>
+<h3 id="（3）设置构建基础镜像"><a href="#（3）设置构建基础镜像" class="headerlink" title="（3）设置构建基础镜像"></a>（3）设置构建基础镜像</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">jobs:</span><br>  <span class="hljs-attr">gh-deploy-pages:</span><br>    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-18.04</span><br>    <span class="hljs-attr">steps:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v2</span><br></code></pre></td></tr></table></figure>
+<h3 id="（4）设置构建步骤（在步骤三的基础上设置）"><a href="#（4）设置构建步骤（在步骤三的基础上设置）" class="headerlink" title="（4）设置构建步骤（在步骤三的基础上设置）"></a>（4）设置构建步骤（在步骤三的基础上设置）</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">steps:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v2</span><br><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Setup</span> <span class="hljs-string">Node.js</span><br>      <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-node@v2.1.0</span><br>      <span class="hljs-attr">with:</span><br>        <span class="hljs-attr">node-version:</span>  <span class="hljs-string">&#x27;16.x&#x27;</span><br>      <span class="hljs-attr">env:</span><br>        <span class="hljs-attr">ACTIONS_ALLOW_UNSECURE_COMMANDS:</span> <span class="hljs-string">&#x27;true&#x27;</span><br><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Cache</span> <span class="hljs-string">dependencies</span><br>      <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/cache@v2</span><br>      <span class="hljs-attr">with:</span><br>        <span class="hljs-attr">path:</span> <span class="hljs-string">~/.npm</span><br>        <span class="hljs-attr">key:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">runner.os</span> <span class="hljs-string">&#125;&#125;-node-$&#123;&#123;</span> <span class="hljs-string">hashFiles(&#x27;**/package-lock.json&#x27;)</span> <span class="hljs-string">&#125;&#125;</span><br>        <span class="hljs-attr">restore-keys:</span> <span class="hljs-string">|</span><br><span class="hljs-string">          $&#123;&#123; runner.os &#125;&#125;-node-</span><br><span class="hljs-string"></span>      <span class="hljs-attr">env:</span><br>        <span class="hljs-attr">ACTIONS_ALLOW_UNSECURE_COMMANDS:</span> <span class="hljs-string">&#x27;true&#x27;</span><br><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Clean</span> <span class="hljs-string">install</span> <span class="hljs-string">dependencies</span><br>      <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">install</span><br>      <span class="hljs-attr">env:</span><br>        <span class="hljs-attr">ACTIONS_ALLOW_UNSECURE_COMMANDS:</span> <span class="hljs-string">&#x27;true&#x27;</span><br><br>   <span class="hljs-comment"># 换成自己的命令即可，按照package.json里面的设置就行</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Clean</span> <span class="hljs-string">and</span> <span class="hljs-string">Build</span> <span class="hljs-string">app</span><br>      <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">clean</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">build</span><br>      <span class="hljs-attr">env:</span><br>        <span class="hljs-attr">ACTIONS_ALLOW_UNSECURE_COMMANDS:</span> <span class="hljs-string">&#x27;true&#x27;</span><br><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">deploy</span> <span class="hljs-string">to</span> <span class="hljs-string">github</span> <span class="hljs-string">pages</span><br>      <span class="hljs-attr">uses:</span> <span class="hljs-string">peaceiris/actions-gh-pages@v3</span><br>      <span class="hljs-attr">with:</span><br>        <span class="hljs-comment"># 预先生成一个SSH-Key</span><br>        <span class="hljs-attr">deploy_key:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">secrets.ACTIONS_DEPLOY_KEY</span> <span class="hljs-string">&#125;&#125;</span><br>        <span class="hljs-attr">publish_dir:</span> <span class="hljs-string">./public</span><br>      <span class="hljs-attr">env:</span><br>        <span class="hljs-attr">ACTIONS_ALLOW_UNSECURE_COMMANDS:</span> <span class="hljs-string">&#x27;true&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>生成SSH Keys的命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> ~/your_hexo_blog_directory</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">ssh-keygen -t rsa -b 4096 -f gh-pages -N <span class="hljs-string">&quot;&quot;</span></span><br></code></pre></td></tr></table></figure>
+<p>然后去Github Project Setting设置如下：</p>
+<p>Add Actions Secret，名称为ACTIONS_DEPLOY_KEY，内容为刚才用SSH生成的私钥；</p>
+<p><img src="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503121853836.png" srcset="/img/loading.gif" lazyload alt="image-20220503121853836"></p>
+<p>Add Deploy Key，这里记得一定要勾选“Allow Write Access”选项；内容为刚才生成的SSH公钥</p>
+<p><img src="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503122014940.png" srcset="/img/loading.gif" lazyload alt="image-20220503122014940"></p>
+<h3 id="（5）在gh-pages目录新增一个-nojeklly文件"><a href="#（5）在gh-pages目录新增一个-nojeklly文件" class="headerlink" title="（5）在gh-pages目录新增一个.nojeklly文件"></a>（5）在<code>gh-pages</code>目录新增一个<code>.nojeklly</code>文件</h3><p>去Github Repository的gh-pages分支上查看下有没有<code>.nojeklly</code>这个文件，如果没有，添加一个。</p>
+<p>这个文件的作用是在执行pages-build-deployment不用Jekyll来生成静态内容，这样的话，你的主题用什么就无所谓啦。</p>
+<p><img src="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503122549571.png" srcset="/img/loading.gif" lazyload alt="image-20220503122549571"></p>
+<h3 id="（6）提交配置，去Actions查看效果"><a href="#（6）提交配置，去Actions查看效果" class="headerlink" title="（6）提交配置，去Actions查看效果"></a>（6）提交配置，去Actions查看效果</h3><p><img src="https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503122700995.png" srcset="/img/loading.gif" lazyload alt="image-20220503122700995"></p>
+<p>可以看到两个构建都成功了，到此大功告成。哈哈！</p>
+<blockquote>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://det171.github.io/blog/automating-building-and-deployment-of-gh-pages/">https://det171.github.io/blog/automating-building-and-deployment-of-gh-pages/</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/marketplace/actions/github-pages-action?version=v3.7.3#%EF%B8%8F-enable-built-in-jekyll-enable_jekyll">https://github.com/marketplace/actions/github-pages-action?version=v3.7.3#%EF%B8%8F-enable-built-in-jekyll-enable_jekyll</a></li>
+</ol>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%85%B6%E4%BB%96%E9%97%B2%E8%81%8A/">其他闲聊</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%87%AA%E5%BB%BA%E5%8D%9A%E5%AE%A2/">自建博客</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/05/03/hello-world/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/05/01/golang/go-design/">
+                        <span class="hidden-mobile">Go设计哲学</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
