@@ -106,7 +106,6 @@ public
 # JetBrains directory
 .idea
 
-github-deploy-key
-github-deploy-key.pub
-circle-ci
-circle-ci.pub
+# SSH Deploy keys
+gh-pages
+gh-pages.pub
