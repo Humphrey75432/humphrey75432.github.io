@@ -16,6 +16,8 @@ jobs:
           uses: actions/setup-node@v2.1.0
           with:
             node-version:  '16.x'
+          env:
+            ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
         - name: Cache dependencies
           uses: actions/cache@v2
@@ -24,15 +26,23 @@ jobs:
             key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
             restore-keys: |
               ${{ runner.os }}-node-
+          env:
+            ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
         - name: Clean install dependencies
           run: npm install
+          env:
+            ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
         - name: Clean and Build app
           run: npm run clean && npm run build
+          env:
+            ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
         - name: deploy to github pages
           uses: peaceiris/actions-gh-pages@v3
           with:
-           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-           publish_dir: ./public
+            deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+            publish_dir: ./public
+          env:
+            ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
