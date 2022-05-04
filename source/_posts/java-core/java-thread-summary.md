@@ -2,8 +2,8 @@
 title: Java多线程面试汇总
 date: 2022-02-24 18:35:13
 updated: 2022-02-24 18:35:13
-tags: Java
-categories: 面试盘点
+tags: 面试整合（二）
+categories: Java
 ---
 
 # 三、多线程

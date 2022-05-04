@@ -2,8 +2,8 @@
 title: Java面试汇总
 date: 2022-02-24 15:57:25
 updated: 2022-02-24 15:57:25
-tags: Java
-categories: 面试技巧
+tags: 面试整合（一）
+categories: Java
 ---
 
 # 一、Java基础

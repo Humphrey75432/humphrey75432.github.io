@@ -3,7 +3,7 @@ title: Go设计哲学
 date: 2022-05-01 23:45:50
 updated: 2022-05-01 23:45:50
 tags: Go语言
-categories: 服务端开发
+categories: 后端开发
 ---
 
 > Less is more，少即是多。这就是Go语言的设计哲学

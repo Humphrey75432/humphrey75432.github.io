@@ -148,9 +148,9 @@ Add Deploy Key，这里记得一定要勾选“Allow Write Access”选项；内
 
 ![image-20220503122014940](https://humphrey-blogs-bucket.oss-cn-shenzhen.aliyuncs.com/img/image-20220503122014940.png)
 
-### （5）在`gh-pages`目录新增一个`.nojeklly`文件
+### （5）在`gh-pages`目录新增一个`.jekyll`文件
 
-去Github Repository的gh-pages分支上查看下有没有`.nojeklly`这个文件，如果没有，添加一个。
+去Github Repository的gh-pages分支上查看下有没有`.jekyll`这个文件，如果没有，添加一个。
 
 这个文件的作用是在执行pages-build-deployment不用Jekyll来生成静态内容，这样的话，你的主题用什么就无所谓啦。
 
