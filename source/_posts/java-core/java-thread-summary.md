@@ -2,7 +2,7 @@
 title: Java多线程面试汇总
 date: 2022-02-24 18:35:13
 updated: 2022-02-24 18:35:13
-tags: 面试整合（二）
+tags: Java八股文
 categories: Java
 ---
 
