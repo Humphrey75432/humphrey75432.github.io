@@ -1,0 +1,496 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Humphrey Hu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、背景最近负责一个项目，需要在SpringBoot中连接多个数据库。这篇博客记录一下Spring Boot集成多个数据库的配置用法。 二、环境设置本文使用环境如下：  Spring Boot 2.6.7 MySQL Connector Java 8.0.28 构建工具 Gradle baomidou Mybatis-Plus 3.5.1 baomidou dynamic-datasource-s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot多数据源配置">
+<meta property="og:url" content="https://humphrey75432.github.io/2022/05/25/spring/SpringBoot%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="后端民工Humphrey的博客">
+<meta property="og:description" content="一、背景最近负责一个项目，需要在SpringBoot中连接多个数据库。这篇博客记录一下Spring Boot集成多个数据库的配置用法。 二、环境设置本文使用环境如下：  Spring Boot 2.6.7 MySQL Connector Java 8.0.28 构建工具 Gradle baomidou Mybatis-Plus 3.5.1 baomidou dynamic-datasource-s">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-25T14:24:52.000Z">
+<meta property="article:modified_time" content="2022-05-25T14:24:52.000Z">
+<meta property="article:author" content="Humphrey Hu">
+<meta property="article:tag" content="Spring框架">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>SpringBoot多数据源配置 - 后端民工Humphrey的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"humphrey75432.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":55,"cursorChar":">","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Humphrey的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/sheep.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="SpringBoot多数据源配置">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-05-25 22:24" pubdate>
+        2022年5月25日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      75 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SpringBoot多数据源配置</h1>
+            
+            <div class="markdown-body">
+              <h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>最近负责一个项目，需要在SpringBoot中连接多个数据库。这篇博客记录一下Spring Boot集成多个数据库的配置用法。</p>
+<h1 id="二、环境设置"><a href="#二、环境设置" class="headerlink" title="二、环境设置"></a>二、环境设置</h1><p>本文使用环境如下：</p>
+<ul>
+<li>Spring Boot 2.6.7</li>
+<li>MySQL Connector Java 8.0.28</li>
+<li>构建工具 Gradle</li>
+<li>baomidou Mybatis-Plus 3.5.1</li>
+<li>baomidou dynamic-datasource-spring-boot-starter 3.5.1</li>
+</ul>
+<h1 id="三、初始化项目"><a href="#三、初始化项目" class="headerlink" title="三、初始化项目"></a>三、初始化项目</h1><p>使用Spring Initializer新建Spring Boot项目，build.gradle文件配置如下：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></div></td><td class="code"><pre><code class="hljs groovy">plugins &#123;<br>    id <span class="hljs-string">&#x27;org.springframework.boot&#x27;</span> version <span class="hljs-string">&#x27;2.6.7&#x27;</span><br>    id <span class="hljs-string">&#x27;io.spring.dependency-management&#x27;</span> version <span class="hljs-string">&#x27;1.0.11.RELEASE&#x27;</span><br>    id <span class="hljs-string">&#x27;java&#x27;</span><br>&#125;<br><br>group = <span class="hljs-string">&#x27;com.hhp.spring&#x27;</span><br>version = <span class="hljs-string">&#x27;0.0.1-SNAPSHOT&#x27;</span><br>sourceCompatibility = <span class="hljs-string">&#x27;11&#x27;</span><br><br>configurations &#123;<br>    compileOnly &#123;<br>        extendsFrom annotationProcessor<br>    &#125;<br>&#125;<br><br>repositories &#123;<br>    maven &#123; url <span class="hljs-string">&#x27;https://maven.aliyun.com/repository/public/&#x27;</span> &#125;<br>    mavenLocal()<br>    mavenCentral()<br>&#125;<br><br>dependencies &#123;<br>    implementation <span class="hljs-string">&#x27;org.springframework.boot:spring-boot-starter-web&#x27;</span><br>    implementation <span class="hljs-string">&#x27;org.springframework.boot:spring-boot-starter-data-jpa&#x27;</span><br>    implementation <span class="hljs-string">&#x27;mysql:mysql-connector-java:8.0.28&#x27;</span><br>    compileOnly <span class="hljs-string">&#x27;org.projectlombok:lombok&#x27;</span><br>    implementation <span class="hljs-string">&#x27;com.baomidou:mybatis-plus-boot-starter:3.5.1&#x27;</span><br>    implementation <span class="hljs-string">&#x27;com.baomidou:dynamic-datasource-spring-boot-starter:3.5.1&#x27;</span><br>    runtimeOnly <span class="hljs-string">&#x27;mysql:mysql-connector-java:6.0.6&#x27;</span><br>    developmentOnly <span class="hljs-string">&#x27;org.springframework.boot:spring-boot-devtools&#x27;</span><br>    annotationProcessor <span class="hljs-string">&#x27;org.projectlombok:lombok&#x27;</span><br>    testImplementation <span class="hljs-string">&#x27;org.springframework.boot:spring-boot-starter-test&#x27;</span><br>&#125;<br><br>tasks.named(<span class="hljs-string">&#x27;test&#x27;</span>) &#123;<br>    useJUnitPlatform()<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>application.yml文件如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">datasource:</span><br>    <span class="hljs-attr">dynamic:</span><br>      <span class="hljs-attr">primary:</span> <span class="hljs-string">story</span><br>      <span class="hljs-attr">strict:</span> <span class="hljs-literal">false</span><br>      <span class="hljs-attr">datasource:</span><br>        <span class="hljs-attr">story:</span><br>          <span class="hljs-attr">driver-class-name:</span> <span class="hljs-string">com.mysql.cj.jdbc.Driver</span><br>          <span class="hljs-attr">url:</span> <span class="hljs-string">jdbc:mysql://localhost:3306/story?useSSL=false</span><br>          <span class="hljs-attr">username:</span> <span class="hljs-string">root</span><br>          <span class="hljs-attr">password:</span> <span class="hljs-string">&lt;database</span> <span class="hljs-string">password&gt;</span><br>        <span class="hljs-attr">test:</span><br>          <span class="hljs-attr">driver-class-name:</span> <span class="hljs-string">com.mysql.cj.jdbc.Driver</span><br>          <span class="hljs-attr">url:</span> <span class="hljs-string">jdbc:mysql://localhost:3306/test?useSSL=false</span><br>          <span class="hljs-attr">username:</span> <span class="hljs-string">root</span><br>          <span class="hljs-attr">password:</span> <span class="hljs-string">&lt;database</span> <span class="hljs-string">password&gt;</span><br></code></pre></td></tr></table></figure>
+<p>新建两个数据库，配置如下：</p>
+<p>story数据库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> Navicat Premium Data Transfer</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"> Source Server         : MySQL-Local</span><br><span class="hljs-comment"> Source Server Type    : MySQL</span><br><span class="hljs-comment"> Source Server Version : 80026</span><br><span class="hljs-comment"> Source Host           : localhost:3306</span><br><span class="hljs-comment"> Source Schema         : story</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"> Target Server Type    : MySQL</span><br><span class="hljs-comment"> Target Server Version : 80026</span><br><span class="hljs-comment"> File Encoding         : 65001</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"> Date: 25/05/2022 22:35:12</span><br><span class="hljs-comment">*/</span><br><br><span class="hljs-keyword">SET</span> NAMES utf8mb4;<br><span class="hljs-keyword">SET</span> FOREIGN_KEY_CHECKS <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br><span class="hljs-comment">-- ----------------------------</span><br><span class="hljs-comment">-- Table structure for money</span><br><span class="hljs-comment">-- ----------------------------</span><br><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">EXISTS</span> `money`;<br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `money` (<br>  `id` <span class="hljs-type">int</span> unsigned <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>  `name` <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;用户名&#x27;</span>,<br>  `money` <span class="hljs-type">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;钱&#x27;</span>,<br>  `is_deleted` tinyint(<span class="hljs-number">1</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span>,<br>  `create_at` <span class="hljs-type">timestamp</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,<br>  `update_at` <span class="hljs-type">timestamp</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="hljs-string">&#x27;更新时间&#x27;</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`),<br>  KEY `name` (`name`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB AUTO_INCREMENT<span class="hljs-operator">=</span><span class="hljs-number">7</span> <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8mb4 <span class="hljs-keyword">COLLATE</span><span class="hljs-operator">=</span>utf8mb4_0900_ai_ci;<br><br><span class="hljs-comment">-- ----------------------------</span><br><span class="hljs-comment">-- Records of money</span><br><span class="hljs-comment">-- ----------------------------</span><br><span class="hljs-keyword">BEGIN</span>;<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `money` <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;对对对&#x27;</span>, <span class="hljs-number">200</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;2022-05-25 21:54:25&#x27;</span>, <span class="hljs-string">&#x27;2022-05-25 21:54:25&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `money` <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;辅导费&#x27;</span>, <span class="hljs-number">200</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;2022-05-25 21:54:33&#x27;</span>, <span class="hljs-string">&#x27;2022-05-25 21:54:33&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `money` <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">3</span>, <span class="hljs-string">&#x27;收到VS的v&#x27;</span>, <span class="hljs-number">400</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;2022-05-25 21:54:43&#x27;</span>, <span class="hljs-string">&#x27;2022-05-25 21:54:43&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `money` <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">4</span>, <span class="hljs-string">&#x27;我带你们打&#x27;</span>, <span class="hljs-number">9293</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;2022-05-25 21:54:56&#x27;</span>, <span class="hljs-string">&#x27;2022-05-25 21:54:56&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `money` <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">5</span>, <span class="hljs-string">&#x27;fuck&#x27;</span>, <span class="hljs-number">90</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;2022-05-25 21:55:03&#x27;</span>, <span class="hljs-string">&#x27;2022-05-25 21:55:03&#x27;</span>);<br><span class="hljs-keyword">COMMIT</span>;<br><br><span class="hljs-keyword">SET</span> FOREIGN_KEY_CHECKS <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><br></code></pre></td></tr></table></figure>
+<p>test数据库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> Navicat Premium Data Transfer</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"> Source Server         : MySQL-Local</span><br><span class="hljs-comment"> Source Server Type    : MySQL</span><br><span class="hljs-comment"> Source Server Version : 80026</span><br><span class="hljs-comment"> Source Host           : localhost:3306</span><br><span class="hljs-comment"> Source Schema         : test</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"> Target Server Type    : MySQL</span><br><span class="hljs-comment"> Target Server Version : 80026</span><br><span class="hljs-comment"> File Encoding         : 65001</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"> Date: 25/05/2022 22:35:24</span><br><span class="hljs-comment">*/</span><br><br><span class="hljs-keyword">SET</span> NAMES utf8mb4;<br><span class="hljs-keyword">SET</span> FOREIGN_KEY_CHECKS <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br><span class="hljs-comment">-- ----------------------------</span><br><span class="hljs-comment">-- Table structure for money</span><br><span class="hljs-comment">-- ----------------------------</span><br><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">EXISTS</span> `money`;<br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `money` (<br>  `id` <span class="hljs-type">int</span> unsigned <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>  `name` <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;用户名&#x27;</span>,<br>  `money` <span class="hljs-type">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;钱&#x27;</span>,<br>  `is_deleted` tinyint(<span class="hljs-number">1</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span>,<br>  `create_at` <span class="hljs-type">timestamp</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,<br>  `update_at` <span class="hljs-type">timestamp</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="hljs-string">&#x27;更新时间&#x27;</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`),<br>  KEY `name` (`name`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB AUTO_INCREMENT<span class="hljs-operator">=</span><span class="hljs-number">4</span> <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8mb4 <span class="hljs-keyword">COLLATE</span><span class="hljs-operator">=</span>utf8mb4_0900_ai_ci;<br><br><span class="hljs-comment">-- ----------------------------</span><br><span class="hljs-comment">-- Records of money</span><br><span class="hljs-comment">-- ----------------------------</span><br><span class="hljs-keyword">BEGIN</span>;<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `money` <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;快快快&#x27;</span>, <span class="hljs-number">98</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;2022-05-25 21:55:34&#x27;</span>, <span class="hljs-string">&#x27;2022-05-25 21:55:34&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `money` <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;都觉得&#x27;</span>, <span class="hljs-number">20</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;2022-05-25 21:55:40&#x27;</span>, <span class="hljs-string">&#x27;2022-05-25 21:55:49&#x27;</span>);<br><span class="hljs-keyword">COMMIT</span>;<br><br><span class="hljs-keyword">SET</span> FOREIGN_KEY_CHECKS <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><br></code></pre></td></tr></table></figure>
+<h1 id="四、编写业务代码"><a href="#四、编写业务代码" class="headerlink" title="四、编写业务代码"></a>四、编写业务代码</h1><h2 id="4-1-新建实体类"><a href="#4-1-新建实体类" class="headerlink" title="4.1 新建实体类"></a>4.1 新建实体类</h2><p>新建一个Money实体类，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Data</span><br><span class="hljs-meta">@Accessors(chain = true)</span><br><span class="hljs-meta">@TableName(&quot;money&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Money</span> &#123;<br><br>    <span class="hljs-meta">@TableId(value = &quot;id&quot;, type = IdType.AUTO)</span><br>    <span class="hljs-keyword">private</span> Integer id;<br><br>    <span class="hljs-keyword">private</span> String name;<br><br>    <span class="hljs-keyword">private</span> Long money;<br><br>    <span class="hljs-meta">@TableField(value = &quot;is_deleted&quot;)</span><br>    <span class="hljs-keyword">private</span> Integer isDeleted;<br><br>    <span class="hljs-meta">@TableField(value = &quot;create_at&quot;)</span><br>    <span class="hljs-keyword">private</span> Timestamp createAt;<br><br>    <span class="hljs-meta">@TableField(value = &quot;update_at&quot;)</span><br>    <span class="hljs-keyword">private</span> Timestamp updateAt;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="4-2-创建Mapper类以及Mapper文件"><a href="#4-2-创建Mapper类以及Mapper文件" class="headerlink" title="4.2 创建Mapper类以及Mapper文件"></a>4.2 创建Mapper类以及Mapper文件</h2><p>mapper类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">MoneyMapper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseMapper</span>&lt;Money&gt; &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>mapper映射</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">mapper</span> <span class="hljs-keyword">PUBLIC</span> <span class="hljs-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span> <span class="hljs-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">&quot;com.hhp.spring.mapper.MoneyMapper&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+<h2 id="4-3-编写Service"><a href="#4-3-编写Service" class="headerlink" title="4.3 编写Service"></a>4.3 编写Service</h2><p>编写MoneyService</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">IMoneyService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">IService</span>&lt;Money&gt; &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>编写StoryMoneyService，实现该接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Service</span><br><span class="hljs-meta">@DS(&quot;story&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StoryMoneyServiceImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ServiceImpl</span>&lt;MoneyMapper, Money&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">IMoneyService</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>编写TestMoneyService，实现该接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Service</span><br><span class="hljs-meta">@DS(&quot;test&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestMoneyServiceImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ServiceImpl</span>&lt;MoneyMapper, Money&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">IMoneyService</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>注意到我们在Service上添加了注解<code>@DS</code>，这个注解来自于<code>dynamic-datasource-spring-boot-starter</code>。在我们进行dao层操作时可以根据不同的数据源灵活切换，从而做到查询不干扰。</p>
+<p>除此之外，如果像将相同查询的写到同一个Service下管理，还可以这样实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MoneyServiceImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ServiceImpl</span>&lt;MoneyMapper, Money&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">IMoneyService</span> &#123;<br>    <br>    <span class="hljs-meta">@DS(&quot;story&quot;)</span><br>    <span class="hljs-keyword">public</span> List&lt;Money&gt; <span class="hljs-title function_">findByStoryIds</span><span class="hljs-params">(Collection&lt;Long&gt; ids)</span> &#123;<br>        <span class="hljs-keyword">return</span> baseMapper.selectBatchIds(ids);<br>    &#125;<br>    <br>    <span class="hljs-meta">@DS(&quot;test&quot;)</span><br>    <span class="hljs-keyword">public</span> List&lt;Money&gt; <span class="hljs-title function_">findByTestIds</span><span class="hljs-params">(Collection&lt;Long&gt; ids)</span> &#123;<br>        <span class="hljs-keyword">return</span> baseMapper.selectBatchIds(ids);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="五、测试效果"><a href="#五、测试效果" class="headerlink" title="五、测试效果"></a>五、测试效果</h1><p>直接在启动类编写如下代码，查看运行结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)</span><br><span class="hljs-meta">@MapperScan(&quot;com.hhp.spring.mapper&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SpringBootDemoApplication</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">SpringBootDemoApplication</span><span class="hljs-params">(StoryMoneyServiceImpl storyIMoneyService, TestMoneyServiceImpl testMoneyService)</span> &#123;<br>        List&lt;Money&gt; testMoneyList = testMoneyService.list();<br>        System.out.println(<span class="hljs-string">&quot;Test Money List: &quot;</span> + testMoneyList);<br><br>        List&lt;Money&gt; storyMoneyList = storyIMoneyService.list();<br>        System.out.println(<span class="hljs-string">&quot;Story Money List: &quot;</span> + storyMoneyList);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        SpringApplication.run(SpringBootDemoApplication.class, args);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>程序运行结果如下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs routeros">2022-05-25 23:37:35.601  <span class="hljs-built_in">INFO</span> 2871 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory <span class="hljs-keyword">for</span> persistence unit <span class="hljs-string">&#x27;default&#x27;</span><br> _ _   |_  _ _|_. ___ _ |    _ <br>| | |\/|_)(_| | |_\  |_)||_|_\ <br>     /               |         <br>                        3.5.1 <br>Test Money List: [Money(<span class="hljs-attribute">id</span>=1, <span class="hljs-attribute">name</span>=快快快, <span class="hljs-attribute">money</span>=98, <span class="hljs-attribute">isDeleted</span>=0, <span class="hljs-attribute">createAt</span>=2022-05-25 21:55:34.0, <span class="hljs-attribute">updateAt</span>=2022-05-25 21:55:34.0), Money(<span class="hljs-attribute">id</span>=2, <span class="hljs-attribute">name</span>=都觉得, <span class="hljs-attribute">money</span>=20, <span class="hljs-attribute">isDeleted</span>=0, <span class="hljs-attribute">createAt</span>=2022-05-25 21:55:40.0, <span class="hljs-attribute">updateAt</span>=2022-05-25 21:55:49.0)]<br>Story Money List: [Money(<span class="hljs-attribute">id</span>=1, <span class="hljs-attribute">name</span>=对对对, <span class="hljs-attribute">money</span>=200, <span class="hljs-attribute">isDeleted</span>=0, <span class="hljs-attribute">createAt</span>=2022-05-25 21:54:25.0, <span class="hljs-attribute">updateAt</span>=2022-05-25 21:54:25.0), Money(<span class="hljs-attribute">id</span>=2, <span class="hljs-attribute">name</span>=辅导费, <span class="hljs-attribute">money</span>=200, <span class="hljs-attribute">isDeleted</span>=0, <span class="hljs-attribute">createAt</span>=2022-05-25 21:54:33.0, <span class="hljs-attribute">updateAt</span>=2022-05-25 21:54:33.0), Money(<span class="hljs-attribute">id</span>=3, <span class="hljs-attribute">name</span>=收到VS的v, <span class="hljs-attribute">money</span>=400, <span class="hljs-attribute">isDeleted</span>=0, <span class="hljs-attribute">createAt</span>=2022-05-25 21:54:43.0, <span class="hljs-attribute">updateAt</span>=2022-05-25 21:54:43.0), Money(<span class="hljs-attribute">id</span>=4, <span class="hljs-attribute">name</span>=我带你们打, <span class="hljs-attribute">money</span>=9293, <span class="hljs-attribute">isDeleted</span>=0, <span class="hljs-attribute">createAt</span>=2022-05-25 21:54:56.0, <span class="hljs-attribute">updateAt</span>=2022-05-25 21:54:56.0), Money(<span class="hljs-attribute">id</span>=5, <span class="hljs-attribute">name</span>=fuck, <span class="hljs-attribute">money</span>=90, <span class="hljs-attribute">isDeleted</span>=0, <span class="hljs-attribute">createAt</span>=2022-05-25 21:55:03.0, <span class="hljs-attribute">updateAt</span>=2022-05-25 21:55:03.0)]<br>2022-05-25 23:37:35.942  WARN 2871 --- [  restartedMain] JpaBaseConfiguration<span class="hljs-variable">$JpaWebConfiguration</span> : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view <span class="hljs-keyword">to</span> <span class="hljs-built_in">disable</span> this <span class="hljs-built_in">warning</span><br>2022-05-25 23:37:36.198  <span class="hljs-built_in">INFO</span> 2871 --- [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload<span class="hljs-built_in"> server </span>is running on<span class="hljs-built_in"> port </span>35729<br></code></pre></td></tr></table></figure>
+<h1 id="六、Spring-Boot-Mybatis-Plus-JdbcTemplate多数据源配置"><a href="#六、Spring-Boot-Mybatis-Plus-JdbcTemplate多数据源配置" class="headerlink" title="六、Spring Boot + Mybatis Plus + JdbcTemplate多数据源配置"></a>六、Spring Boot + Mybatis Plus + JdbcTemplate多数据源配置</h1><p>讲完上面基于baomidou的多数据源切换方案，我们理解一下通用的Spring Boot多数据源配置如何实现。</p>
+<h2 id="6-1-数据库准备"><a href="#6-1-数据库准备" class="headerlink" title="6.1 数据库准备"></a>6.1 数据库准备</h2><p>我们创建三个数据库来演示这个案例：</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Spring/">Spring</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Spring%E6%A1%86%E6%9E%B6/">Spring框架</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/05/others/git-rebase-sample/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Git Rebase 一篇就够</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/05/05/database/install-postgres-with-docker/">
+                        <span class="hidden-mobile">使用Docker安装Postgresql</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
